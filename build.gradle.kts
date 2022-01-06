@@ -15,6 +15,7 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    implementation("info.picocli:picocli:4.6.2")
 }
 
 tasks.test {

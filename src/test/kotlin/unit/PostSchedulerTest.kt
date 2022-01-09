@@ -1,4 +1,4 @@
-package acceptance
+package unit
 
 import Scheduler
 import org.junit.jupiter.api.Test

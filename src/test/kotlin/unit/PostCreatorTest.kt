@@ -1,4 +1,4 @@
-package acceptance
+package unit
 
 import Post
 import org.junit.jupiter.api.Test
@@ -10,19 +10,17 @@ import kotlin.test.assertEquals
 class PostCreatorTest {
 
     @Test
-    fun `should show help message for post command`() {
-        val app = Post()
-        val cmd = CommandLine(app)
+    fun `should create post with the desired text`() {
+        val cmd = CommandLine(Post())
 
         val sw = StringWriter()
         cmd.out = PrintWriter(sw)
+        cmd.err = PrintWriter(sw)
 
-        cmd.execute("--help")
+        cmd.execute()
+
         assertEquals("""
-            Usage: post [-hV]
-              -h, --help      Show this help message and exit.
-              -V, --version   Print version information and exit.
-        
+            Post has been created
         """.trimIndent(), sw.toString())
     }
 }

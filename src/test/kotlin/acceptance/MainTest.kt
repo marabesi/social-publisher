@@ -39,9 +39,10 @@ class MainTest {
 
         cmd.execute("post", "--help")
         assertEquals("""
-            Usage: social post [-hV] [-c=<text>]
+            Usage: social post [-hlV] [-c=<text>]
               -c=<text>       Creates a post
               -h, --help      Show this help message and exit.
+              -l              List created posts
               -V, --version   Print version information and exit.
         
         """.trimIndent(), sw.toString())

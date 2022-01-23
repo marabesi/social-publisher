@@ -20,7 +20,7 @@ class PostCreatorTest {
     }
 
     @Test
-    fun `should list posts created`() {
+    fun `should give a message when no posts exists`() {
         val cmd = CommandLine(Post())
 
         cmd.execute("-l")
@@ -28,6 +28,20 @@ class PostCreatorTest {
 
         assertEquals("""
             No post found
+        """.trimIndent(), result)
+    }
+
+    @Test
+    fun `should list posts created`() {
+        val cmd = CommandLine(Post())
+
+        cmd.execute("-c", "this is my first post")
+        cmd.execute("-l")
+
+        val result = cmd.getExecutionResult<String>()
+
+        assertEquals("""
+            1. this is my first post
         """.trimIndent(), result)
     }
 }

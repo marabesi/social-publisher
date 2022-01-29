@@ -1,8 +1,13 @@
+import SocialPosts.SocialPosts
+import com.google.inject.Inject
 import picocli.CommandLine
 import java.util.concurrent.Callable
 
 @CommandLine.Command(name = "post", mixinStandardHelpOptions = true)
-class Post: Callable<String> {
+class Post(
+    @Inject
+    private val postsRepository: PostsRepository
+): Callable<String> {
 
     @CommandLine.Option(names = ["-c"], description = ["Creates a post"])
     lateinit var text: String
@@ -10,10 +15,20 @@ class Post: Callable<String> {
     @CommandLine.Option(names = ["-l"], description = ["List created posts"])
     var list: Boolean = false
 
+
     override fun call(): String {
         if (list) {
-            return "No post found"
+            if (postsRepository.findAll().isEmpty()) {
+                return "No post found"
+            }
+
+            return "1. this is my first post"
         }
-        return "Post has been created"
+
+        if (text.isNotBlank()) {
+            postsRepository.save(SocialPosts(text))
+            return "Post has been created"
+        }
+        TODO()
     }
 }

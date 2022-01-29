@@ -9,10 +9,12 @@ import picocli.CommandLine
     ]
 )
 class Application {
+}
 
+fun buildCommandLine(): CommandLine {
+    return CommandLine(Application::class.java, MyFactory())
 }
 
 fun main(args: Array<String>) {
-    CommandLine(Application())
-        .execute(*args)
+    buildCommandLine().execute(*args)
 }

@@ -16,6 +16,7 @@ repositories {
 dependencies {
     testImplementation(kotlin("test"))
     implementation("info.picocli:picocli:4.6.2")
+    implementation("com.google.inject:guice:4.0")
 }
 
 tasks.test {

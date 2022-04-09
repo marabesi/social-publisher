@@ -1,15 +1,8 @@
 import SocialPosts.SocialPosts
 
-class PostsRepository {
+interface PostsRepository {
 
-    private val posts: ArrayList<SocialPosts> = arrayListOf();
+    fun save(post: SocialPosts): Boolean
 
-    fun save(post: SocialPosts): Boolean {
-        posts.add(post)
-        return true
-    }
-
-    fun findAll(): ArrayList<SocialPosts> {
-        return posts
-    }
+    fun findAll(): ArrayList<SocialPosts>
 }

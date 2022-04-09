@@ -1,7 +1,7 @@
 package persistence
 
 import PostsRepository
-import SocialPosts.SocialPosts
+import socialPosts.SocialPosts
 
 class InMemoryRepository: PostsRepository {
 

@@ -1,4 +1,4 @@
-import SocialPosts.SocialPosts
+import socialPosts.SocialPosts
 
 interface PostsRepository {
 

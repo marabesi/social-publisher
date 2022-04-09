@@ -1,4 +1,4 @@
-import SocialPosts.SocialPosts
+import socialPosts.SocialPosts
 import com.google.inject.Inject
 import picocli.CommandLine
 import java.util.concurrent.Callable

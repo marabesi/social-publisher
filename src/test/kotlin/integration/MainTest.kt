@@ -1,4 +1,4 @@
-package acceptance
+package integration
 
 import buildCommandLine
 import org.junit.jupiter.api.Test

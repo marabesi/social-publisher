@@ -43,7 +43,9 @@ class FileSystemTest {
             arrayListOf(post)
         )
 
-        assertEquals(1, repository.findAll().size)
+        val storedPost: SocialPosts = repository.findAll().first()
+
+        assertEquals(post.text, storedPost.text)
     }
 
     @Test
@@ -56,7 +58,6 @@ class FileSystemTest {
                 SocialPosts("another post")
             )
         )
-
 
         assertEquals(2, repository.findAll().size)
     }

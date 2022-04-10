@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.ir.backend.js.compile
 
 plugins {
     kotlin("jvm") version "1.5.10"
@@ -18,6 +19,9 @@ dependencies {
     implementation("info.picocli:picocli:4.6.2")
     implementation("com.google.inject:guice:4.0")
     implementation(kotlin("stdlib-jdk8"))
+    testCompileOnly("io.cucumber:cucumber-java8:7.0.0")
+    testCompileOnly("io.cucumber:cucumber-junit:7.0.0")
+    implementation("org.apache.commons:commons-csv:1.9.0")
 }
 
 tasks.test {

@@ -33,4 +33,14 @@ class FileSystemTest {
 
         assertTrue(repository.save(post))
     }
+
+    @Test
+    fun fetchPostFromCsv() {
+        val post = SocialPosts("fetch from csv")
+        val repository = FileSystemRepository(filePath)
+
+        repository.save(post)
+
+        assertEquals(1, repository.findAll().size)
+    }
 }

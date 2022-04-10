@@ -11,7 +11,7 @@ import java.io.FileWriter
 
 
 class FileSystemRepository(private val filePath: String): PostsRepository {
-    override fun save(post: SocialPosts): Boolean {
+    override fun save(posts: ArrayList<SocialPosts>): Boolean {
         try {
             File(filePath).parentFile.mkdirs()
         } catch (ex: NullPointerException) {
@@ -23,7 +23,9 @@ class FileSystemRepository(private val filePath: String): PostsRepository {
         val writer = FileWriter(file)
         val printer = CSVPrinter(writer, CSVFormat.DEFAULT)
 
-        printer.printRecord("text")
+        for (post: SocialPosts in posts) {
+            printer.printRecord("text")
+        }
         printer.close()
 
         return true

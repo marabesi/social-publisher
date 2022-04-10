@@ -26,7 +26,7 @@ class Post(
         }
 
         if (text.isNotBlank()) {
-            postsRepository.save(SocialPosts(text))
+            postsRepository.save(arrayListOf(SocialPosts(text)))
             return "Post has been created"
         }
         TODO()

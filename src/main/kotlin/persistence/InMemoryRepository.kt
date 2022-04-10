@@ -5,10 +5,10 @@ import socialPosts.SocialPosts
 
 class InMemoryRepository: PostsRepository {
 
-    private val posts: ArrayList<SocialPosts> = arrayListOf();
+    private var posts: ArrayList<SocialPosts> = arrayListOf();
 
-    override fun save(post: SocialPosts): Boolean {
-        posts.add(post)
+    override fun save(post: ArrayList<SocialPosts>): Boolean {
+        posts = post
         return true
     }
 

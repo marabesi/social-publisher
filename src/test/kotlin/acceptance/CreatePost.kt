@@ -7,7 +7,9 @@ class CreatePost: En {
     init {
         When(
             "I create a post with the title {string}"
-        ) { _: String? -> throw PendingException() }
+        ) { _: String? ->
+
+        }
         Then(
             "Show successfull menssage {string}"
         ) { _: String? -> throw PendingException() }

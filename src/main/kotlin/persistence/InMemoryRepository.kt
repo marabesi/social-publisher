@@ -5,14 +5,16 @@ import socialPosts.SocialPosts
 
 class InMemoryRepository: PostsRepository {
 
-    private var posts: ArrayList<SocialPosts> = arrayListOf();
+    private var storedPosts: ArrayList<SocialPosts> = arrayListOf();
 
-    override fun save(post: ArrayList<SocialPosts>): Boolean {
-        posts = post
+    override fun save(posts: ArrayList<SocialPosts>): Boolean {
+        for (post in posts) {
+            storedPosts.add(post)
+        }
         return true
     }
 
     override fun findAll(): ArrayList<SocialPosts> {
-        return posts
+        return storedPosts
     }
 }

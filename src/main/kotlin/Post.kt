@@ -15,18 +15,27 @@ class Post(
     @CommandLine.Option(names = ["-l"], description = ["List created posts"])
     var list: Boolean = false
 
-
     override fun call(): String {
         if (list) {
-            if (postsRepository.findAll().isEmpty()) {
+            val findAll = postsRepository.findAll()
+            if (findAll.isEmpty()) {
+                print("No post found")
                 return "No post found"
             }
 
-            return "1. this is my first post"
+            var result = ""
+            var index = 1
+            for (post in findAll) {
+                result += index.toString() + ". " + post.text + "\n"
+                ++index
+            }
+            print(result)
+            return result.trimIndent()
         }
 
         if (text.isNotBlank()) {
             postsRepository.save(arrayListOf(SocialPosts(text)))
+            print("Post has been created")
             return "Post has been created"
         }
         TODO()

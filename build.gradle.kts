@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.ir.backend.js.compile
 
 plugins {
     kotlin("jvm") version "1.5.10"
@@ -26,6 +25,9 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    filter {
+        excludeTestsMatching("acceptance.*")
+    }
 }
 
 tasks.withType<KotlinCompile> {

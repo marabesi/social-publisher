@@ -4,7 +4,6 @@ import Post
 import org.junit.jupiter.api.Test
 import persistence.InMemoryRepository
 import picocli.CommandLine
-import socialPosts.SocialPosts
 import kotlin.test.assertEquals
 
 class ListPostTest {

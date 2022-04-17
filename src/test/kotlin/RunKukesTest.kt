@@ -5,7 +5,8 @@ import org.junit.runner.RunWith
 @RunWith(Cucumber::class)
 @CucumberOptions(
     features = ["src/test/resources"],
-    tags = "not @ignored"
+    tags = "not @ignored",
+    publish = false,
 )
 class RunKukesTest {
 }

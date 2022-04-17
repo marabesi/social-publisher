@@ -2,6 +2,9 @@ name: Java CI
 
 on: [push]
 
+env:
+  COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,14 +18,16 @@ jobs:
           distribution: 'adopt'
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
+
       - name: Build with Gradle
         uses: gradle/gradle-build-action@4137be6a8bf7d7133955359dbd952c0ca73b1021
         with:
           arguments: build
-      - name: Unit test
+
+      - name: Unit test and coverage
         uses: gradle/gradle-build-action@4137be6a8bf7d7133955359dbd952c0ca73b1021
         with:
-          arguments: test
+          arguments: test jacocoTestReport coverallsJacoco
 
       - name: Acceptance test
         uses: gradle/gradle-build-action@4137be6a8bf7d7133955359dbd952c0ca73b1021

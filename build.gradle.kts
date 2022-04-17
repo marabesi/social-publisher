@@ -5,6 +5,7 @@ plugins {
     application
     java
     jacoco
+    id("com.github.nbaztec.coveralls-jacoco") version "1.2.14"
 }
 
 group = "me.marabesi"

@@ -8,6 +8,8 @@ class Post(
     @Inject
     private val postsRepository: PostsRepository
 ): Callable<String> {
+    @CommandLine.Spec
+    lateinit var spec: CommandLine.Model.CommandSpec
 
     @CommandLine.Option(names = ["-c"], description = ["Creates a post"])
     lateinit var text: String
@@ -19,7 +21,7 @@ class Post(
         if (list) {
             val findAll = postsRepository.findAll()
             if (findAll.isEmpty()) {
-                print("No post found")
+                spec.commandLine().out.print("No post found")
                 return "No post found"
             }
 
@@ -35,7 +37,7 @@ class Post(
 
         if (text.isNotBlank()) {
             postsRepository.save(arrayListOf(SocialPosts(text)))
-            print("Post has been created")
+            spec.commandLine().out.print("Post has been created")
             return "Post has been created"
         }
         TODO()

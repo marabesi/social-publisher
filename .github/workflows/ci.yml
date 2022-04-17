@@ -24,17 +24,7 @@ jobs:
         with:
           arguments: build
 
-      - name: Unit test
+      - name: Test and coverage
         uses: gradle/gradle-build-action@4137be6a8bf7d7133955359dbd952c0ca73b1021
         with:
-          arguments: test jacocoTestReport
-
-      - name: Acceptance test
-        uses: gradle/gradle-build-action@4137be6a8bf7d7133955359dbd952c0ca73b1021
-        with:
-          arguments: cucumber
-
-      - name: Coverage
-        uses: gradle/gradle-build-action@4137be6a8bf7d7133955359dbd952c0ca73b1021
-        with:
-          arguments: coverallsJacoco
+          arguments: test cucumber jacocoTestReport coverallsJacoco

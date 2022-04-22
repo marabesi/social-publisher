@@ -31,7 +31,7 @@ class Post(
                 result += index.toString() + ". " + post.text + "\n"
                 ++index
             }
-            print(result)
+            spec.commandLine().out.print(result)
             return result.trimIndent()
         }
 

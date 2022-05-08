@@ -28,11 +28,16 @@ class Post(
             var result = ""
             var index = 1
             for (post in findAll) {
-                result += index.toString() + ". " + post.text + "\n"
+                val isLast: Boolean = index == findAll.size
+                result += index.toString() + ". " + post.text
+                if (!isLast) {
+                    result += "\n"
+                }
                 ++index
             }
-            spec.commandLine().out.print(result)
-            return result.trimIndent()
+            val output = result.trimIndent()
+            spec.commandLine().out.print(output)
+            return output
         }
 
         if (text.isNotBlank()) {

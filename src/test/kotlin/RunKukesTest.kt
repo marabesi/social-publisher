@@ -8,5 +8,4 @@ import org.junit.runner.RunWith
     tags = "not @ignored",
     publish = false,
 )
-class RunKukesTest {
-}
+class RunKukesTest

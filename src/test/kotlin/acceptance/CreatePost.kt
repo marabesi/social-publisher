@@ -33,7 +33,7 @@ class CreatePost: En {
         }
 
         Then(
-            "Show successfull menssage {string}"
+            "Show successfully message {string}"
         ) { _: String? ->
             assertEquals(0, exitCode)
             assertEquals("Post has been created", sw.toString())

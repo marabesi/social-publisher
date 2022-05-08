@@ -23,8 +23,6 @@ class CreatePost: En {
         }
 
         Then("I clean the output") {
-            sw.flush()
-            cmd.clearExecutionResults()
             sw.buffer.setLength(0)
         }
 

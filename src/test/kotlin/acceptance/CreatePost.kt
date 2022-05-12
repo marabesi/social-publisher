@@ -2,6 +2,7 @@ package acceptance
 
 import buildCommandLine
 import io.cucumber.java8.En
+import io.cucumber.java8.PendingException
 import picocli.CommandLine
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -22,27 +23,27 @@ class CreatePost: En {
             cmd.err = PrintWriter(sw)
         }
 
-        Then("I clean the output") {
-            sw.buffer.setLength(0)
-        }
-
         When(
-            "I create a post with the title {string}"
-        ) { _: String? ->
-            exitCode = cmd.execute("post", "-c", "Hello")
+            "I create a post with the text {string}"
+        ) { text: String? ->
+            exitCode = cmd.execute("post", "-c", text)
         }
 
         Then(
             "Show successfully message {string}"
-        ) { _: String? ->
-            assertEquals(0, exitCode)
-            assertEquals("Post has been created", sw.toString())
+        ) { successMessage: String? ->
+            assertEquals(0, exitCode, "Exit code is not correct check the cli lib for details")
+            assertEquals(successMessage, sw.toString())
         }
 
         Then("Show the created post") {
             exitCode = cmd.execute("post", "-l")
-            assertEquals(0, exitCode)
+            assertEquals(0, exitCode, "Exit code is not correct check the cli lib for details")
             assertContains("1. Hello", sw.toString())
+        }
+
+        Then("I clean the output") {
+            sw.buffer.setLength(0)
         }
     }
 }

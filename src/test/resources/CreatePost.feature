@@ -11,4 +11,12 @@ Feature: Create a post with a title
     Given A new cli
     When I create a post with the text "Hello"
     Then I clean the output
-    Then Show the created post
+    Then Show the created post "1. Hello"
+
+  Scenario: Creates two posts and list them
+    Given A new cli
+    When I create a post with the text "caracters"
+    When I create a post with the text "another"
+    Then I clean the output
+    Then Show the created post "1. caracters"
+    Then Show the created post "2. another"

@@ -2,8 +2,8 @@ package acceptance
 
 import buildCommandLine
 import io.cucumber.java8.En
-import io.cucumber.java8.PendingException
 import picocli.CommandLine
+import java.io.File
 import java.io.PrintWriter
 import java.io.StringWriter
 import kotlin.test.assertContains
@@ -18,9 +18,13 @@ class CreatePost: En {
 
         Given("A new cli"){ ->
             cmd  = buildCommandLine()
+
             sw = StringWriter()
             cmd.out = PrintWriter(sw)
             cmd.err = PrintWriter(sw)
+
+            val data = File("data/social-production.csv")
+            data.delete();
         }
 
         When(
@@ -36,14 +40,16 @@ class CreatePost: En {
             assertEquals(successMessage, sw.toString())
         }
 
-        Then("Show the created post") {
-            exitCode = cmd.execute("post", "-l")
-            assertEquals(0, exitCode, "Exit code is not correct check the cli lib for details")
-            assertContains("1. Hello", sw.toString())
-        }
-
         Then("I clean the output") {
             sw.buffer.setLength(0)
+        }
+
+        Then(
+            "Show the created post {string}"
+        ) { text: String ->
+            exitCode = cmd.execute("post", "-l")
+            assertEquals(0, exitCode, "Exit code is not correct check the cli lib for details")
+            assertContains(sw.toString(), text)
         }
     }
 }

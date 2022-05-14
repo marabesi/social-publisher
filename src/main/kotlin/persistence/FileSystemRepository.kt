@@ -20,7 +20,7 @@ class FileSystemRepository(private val filePath: String): PostsRepository {
 
         val file = File(filePath)
 
-        val writer = FileWriter(file)
+        val writer = FileWriter(file, true)
         val printer = CSVPrinter(writer, CSVFormat.DEFAULT)
 
         for (post: SocialPosts in posts) {

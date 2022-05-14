@@ -55,7 +55,11 @@ class FileSystemTest {
         repository.save(
             arrayListOf(
                 SocialPosts("fetch from csv"),
-                SocialPosts("another post")
+            )
+        )
+        repository.save(
+            arrayListOf(
+                SocialPosts("fetch from csv"),
             )
         )
 

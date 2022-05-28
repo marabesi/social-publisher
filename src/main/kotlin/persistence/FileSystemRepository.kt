@@ -4,6 +4,7 @@ import PostsRepository
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVPrinter
+import org.apache.commons.csv.CSVRecord
 import socialPosts.SocialPosts
 import java.io.File
 import java.io.FileReader
@@ -38,7 +39,7 @@ class FileSystemRepository(private val filePath: String): PostsRepository {
         val posts = arrayListOf<SocialPosts>()
 
         for (record in parser) {
-            posts.add(SocialPosts(record[1].toInt(), record[0]))
+            posts.add(buildPostFromCsvRecord(record))
         }
 
         parser.close()
@@ -54,12 +55,16 @@ class FileSystemRepository(private val filePath: String): PostsRepository {
 
         for (record in parser) {
             if (record[1] == postId) {
-                posts = SocialPosts(record[1].toInt(), record[0])
+                posts = buildPostFromCsvRecord(record)
             }
         }
 
         parser.close()
 
         return posts
+    }
+
+    private fun buildPostFromCsvRecord(record: CSVRecord): SocialPosts {
+        return SocialPosts(record[1].toInt(), record[0])
     }
 }

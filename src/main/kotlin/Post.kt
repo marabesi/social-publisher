@@ -29,7 +29,15 @@ class Post(
             var index = 1
             for (post in findAll) {
                 val isLast: Boolean = index == findAll.size
-                result += index.toString() + ". " + post.text
+
+                when {
+                    post.text.length > 50 -> {
+                        result += index.toString() + ". " + post.text.substring(0, 50) + "..."
+                    }
+                    else -> {
+                        result += index.toString() + ". " + post.text
+                    }
+                }
                 if (!isLast) {
                     result += "\n"
                 }

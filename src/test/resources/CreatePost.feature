@@ -20,3 +20,9 @@ Feature: Create a post with a title
     Then I clean the output
     Then Show the created post "1. caracters"
     Then Show the created post "2. another"
+
+  Scenario: Text with more than 50 characters should show three dots
+    Given A new cli
+    When I create a post with the text "caracters, our online editor can help you to improve word choice and writing style, and, optionally, help you to detect grammar mistakes and plagiarism. To check word count, simply 1"
+    Then I clean the output
+    Then Show the created post "caracters, our online editor can help you to impro..."

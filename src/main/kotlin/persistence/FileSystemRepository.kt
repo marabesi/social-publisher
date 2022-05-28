@@ -24,7 +24,7 @@ class FileSystemRepository(private val filePath: String): PostsRepository {
         val printer = CSVPrinter(writer, CSVFormat.DEFAULT)
 
         for (post: SocialPosts in posts) {
-            printer.printRecord(post.text)
+            printer.printRecord(post.text, post.id)
         }
         printer.close()
 
@@ -38,7 +38,7 @@ class FileSystemRepository(private val filePath: String): PostsRepository {
         val posts = arrayListOf<SocialPosts>()
 
         for (record in parser) {
-            posts.add(SocialPosts(1, record[0]))
+            posts.add(SocialPosts(record[1].toInt(), record[0]))
         }
 
         parser.close()
@@ -47,6 +47,19 @@ class FileSystemRepository(private val filePath: String): PostsRepository {
     }
 
     override fun findById(postId: String): SocialPosts? {
-        TODO("Not yet implemented")
+        val reader = FileReader(filePath)
+        val parser = CSVParser(reader, CSVFormat.DEFAULT)
+
+        var posts: SocialPosts? = null
+
+        for (record in parser) {
+            if (record[1] == postId) {
+                posts = SocialPosts(record[1].toInt(), record[0])
+            }
+        }
+
+        parser.close()
+
+        return posts
     }
 }

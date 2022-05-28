@@ -31,6 +31,19 @@ class PostSchedulerTest {
     }
 
     @Test
+    fun `should show message if post id does not exists`() {
+        val postsRepository = InMemoryRepository()
+        val app = Scheduler(postsRepository)
+        val cmd = CommandLine(app)
+
+        val sw = StringWriter()
+        cmd.out = PrintWriter(sw)
+
+        cmd.execute("-p", "1", "-d", "2022-10-02 at 09:00 PM")
+        assertEquals("Couldn't find post with id 1", sw.toString())
+    }
+
+    @Test
     fun `should schedule post to be published`() {
         val postsRepository = InMemoryRepository()
         postsRepository.save(arrayListOf(

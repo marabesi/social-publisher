@@ -17,6 +17,10 @@ class Scheduler (
     lateinit var targetDate: String
 
     override fun call(): String {
+        if (null == postsRepository.findById(postId)) {
+            spec.commandLine().out.print("Couldn't find post with id 1")
+            return ""
+        }
         spec.commandLine().out.print("Post has been scheduled")
         return ""
     }

@@ -45,4 +45,8 @@ class FileSystemRepository(private val filePath: String): PostsRepository {
 
         return posts
     }
+
+    override fun findById(postId: String): SocialPosts? {
+        TODO("Not yet implemented")
+    }
 }

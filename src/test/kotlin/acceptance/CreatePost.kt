@@ -2,6 +2,7 @@ package acceptance
 
 import buildCommandLine
 import io.cucumber.java8.En
+import io.cucumber.java8.PendingException
 import picocli.CommandLine
 import java.io.File
 import java.io.PrintWriter
@@ -50,6 +51,13 @@ class CreatePost: En {
             exitCode = cmd.execute("post", "-l")
             assertEquals(0, exitCode, "Exit code is not correct check the cli lib for details")
             assertContains(sw.toString(), text)
+        }
+
+        When(
+            "I and schedule the post with id {string} to be published at {string}"
+        ) { postId: String, dateToBePublished: String ->
+            exitCode = cmd.execute("schedule", "-p", postId, "-d", dateToBePublished)
+            assertEquals(0, exitCode, "Exit code is not correct check the cli lib for details")
         }
     }
 }

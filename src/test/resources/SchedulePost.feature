@@ -1,0 +1,10 @@
+Feature: Schedule a post to be posted
+  Background: With a new cli instance and no configuration in place
+
+  Scenario: Schedule a post created on "2022-10-02 at 09:00 PM" to be posted on "2022-10:02 at 10:00 PM"
+    Given A new cli
+    When I create a post with the text "Post to schedule"
+    And I and schedule the post with id "1" to be published at "2022-10-02 at 09:00 PM"
+#    When I create a post with the text "Hello" and created date at "2022-10-02 at 09:00 PM"
+    Then Show successfully message "Post has been scheduled"
+    Then I clean the output

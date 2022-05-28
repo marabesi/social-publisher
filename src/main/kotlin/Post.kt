@@ -49,7 +49,7 @@ class Post(
         }
 
         if (text.isNotBlank()) {
-            postsRepository.save(arrayListOf(SocialPosts(text)))
+            postsRepository.save(arrayListOf(SocialPosts(1, text)))
             spec.commandLine().out.print("Post has been created")
             return "Post has been created"
         }

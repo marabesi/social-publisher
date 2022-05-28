@@ -21,17 +21,20 @@ class PostSchedulerTest {
 
         cmd.execute("--help")
         assertEquals("""
-            Usage: schedule [-hV]
-              -h, --help      Show this help message and exit.
-              -V, --version   Print version information and exit.
+            Usage: schedule [-hV] [-d=<targetDate>] [-p=<postId>]
+              -d=<targetDate>    Target date
+              -h, --help         Show this help message and exit.
+              -p=<postId>        Post id
+              -V, --version      Print version information and exit.
         
         """.trimIndent(), sw.toString())
     }
 
+    @Test
     fun `should schedule post to be published`() {
         val postsRepository = InMemoryRepository()
         postsRepository.save(arrayListOf(
-            SocialPosts("anything")
+            SocialPosts(1, "anything")
         ))
         val app = Scheduler(postsRepository)
         val cmd = CommandLine(app)
@@ -39,7 +42,7 @@ class PostSchedulerTest {
         val sw = StringWriter()
         cmd.out = PrintWriter(sw)
 
-        cmd.execute("schedule -p 1 -d 2022-10-02 at 09:00 PM")
+        cmd.execute("-p", "1", "-d", "2022-10-02 at 09:00 PM")
         assertEquals("Post has been scheduled", sw.toString())
     }
 }

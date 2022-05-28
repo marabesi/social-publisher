@@ -38,7 +38,7 @@ class FileSystemRepository(private val filePath: String): PostsRepository {
         val posts = arrayListOf<SocialPosts>()
 
         for (record in parser) {
-            posts.add(SocialPosts(record[0]))
+            posts.add(SocialPosts(1, record[0]))
         }
 
         parser.close()

@@ -7,6 +7,9 @@ class MyFactory: CommandLine.IFactory {
             if (cls == Post::class.java) {
                 return Post(FileSystemRepository("data/social-production.csv")) as K
             }
+            if (cls == Scheduler::class.java) {
+                return Scheduler(FileSystemRepository("data/social-production.csv")) as K
+            }
         }
         return CommandLine.defaultFactory().create(cls)
     }

@@ -20,7 +20,7 @@ class FileSystemTest {
 
     @Test
     fun storePostsInAFile() {
-        val post = SocialPosts("another post")
+        val post = SocialPosts(1, "another post")
         val repository = FileSystemRepository(filePath)
 
         assertTrue(repository.save(arrayListOf(post)))
@@ -28,7 +28,7 @@ class FileSystemTest {
 
     @Test
     fun storePostsInAFileUnderAPath() {
-        val post = SocialPosts("my_another_post")
+        val post = SocialPosts(1, "my_another_post")
         val repository = FileSystemRepository(filePathWithSubfolder)
 
         assertTrue(repository.save(arrayListOf(post)))
@@ -36,7 +36,7 @@ class FileSystemTest {
 
     @Test
     fun fetchPostFromCsv() {
-        val post = SocialPosts("fetch from csv")
+        val post = SocialPosts(1, "fetch from csv")
         val repository = FileSystemRepository(filePath)
 
         repository.save(
@@ -54,12 +54,12 @@ class FileSystemTest {
 
         repository.save(
             arrayListOf(
-                SocialPosts("fetch from csv"),
+                SocialPosts(1, "fetch from csv"),
             )
         )
         repository.save(
             arrayListOf(
-                SocialPosts("fetch from csv"),
+                SocialPosts(1,"fetch from csv"),
             )
         )
 

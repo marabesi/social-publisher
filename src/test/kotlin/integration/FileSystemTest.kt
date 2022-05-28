@@ -63,8 +63,8 @@ class FileSystemTest {
             )
         )
 
-        assertEquals(1, repository.findAll().get(0).id)
-        assertEquals(2, repository.findAll().get(1).id)
+        assertEquals(1, repository.findAll()[0].id)
+        assertEquals(2, repository.findAll()[1].id)
     }
 
     @Test

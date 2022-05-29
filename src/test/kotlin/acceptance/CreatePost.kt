@@ -58,5 +58,13 @@ class CreatePost: En {
             exitCode = cmd.execute("scheduler", "-p", postId, "-d", dateToBePublished)
             assertEquals(0, exitCode, "Exit code is not correct check the cli lib for details")
         }
+
+        Then(
+            "Show the scheduled post {string}"
+        ) { text: String ->
+            exitCode = cmd.execute("scheduler", "-l")
+            assertEquals(0, exitCode, "Exit code is not correct check the cli lib for details")
+            assertContains(sw.toString(), text)
+        }
     }
 }

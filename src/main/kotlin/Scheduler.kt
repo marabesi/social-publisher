@@ -6,7 +6,7 @@ import java.util.concurrent.Callable
 class Scheduler (
     @Inject
     private val postsRepository: PostsRepository
-): Callable<String> {
+): Callable<Boolean> {
     @CommandLine.Spec
     lateinit var spec: CommandLine.Model.CommandSpec
 
@@ -16,12 +16,12 @@ class Scheduler (
     @CommandLine.Option(names = ["-d"], description = ["Target date"])
     lateinit var targetDate: String
 
-    override fun call(): String {
+    override fun call(): Boolean {
         if (null == postsRepository.findById(postId)) {
             spec.commandLine().out.print("Couldn't find post with id 1")
-            return ""
+            return false
         }
         spec.commandLine().out.print("Post has been scheduled")
-        return ""
+        return true
     }
 }

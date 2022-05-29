@@ -1,6 +1,6 @@
 package persistence
 
-import ScheduledItem
+import socialPosts.ScheduledItem
 import SchedulerRepository
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser

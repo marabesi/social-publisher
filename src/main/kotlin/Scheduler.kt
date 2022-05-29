@@ -1,5 +1,6 @@
 import com.google.inject.Inject
 import picocli.CommandLine
+import socialPosts.ScheduledItem
 import java.time.Instant
 import java.util.concurrent.Callable
 

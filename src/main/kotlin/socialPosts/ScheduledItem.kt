@@ -1,3 +1,5 @@
+package socialPosts
+
 import socialPosts.SocialPosts
 import java.time.Instant
 

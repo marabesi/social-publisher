@@ -1,6 +1,6 @@
 package unit
 
-import ScheduledItem
+import socialPosts.ScheduledItem
 import Scheduler
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -80,9 +80,11 @@ class PostSchedulerTest {
         ))
 
         val scheduleRepository = InMemorySchedulerRepository()
-        scheduleRepository.save(ScheduledItem(
+        scheduleRepository.save(
+            ScheduledItem(
             post, Instant.parse("2022-10-02T09:00:00Z")
-        ))
+        )
+        )
 
         val app = Scheduler(postsRepository, scheduleRepository)
         val cmd = CommandLine(app)

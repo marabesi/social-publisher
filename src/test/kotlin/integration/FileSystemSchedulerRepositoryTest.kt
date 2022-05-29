@@ -1,6 +1,6 @@
 package integration
 
-import ScheduledItem
+import socialPosts.ScheduledItem
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import persistence.FileSystemSchedulerRepository

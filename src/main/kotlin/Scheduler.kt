@@ -1,9 +1,7 @@
 import com.google.inject.Inject
 import picocli.CommandLine
 import java.time.Instant
-import java.time.format.DateTimeFormatter
 import java.util.concurrent.Callable
-import javax.swing.text.DateFormatter
 
 @CommandLine.Command(name = "scheduler", mixinStandardHelpOptions = true, version = ["1.0"])
 class Scheduler (

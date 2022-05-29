@@ -21,7 +21,7 @@ class PostSchedulerTest {
 
         cmd.execute("--help")
         assertEquals("""
-            Usage: schedule [-hV] [-d=<targetDate>] [-p=<postId>]
+            Usage: scheduler [-hV] [-d=<targetDate>] [-p=<postId>]
               -d=<targetDate>    Target date
               -h, --help         Show this help message and exit.
               -p=<postId>        Post id

@@ -22,7 +22,7 @@ class MainTest {
             post to any social media
             Commands:
               post
-              schedule
+              scheduler
         
         """.trimIndent(), sw.toString())
     }

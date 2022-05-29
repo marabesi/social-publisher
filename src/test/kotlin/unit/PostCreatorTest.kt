@@ -9,7 +9,7 @@ import kotlin.test.assertEquals
 class PostCreatorTest {
 
     @Test
-    fun `should list help when no arguments is provided to post`() {
+    fun `should show friendly message when no arguments is provided to post`() {
         val cmd = CommandLine(Post(InMemoryRepository()))
 
         cmd.execute()

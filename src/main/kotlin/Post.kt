@@ -12,7 +12,7 @@ class Post(
     lateinit var spec: CommandLine.Model.CommandSpec
 
     @CommandLine.Option(names = ["-c"], description = ["Creates a post"])
-    lateinit var text: String
+    var text: String = ""
 
     @CommandLine.Option(names = ["-l"], description = ["List created posts"])
     var list: Boolean = false
@@ -53,6 +53,8 @@ class Post(
             spec.commandLine().out.print("Post has been created")
             return "Post has been created"
         }
-        TODO()
+
+        spec.commandLine().out.print("Missing required fields")
+        return "Missing required fields"
     }
 }

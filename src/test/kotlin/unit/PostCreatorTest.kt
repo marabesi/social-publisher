@@ -9,6 +9,17 @@ import kotlin.test.assertEquals
 class PostCreatorTest {
 
     @Test
+    fun `should list help when no arguments is provided to post`() {
+        val cmd = CommandLine(Post(InMemoryRepository()))
+
+        cmd.execute()
+
+        val result = cmd.getExecutionResult<String>()
+
+        assertEquals("Missing required fields", result)
+    }
+
+    @Test
     fun `should create post with the desired text`() {
         val cmd = CommandLine(Post(InMemoryRepository()))
 

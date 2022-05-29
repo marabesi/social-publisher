@@ -12,6 +12,18 @@ import kotlin.test.assertEquals
 class PostSchedulerTest {
 
     @Test
+    fun `should show friendly message when required fields are not provided`() {
+        val app = Scheduler(InMemoryRepository())
+        val cmd = CommandLine(app)
+
+        val sw = StringWriter()
+        cmd.out = PrintWriter(sw)
+
+        cmd.execute()
+        assertEquals("Missing required fields", sw.toString())
+    }
+
+    @Test
     fun `should show help message for schedule command`() {
         val app = Scheduler(InMemoryRepository())
         val cmd = CommandLine(app)

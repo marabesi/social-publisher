@@ -2,7 +2,6 @@ package acceptance
 
 import buildCommandLine
 import io.cucumber.java8.En
-import io.cucumber.java8.PendingException
 import picocli.CommandLine
 import java.io.File
 import java.io.PrintWriter

@@ -31,7 +31,11 @@ class Scheduler (
                 return false
             }
 
-            scheduleRepository.save(post, Instant.parse(targetDate))
+            scheduleRepository.save(
+                ScheduledItem(
+                    post, Instant.parse(targetDate)
+                )
+            )
             spec.commandLine().out.print("Post has been scheduled")
             return true
         }

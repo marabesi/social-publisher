@@ -25,7 +25,11 @@ class FileSystemSchedulerRepositoryTest {
         val post = SocialPosts(1, "another post")
         val repository = FileSystemSchedulerRepository(filePath)
 
-        assertTrue(repository.save(post, Instant.parse("2021-11-25T11:00:00Z")))
+        assertTrue(repository.save(
+            ScheduledItem(
+                post, Instant.parse("2021-11-25T11:00:00Z")
+            )
+        ))
     }
 
     @Test
@@ -33,7 +37,11 @@ class FileSystemSchedulerRepositoryTest {
         val post = SocialPosts(1, "another post")
         val repository = FileSystemSchedulerRepository(filePath)
 
-        repository.save(post, Instant.parse("2021-11-25T11:00:00Z"))
+        repository.save(
+            ScheduledItem(
+                post, Instant.parse("2021-11-25T11:00:00Z")
+            )
+        )
 
         val scheduledItem: ScheduledItem = repository.findAll()[0]
         assertEquals(post.id, scheduledItem.post.id)

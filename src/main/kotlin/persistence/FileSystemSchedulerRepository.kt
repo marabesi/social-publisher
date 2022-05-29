@@ -13,13 +13,13 @@ import java.io.FileWriter
 import java.time.Instant
 
 class FileSystemSchedulerRepository(private val filePath: String) : SchedulerRepository{
-    override fun save(socialPost: SocialPosts, publishDate: Instant): Boolean {
+    override fun save(scheduledItem: ScheduledItem): Boolean {
         val file = File(filePath)
 
         val writer = FileWriter(file, true)
         val printer = CSVPrinter(writer, CSVFormat.DEFAULT)
 
-        printer.printRecord(socialPost.id, publishDate)
+        printer.printRecord(scheduledItem.post.id, scheduledItem.publishDate)
         printer.close()
 
         return true

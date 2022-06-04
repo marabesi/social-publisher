@@ -1,5 +1,5 @@
-import cli.Post
-import cli.Scheduler
+package cli
+
 import persistence.FileSystemRepository
 import persistence.FileSystemSchedulerRepository
 import picocli.CommandLine

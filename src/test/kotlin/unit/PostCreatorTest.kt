@@ -1,6 +1,6 @@
 package unit
 
-import commands.Post
+import cli.Post
 import org.junit.jupiter.api.Test
 import persistence.InMemoryRepository
 import picocli.CommandLine

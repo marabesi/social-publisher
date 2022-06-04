@@ -1,5 +1,5 @@
-import commands.Post
-import commands.Scheduler
+import cli.Post
+import cli.Scheduler
 import picocli.CommandLine
 
 @CommandLine.Command(

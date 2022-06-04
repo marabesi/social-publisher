@@ -1,7 +1,7 @@
 package unit
 
 import socialPosts.ScheduledItem
-import Scheduler
+import commands.Scheduler
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import persistence.InMemoryRepository

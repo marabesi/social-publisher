@@ -1,3 +1,7 @@
+package commands
+
+import PostsRepository
+import SchedulerRepository
 import com.google.inject.Inject
 import picocli.CommandLine
 import socialPosts.ScheduledItem

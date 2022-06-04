@@ -1,3 +1,6 @@
+package commands
+
+import PostsRepository
 import socialPosts.SocialPosts
 import com.google.inject.Inject
 import picocli.CommandLine

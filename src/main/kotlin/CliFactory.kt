@@ -4,7 +4,7 @@ import persistence.FileSystemRepository
 import persistence.FileSystemSchedulerRepository
 import picocli.CommandLine
 
-class MyFactory: CommandLine.IFactory {
+class CliFactory: CommandLine.IFactory {
     override fun <K : Any?> create(cls: Class<K>?): K {
         if (cls != null) {
             val postsRepository = FileSystemRepository("data/social-production.csv")

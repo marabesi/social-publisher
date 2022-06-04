@@ -14,7 +14,7 @@ class Application {
 }
 
 fun buildCommandLine(): CommandLine {
-    return CommandLine(Application::class.java, MyFactory())
+    return CommandLine(Application::class.java, CliFactory())
 }
 
 fun main(args: Array<String>) {

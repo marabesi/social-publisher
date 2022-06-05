@@ -26,7 +26,7 @@ class Scheduler(
     var list: Boolean = false
 
     override fun call(): String {
-        if (postId.isNotEmpty()) {
+        if (postId.isNotEmpty() && targetDate.isNotEmpty()) {
             val post = postsRepository.findById(postId)
             if (null == post) {
                 return cliOutput.write("Couldn't find post with id 1")

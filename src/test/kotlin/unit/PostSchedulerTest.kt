@@ -30,6 +30,12 @@ class PostSchedulerTest {
     }
 
     @Test
+    fun `should show friendly message on empty date`() {
+        cmd.execute("-p", "1", "-d", "")
+        assertEquals("Missing required fields", cmd.getExecutionResult())
+    }
+
+    @Test
     fun `should show help message for schedule command`() {
         cmd.execute("--help")
         assertEquals("""

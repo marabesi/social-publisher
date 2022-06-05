@@ -1,5 +1,6 @@
 import cli.CliFactory
 import cli.Post
+import cli.Poster
 import cli.Scheduler
 import picocli.CommandLine
 
@@ -8,7 +9,8 @@ import picocli.CommandLine
     description = ["post to any social media"],
     subcommands = [
         Post::class,
-        Scheduler::class
+        Scheduler::class,
+        Poster::class
     ]
 )
 class Application {

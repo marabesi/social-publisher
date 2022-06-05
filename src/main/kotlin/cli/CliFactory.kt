@@ -17,6 +17,10 @@ class CliFactory: CommandLine.IFactory {
                 val scheduler = FileSystemSchedulerRepository(filePath)
                 return Scheduler(postsRepository, scheduler, CliOutput()) as K
             }
+            if (cls == Poster::class.java) {
+                val filePath = "data/scheduler-social-production.csv"
+                return Poster(postsRepository, CliOutput()) as K
+            }
         }
         return CommandLine.defaultFactory().create(cls)
     }

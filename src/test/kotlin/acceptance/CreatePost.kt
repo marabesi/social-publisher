@@ -2,6 +2,7 @@ package acceptance
 
 import buildCommandLine
 import io.cucumber.java8.En
+import io.cucumber.java8.PendingException
 import org.junit.jupiter.api.Assertions.assertEquals
 import picocli.CommandLine
 import java.io.ByteArrayOutputStream
@@ -65,6 +66,14 @@ class CreatePost: En {
             exitCode = cmd.execute("scheduler", "-l")
             assertEquals(0, exitCode)
             assertContains(outputStreamCaptor.toString(), text)
+        }
+
+        Then(
+            "I set the post {string} to {string}"
+        ) { postId: String, socialMedia: String ->
+            exitCode = cmd.execute("poster", "-p", postId, "-s", socialMedia)
+            assertEquals(0, exitCode)
+            assertContains(outputStreamCaptor.toString(), "Post $postId set to $socialMedia")
         }
     }
 }

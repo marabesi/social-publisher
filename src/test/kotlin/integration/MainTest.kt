@@ -23,6 +23,7 @@ class MainTest {
             Commands:
               post
               scheduler
+              poster
         
         """.trimIndent(), sw.toString())
     }

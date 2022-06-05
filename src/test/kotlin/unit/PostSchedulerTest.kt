@@ -2,8 +2,11 @@ package unit
 
 import socialPosts.ScheduledItem
 import cli.Scheduler
+import junit.framework.TestCase.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import persistence.InMemoryRepository
 import persistence.InMemorySchedulerRepository
 import picocli.CommandLine
@@ -11,7 +14,6 @@ import socialPosts.SocialPosts
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.time.Instant
-import kotlin.test.assertEquals
 
 class PostSchedulerTest {
     private lateinit var app: Scheduler
@@ -29,9 +31,14 @@ class PostSchedulerTest {
         assertEquals("Missing required fields", cmd.getExecutionResult())
     }
 
-    @Test
-    fun `should show friendly message on empty date`() {
-        cmd.execute("-p", "1", "-d", "")
+    @CsvSource("""
+        1,''
+        1, 2020-12-23T11:11:00Z
+        '', 2020-12-23T11:11:00Z
+    """)
+    @ParameterizedTest
+    fun `should show friendly message on empty date`(postId: String?, targetDate: String?) {
+        cmd.execute("-p", postId, "-d", targetDate)
         assertEquals("Missing required fields", cmd.getExecutionResult())
     }
 

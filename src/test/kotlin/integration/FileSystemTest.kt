@@ -1,12 +1,12 @@
 package integration
 
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertTrue
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import persistence.FileSystemRepository
 import socialPosts.SocialPosts
 import java.io.File
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 class FileSystemTest {
     private val filePath = "social-publisher.csv"

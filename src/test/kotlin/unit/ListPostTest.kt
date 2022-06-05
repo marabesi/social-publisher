@@ -1,10 +1,10 @@
 package unit
 
 import cli.Post
+import junit.framework.TestCase.assertEquals
 import org.junit.jupiter.api.Test
 import persistence.InMemoryRepository
 import picocli.CommandLine
-import kotlin.test.assertEquals
 
 class ListPostTest {
     private val cmd = CommandLine(Post(InMemoryRepository(), MockedOutput()))

@@ -1,5 +1,7 @@
 package integration
 
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertTrue
 import socialPosts.ScheduledItem
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
@@ -7,8 +9,6 @@ import persistence.FileSystemSchedulerRepository
 import socialPosts.SocialPosts
 import java.io.File
 import java.time.Instant
-import kotlin.test.assertTrue
-import kotlin.test.assertEquals
 
 class FileSystemSchedulerRepositoryTest {
     private val filePath = "scheduler-social-publisher.csv"

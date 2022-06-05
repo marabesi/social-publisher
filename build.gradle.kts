@@ -30,6 +30,8 @@ dependencies {
     testImplementation("io.cucumber:cucumber-junit:7.0.0")
     implementation("org.apache.commons:commons-csv:1.9.0")
     testCompileOnly("org.junit.jupiter:junit-jupiter-params:5.8.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.1")
+    implementation("org.hamcrest:hamcrest:2.2")
 }
 
 tasks.test {

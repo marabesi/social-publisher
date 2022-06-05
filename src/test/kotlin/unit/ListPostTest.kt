@@ -7,7 +7,7 @@ import picocli.CommandLine
 import kotlin.test.assertEquals
 
 class ListPostTest {
-    private val cmd = CommandLine(Post(InMemoryRepository()))
+    private val cmd = CommandLine(Post(InMemoryRepository(), MockedOutput()))
 
     @Test
     fun `should list post created`() {

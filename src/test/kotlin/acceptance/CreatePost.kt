@@ -3,25 +3,26 @@ package acceptance
 import buildCommandLine
 import io.cucumber.java8.En
 import picocli.CommandLine
+import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.PrintWriter
-import java.io.StringWriter
+import java.io.PrintStream
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
 
+
 class CreatePost: En {
+
+//    private val standardOut = System.out
+    private val outputStreamCaptor: ByteArrayOutputStream = ByteArrayOutputStream()
 
     init {
         lateinit var cmd: CommandLine
-        lateinit var sw: StringWriter
         var exitCode: Int? = null
 
         Given("A new cli"){ ->
             cmd  = buildCommandLine()
 
-            sw = StringWriter()
-            cmd.out = PrintWriter(sw)
-            cmd.err = PrintWriter(sw)
+            System.setOut(PrintStream(outputStreamCaptor))
 
             val data = File("data/social-production.csv")
             data.delete();
@@ -37,11 +38,11 @@ class CreatePost: En {
             "Show successfully message {string}"
         ) { successMessage: String? ->
             assertEquals(0, exitCode, "Exit code is not correct check the cli lib for details")
-            assertEquals(successMessage, sw.toString())
+            assertEquals(successMessage, outputStreamCaptor.toString())
         }
 
         Then("I clean the output") {
-            sw.buffer.setLength(0)
+            outputStreamCaptor.reset()
         }
 
         Then(
@@ -49,7 +50,7 @@ class CreatePost: En {
         ) { text: String ->
             exitCode = cmd.execute("post", "-l")
             assertEquals(0, exitCode, "Exit code is not correct check the cli lib for details")
-            assertContains(sw.toString(), text)
+            assertContains(outputStreamCaptor.toString(), text)
         }
 
         When(
@@ -64,7 +65,7 @@ class CreatePost: En {
         ) { text: String ->
             exitCode = cmd.execute("scheduler", "-l")
             assertEquals(0, exitCode, "Exit code is not correct check the cli lib for details")
-            assertContains(sw.toString(), text)
+            assertContains(outputStreamCaptor.toString(), text)
         }
     }
 }

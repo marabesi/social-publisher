@@ -9,13 +9,12 @@ import java.time.Instant
 import java.util.concurrent.Callable
 
 @CommandLine.Command(name = "scheduler", mixinStandardHelpOptions = true, version = ["1.0"])
-class Scheduler (
+class Scheduler(
     @Inject
     private val postsRepository: PostsRepository,
-    private val scheduleRepository: SchedulerRepository
-): Callable<Boolean> {
-    @CommandLine.Spec
-    lateinit var spec: CommandLine.Model.CommandSpec
+    private val scheduleRepository: SchedulerRepository,
+    private val cliOutput: Output
+): Callable<String> {
 
     @CommandLine.Option(names = ["-p"], description = ["Post id"])
     var postId: String = ""
@@ -26,12 +25,11 @@ class Scheduler (
     @CommandLine.Option(names = ["-l"], description = ["List scheduled posts"])
     var list: Boolean = false
 
-    override fun call(): Boolean {
+    override fun call(): String {
         if (postId.isNotEmpty()) {
             val post = postsRepository.findById(postId)
             if (null == post) {
-                spec.commandLine().out.print("Couldn't find post with id 1")
-                return false
+                return cliOutput.write("Couldn't find post with id 1")
             }
 
             scheduleRepository.save(
@@ -39,8 +37,7 @@ class Scheduler (
                     post, Instant.parse(targetDate)
                 )
             )
-            spec.commandLine().out.print("Post has been scheduled")
-            return true
+            return cliOutput.write("Post has been scheduled")
         }
 
         if (list) {
@@ -51,11 +48,9 @@ class Scheduler (
                 result += "$index. Post with id ${post.post.id} will be published on ${post.publishDate}"
             }
             val output = result.trimIndent()
-            spec.commandLine().out.print(output)
-            return true
+            return cliOutput.write(output)
         }
 
-        spec.commandLine().out.print("Missing required fields")
-        return false
+        return cliOutput.write("Missing required fields")
     }
 }

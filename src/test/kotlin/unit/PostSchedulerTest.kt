@@ -20,7 +20,7 @@ class PostSchedulerTest {
 
     @BeforeEach
     fun setUp() {
-        app = Scheduler(InMemoryRepository(), InMemorySchedulerRepository())
+        app = Scheduler(InMemoryRepository(), InMemorySchedulerRepository(), MockedOutput())
         cmd = CommandLine(app)
 
         sw = StringWriter()
@@ -32,7 +32,7 @@ class PostSchedulerTest {
     @Test
     fun `should show friendly message when required fields are not provided`() {
         cmd.execute()
-        assertEquals("Missing required fields", sw.toString())
+        assertEquals("Missing required fields", cmd.getExecutionResult())
     }
 
     @Test
@@ -52,7 +52,7 @@ class PostSchedulerTest {
     @Test
     fun `should show message if post id does not exists`() {
         cmd.execute("-p", "1", "-d", "2022-10-02 at 09:00 PM")
-        assertEquals("Couldn't find post with id 1", sw.toString())
+        assertEquals("Couldn't find post with id 1", cmd.getExecutionResult())
     }
 
     @Test
@@ -61,14 +61,14 @@ class PostSchedulerTest {
         postsRepository.save(arrayListOf(
             SocialPosts(1, "anything")
         ))
-        val app = Scheduler(postsRepository, InMemorySchedulerRepository())
+        val app = Scheduler(postsRepository, InMemorySchedulerRepository(), MockedOutput())
         val cmd = CommandLine(app)
 
         val sw = StringWriter()
         cmd.out = PrintWriter(sw)
 
         cmd.execute("-p", "1", "-d", "2022-10-02T09:00:00Z")
-        assertEquals("Post has been scheduled", sw.toString())
+        assertEquals("Post has been scheduled", cmd.getExecutionResult())
     }
 
     @Test
@@ -86,7 +86,7 @@ class PostSchedulerTest {
         )
         )
 
-        val app = Scheduler(postsRepository, scheduleRepository)
+        val app = Scheduler(postsRepository, scheduleRepository, MockedOutput())
         val cmd = CommandLine(app)
 
         val sw = StringWriter()
@@ -96,6 +96,6 @@ class PostSchedulerTest {
 
         assertEquals("""
             1. Post with id 1 will be published on 2022-10-02T09:00:00Z
-        """.trimIndent(), sw.toString() )
+        """.trimIndent(), cmd.getExecutionResult())
     }
 }

@@ -9,7 +9,8 @@ import java.util.concurrent.Callable
 @CommandLine.Command(name = "post", mixinStandardHelpOptions = true)
 class Post(
     @Inject
-    private val postsRepository: PostsRepository
+    private val postsRepository: PostsRepository,
+    private val cliOutput: Output
 ): Callable<String> {
     @CommandLine.Spec
     lateinit var spec: CommandLine.Model.CommandSpec
@@ -24,8 +25,7 @@ class Post(
         if (list) {
             val findAll = postsRepository.findAll()
             if (findAll.isEmpty()) {
-                spec.commandLine().out.print("No post found")
-                return "No post found"
+                return cliOutput.write("No post found")
             }
 
             var result = ""
@@ -47,17 +47,14 @@ class Post(
                 ++index
             }
             val output = result.trimIndent()
-            spec.commandLine().out.print(output)
-            return output
+            return cliOutput.write(output)
         }
 
         if (text.isNotBlank()) {
             postsRepository.save(arrayListOf(SocialPosts(1, text)))
-            spec.commandLine().out.print("Post has been created")
-            return "Post has been created"
+            return cliOutput.write("Post has been created")
         }
 
-        spec.commandLine().out.print("Missing required fields")
-        return "Missing required fields"
+        return cliOutput.write("Missing required fields")
     }
 }

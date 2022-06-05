@@ -7,7 +7,7 @@ import picocli.CommandLine
 import kotlin.test.assertEquals
 
 class PostCreatorTest {
-    private val cmd = CommandLine(Post(InMemoryRepository()))
+    private val cmd = CommandLine(Post(InMemoryRepository(), MockedOutput()))
 
     @Test
     fun `should show friendly message when no arguments is provided to post`() {

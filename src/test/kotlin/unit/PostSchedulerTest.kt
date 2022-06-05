@@ -2,7 +2,7 @@ package unit
 
 import socialPosts.ScheduledItem
 import cli.Scheduler
-import junit.framework.TestCase.assertEquals
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest

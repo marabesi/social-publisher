@@ -1,7 +1,7 @@
 package integration
 
 import buildCommandLine
-import junit.framework.TestCase.assertEquals
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.io.PrintWriter
 import java.io.StringWriter

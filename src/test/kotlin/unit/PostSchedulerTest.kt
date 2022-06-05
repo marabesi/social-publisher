@@ -11,8 +11,6 @@ import persistence.InMemoryRepository
 import persistence.InMemorySchedulerRepository
 import picocli.CommandLine
 import socialPosts.SocialPosts
-import java.io.PrintWriter
-import java.io.StringWriter
 import java.time.Instant
 
 class PostSchedulerTest {
@@ -66,13 +64,10 @@ class PostSchedulerTest {
     fun `should schedule post to be published`() {
         val postsRepository = InMemoryRepository()
         postsRepository.save(arrayListOf(
-            SocialPosts(1, "anything")
+            SocialPosts(text = "anything")
         ))
         val app = Scheduler(postsRepository, InMemorySchedulerRepository(), MockedOutput())
         val cmd = CommandLine(app)
-
-        val sw = StringWriter()
-        cmd.out = PrintWriter(sw)
 
         cmd.execute("-p", "1", "-d", "2022-10-02T09:00:00Z")
         assertEquals("Post has been scheduled", cmd.getExecutionResult())
@@ -81,7 +76,7 @@ class PostSchedulerTest {
     @Test
     fun `should list post with id 1 to be scheduled`() {
         val postsRepository = InMemoryRepository()
-        val post = SocialPosts(1, "anything")
+        val post = SocialPosts(text = "anything")
         postsRepository.save(arrayListOf(
             post
         ))
@@ -95,10 +90,6 @@ class PostSchedulerTest {
 
         val app = Scheduler(postsRepository, scheduleRepository, MockedOutput())
         val cmd = CommandLine(app)
-
-        val sw = StringWriter()
-        cmd.out = PrintWriter(sw)
-
         cmd.execute("-l")
 
         assertEquals("""

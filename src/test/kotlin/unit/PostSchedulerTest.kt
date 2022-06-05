@@ -16,17 +16,11 @@ import kotlin.test.assertEquals
 class PostSchedulerTest {
     private lateinit var app: Scheduler
     private lateinit var cmd: CommandLine
-    private lateinit var sw: StringWriter
 
     @BeforeEach
     fun setUp() {
         app = Scheduler(InMemoryRepository(), InMemorySchedulerRepository(), MockedOutput())
         cmd = CommandLine(app)
-
-        sw = StringWriter()
-
-        cmd.out = PrintWriter(sw)
-        cmd.err = PrintWriter(sw)
     }
 
     @Test
@@ -46,7 +40,7 @@ class PostSchedulerTest {
               -p=<postId>        Post id
               -V, --version      Print version information and exit.
         
-        """.trimIndent(), sw.toString())
+        """.trimIndent(), cmd.usageMessage)
     }
 
     @Test

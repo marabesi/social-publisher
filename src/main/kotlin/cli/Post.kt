@@ -1,9 +1,9 @@
 package cli
 
 import PostsRepository
-import socialPosts.SocialPosts
 import com.google.inject.Inject
 import picocli.CommandLine
+import socialPosts.SocialPosts
 import java.util.concurrent.Callable
 
 @CommandLine.Command(name = "post", mixinStandardHelpOptions = true)
@@ -12,9 +12,6 @@ class Post(
     private val postsRepository: PostsRepository,
     private val cliOutput: Output
 ): Callable<String> {
-    @CommandLine.Spec
-    lateinit var spec: CommandLine.Model.CommandSpec
-
     @CommandLine.Option(names = ["-c"], description = ["Creates a post"])
     var text: String = ""
 

@@ -53,7 +53,7 @@ class CreatePost: En {
         }
 
         When(
-            "I and schedule the post with id {string} to be published at {string}"
+            "I schedule the post with id {string} to be published at {string}"
         ) { postId: String, dateToBePublished: String ->
             exitCode = cmd.execute("scheduler", "-p", postId, "-d", dateToBePublished)
             assertEquals(0, exitCode)

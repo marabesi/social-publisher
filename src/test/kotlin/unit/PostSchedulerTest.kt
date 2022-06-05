@@ -84,8 +84,8 @@ class PostSchedulerTest {
         val scheduleRepository = InMemorySchedulerRepository()
         scheduleRepository.save(
             ScheduledItem(
-            post, Instant.parse("2022-10-02T09:00:00Z")
-        )
+                post, Instant.parse("2022-10-02T09:00:00Z")
+            )
         )
 
         val app = Scheduler(postsRepository, scheduleRepository, MockedOutput())

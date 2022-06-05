@@ -39,10 +39,9 @@ class Scheduler(
 
         if (list) {
             var result = ""
-            var index = 1
             val findAll = scheduleRepository.findAll()
             for (post in findAll) {
-                result += "$index. Post with id ${post.post.id} will be published on ${post.publishDate}"
+                result += "${post.post.id}. Post with id ${post.post.id} will be published on ${post.publishDate}"
             }
             val output = result.trimIndent()
             return cliOutput.write(output)

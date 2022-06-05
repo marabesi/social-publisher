@@ -3,10 +3,12 @@ package acceptance
 import buildCommandLine
 import io.cucumber.java8.En
 import junit.framework.TestCase.assertEquals
+import org.hamcrest.MatcherAssert
 import picocli.CommandLine
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.PrintStream
+import kotlin.test.assertContains
 
 class CreatePost: En {
 
@@ -22,8 +24,8 @@ class CreatePost: En {
 
             System.setOut(PrintStream(outputStreamCaptor))
 
-            val data = File("data/social-production.csv")
-            data.delete();
+            File("data/social-production.csv").delete()
+            File("data/scheduler-social-production.csv").delete()
         }
 
         When(
@@ -48,7 +50,7 @@ class CreatePost: En {
         ) { text: String ->
             exitCode = cmd.execute("post", "-l")
             assertEquals(0, exitCode)
-            assertEquals(outputStreamCaptor.toString(),  text)
+            assertContains(outputStreamCaptor.toString(), text)
         }
 
         When(
@@ -63,7 +65,7 @@ class CreatePost: En {
         ) { text: String ->
             exitCode = cmd.execute("scheduler", "-l")
             assertEquals(0, exitCode)
-            assertEquals(outputStreamCaptor.toString(), text)
+            assertContains(outputStreamCaptor.toString(), text)
         }
     }
 }

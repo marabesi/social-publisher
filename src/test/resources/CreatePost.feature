@@ -5,7 +5,6 @@ Feature: Create a post with a title
     Given A new cli
     When I create a post with the text "Hello"
     Then Show successfully message "Post has been created"
-    Then I clean the output
 
   Scenario: List the created post
     Given A new cli

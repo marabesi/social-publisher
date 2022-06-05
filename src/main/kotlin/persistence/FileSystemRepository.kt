@@ -24,8 +24,10 @@ class FileSystemRepository(private val filePath: String): PostsRepository {
         val writer = FileWriter(file, true)
         val printer = CSVPrinter(writer, CSVFormat.DEFAULT)
 
+        val nextId = findAll().size
+
         for (post: SocialPosts in posts) {
-            printer.printRecord(post.text, post.id)
+            printer.printRecord(post.text, nextId + 1)
         }
         printer.close()
 

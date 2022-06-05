@@ -1,6 +1,6 @@
 package socialPosts
 
 class SocialPosts(
-    val id: Int,
+    var id: Int? = null,
     val text: String
 )

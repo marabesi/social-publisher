@@ -54,12 +54,12 @@ class FileSystemTest {
 
         repository.save(
             arrayListOf(
-                SocialPosts(1, "fetch from csv"),
+                SocialPosts(text = "fetch from csv"),
             )
         )
         repository.save(
             arrayListOf(
-                SocialPosts(2,"fetch from csv"),
+                SocialPosts(text = "fetch from csv"),
             )
         )
 
@@ -70,11 +70,12 @@ class FileSystemTest {
     @Test
     fun fetchPostByIdFromCsv() {
         val repository = FileSystemRepository(filePath)
-        val post = SocialPosts(1, "fetch from csv with id 1")
+        val post = SocialPosts(text = "fetch from csv with id 1")
 
         repository.save(arrayListOf(post))
 
-        assertEquals(post.text, repository.findById(post.id.toString())?.text)
-        assertEquals(post.id, repository.findById(post.id.toString())?.id)
+        val findById = repository.findById("1")
+        assertEquals(post.text, findById?.text)
+        assertEquals("1", findById?.id.toString())
     }
 }

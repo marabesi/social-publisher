@@ -35,10 +35,10 @@ class Post(
 
                 result += when {
                     post.text.length > 50 -> {
-                        index.toString() + ". " + post.text.substring(0, 50) + "..."
+                        post.id.toString() + ". " + post.text.substring(0, 50) + "..."
                     }
                     else -> {
-                        index.toString() + ". " + post.text
+                        post.id.toString() + ". " + post.text
                     }
                 }
                 if (!isLast) {
@@ -51,7 +51,7 @@ class Post(
         }
 
         if (text.isNotBlank()) {
-            postsRepository.save(arrayListOf(SocialPosts(1, text)))
+            postsRepository.save(arrayListOf(SocialPosts(null, text)))
             return cliOutput.write("Post has been created")
         }
 

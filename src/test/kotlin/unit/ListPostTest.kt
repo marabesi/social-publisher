@@ -3,22 +3,35 @@ package unit
 import cli.Post
 import junit.framework.TestCase.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 import persistence.InMemoryRepository
 import picocli.CommandLine
+import java.util.stream.Stream
 
 class ListPostTest {
     private val cmd = CommandLine(Post(InMemoryRepository(), MockedOutput()))
 
-    @Test
-    fun `should list post created`() {
-        cmd.execute("-c", "this is my first post")
+    @MethodSource("postProvider")
+    @ParameterizedTest
+    fun `should list post created`(text: String, expected: String) {
+        cmd.execute("-c", text)
         cmd.execute("-l")
 
         val result = cmd.getExecutionResult<String>()
 
-        assertEquals("""
-            1. this is my first post
-        """.trimIndent(), result)
+        assertEquals(expected.trimIndent(), result)
+    }
+
+    companion object {
+        @JvmStatic
+        fun postProvider(): Stream<Arguments> {
+            return Stream.of(
+                Arguments.of("a", "1. a"),
+                Arguments.of("b", "1. b"),
+            );
+        }
     }
 
     @Test

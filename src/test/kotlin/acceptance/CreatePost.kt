@@ -3,7 +3,6 @@ package acceptance
 import buildCommandLine
 import io.cucumber.java8.En
 import junit.framework.TestCase.assertEquals
-import org.hamcrest.MatcherAssert
 import picocli.CommandLine
 import java.io.ByteArrayOutputStream
 import java.io.File

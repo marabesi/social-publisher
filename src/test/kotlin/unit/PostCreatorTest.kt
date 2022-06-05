@@ -3,6 +3,8 @@ package unit
 import cli.Post
 import junit.framework.TestCase.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import persistence.InMemoryRepository
 import picocli.CommandLine
 
@@ -18,9 +20,10 @@ class PostCreatorTest {
         assertEquals("Missing required fields", result)
     }
 
-    @Test
-    fun `should create post with the desired text`() {
-        cmd.execute("-c", "this is my first post")
+    @ParameterizedTest
+    @ValueSource(strings = ["this is my first post", "<b>another</b>"])
+    fun `should create post with the desired text`(text: String) {
+        cmd.execute("-c", text)
         val result = cmd.getExecutionResult<String>()
 
         assertEquals("""

@@ -24,6 +24,7 @@ class MainTest {
               post
               scheduler
               poster
+              configuration
         
         """.trimIndent(), sw.toString())
     }

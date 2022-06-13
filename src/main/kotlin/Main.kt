@@ -1,4 +1,5 @@
 import cli.CliFactory
+import cli.Configuration
 import cli.Post
 import cli.Poster
 import cli.Scheduler
@@ -10,7 +11,8 @@ import picocli.CommandLine
     subcommands = [
         Post::class,
         Scheduler::class,
-        Poster::class
+        Poster::class,
+        Configuration::class,
     ]
 )
 class Application {

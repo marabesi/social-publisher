@@ -75,5 +75,13 @@ class CreatePost: En {
             assertEquals(0, exitCode)
             assertContains(outputStreamCaptor.toString(), "Post $postId set to $socialMedia")
         }
+
+        When(
+            "I create a configuration with the path to {string}"
+        ) { path: String ->
+            exitCode = cmd.execute("configuration", "-c", "{}", "-p", path)
+            assertEquals(0, exitCode)
+            assertContains(outputStreamCaptor.toString(), "Configuration has been stored")
+        }
     }
 }

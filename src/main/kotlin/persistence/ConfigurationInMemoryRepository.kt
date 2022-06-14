@@ -5,12 +5,13 @@ import socialPosts.SocialConfiguration
 class ConfigurationInMemoryRepository: ConfigurationRepository {
     private val configurationList: ArrayList<SocialConfiguration> = arrayListOf()
 
-    override fun save(socialConfiguration: SocialConfiguration): Boolean {
-        configurationList.add(socialConfiguration)
-        return true;
+    override fun save(path: String): SocialConfiguration {
+        val fullPath = "$path/configuration.json"
+        configurationList.add(SocialConfiguration(fullPath))
+        return configurationList[0]
     }
 
-    override fun find(): SocialConfiguration {
+    override fun find(path: String): SocialConfiguration {
         return configurationList[0]
     }
 }

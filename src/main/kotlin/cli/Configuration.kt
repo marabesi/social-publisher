@@ -26,13 +26,12 @@ class Configuration(
 
     override fun call(): String {
         if (list) {
-            val data: SocialConfiguration = configurationRepository.find()
-            print(Json.encodeToString(data))
-            return Json.encodeToString(data)
+            val data: SocialConfiguration = configurationRepository.find(path)
+            return cliOutput.write(Json.encodeToString(data))
         }
 
         if (path.isNotEmpty()) {
-            configurationRepository.save(SocialConfiguration(path))
+            configurationRepository.save(path)
             return cliOutput.write("Configuration has been stored")
         }
         return cliOutput.write("Missing required fields")

@@ -8,7 +8,7 @@ import persistence.FileSystemRepository
 import socialPosts.SocialPosts
 import java.io.File
 
-class FileSystemTest {
+class FileSystemPostRepositoryTest {
     private val filePath = "social-publisher.csv"
     private val filePathWithSubfolder = "data/social-publisher.csv"
 

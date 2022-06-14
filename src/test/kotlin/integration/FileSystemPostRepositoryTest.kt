@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import junit.framework.TestCase.assertTrue
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
-import persistence.FileSystemRepository
+import persistence.FileSystemPostRepository
 import socialPosts.SocialPosts
 import java.io.File
 
@@ -21,7 +21,7 @@ class FileSystemPostRepositoryTest {
     @Test
     fun storePostsInAFile() {
         val post = SocialPosts(1, "another post")
-        val repository = FileSystemRepository(filePath)
+        val repository = FileSystemPostRepository(filePath)
 
         assertTrue(repository.save(arrayListOf(post)))
     }
@@ -29,7 +29,7 @@ class FileSystemPostRepositoryTest {
     @Test
     fun storePostsInAFileUnderAPath() {
         val post = SocialPosts(1, "my_another_post")
-        val repository = FileSystemRepository(filePathWithSubfolder)
+        val repository = FileSystemPostRepository(filePathWithSubfolder)
 
         assertTrue(repository.save(arrayListOf(post)))
     }
@@ -37,7 +37,7 @@ class FileSystemPostRepositoryTest {
     @Test
     fun fetchPostFromCsv() {
         val post = SocialPosts(1, "fetch from csv")
-        val repository = FileSystemRepository(filePath)
+        val repository = FileSystemPostRepository(filePath)
 
         repository.save(
             arrayListOf(post)
@@ -50,7 +50,7 @@ class FileSystemPostRepositoryTest {
 
     @Test
     fun fetchPostsFromCsv() {
-        val repository = FileSystemRepository(filePath)
+        val repository = FileSystemPostRepository(filePath)
 
         repository.save(
             arrayListOf(
@@ -69,7 +69,7 @@ class FileSystemPostRepositoryTest {
 
     @Test
     fun fetchPostByIdFromCsv() {
-        val repository = FileSystemRepository(filePath)
+        val repository = FileSystemPostRepository(filePath)
         val post = SocialPosts(text = "fetch from csv with id 1")
 
         repository.save(arrayListOf(post))

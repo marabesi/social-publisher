@@ -1,15 +1,14 @@
 package cli
 
-import persistence.ConfigurationRepository
 import persistence.FileSystemConfigurationRepository
-import persistence.FileSystemRepository
+import persistence.FileSystemPostRepository
 import persistence.FileSystemSchedulerRepository
 import picocli.CommandLine
 
 class CliFactory: CommandLine.IFactory {
     override fun <K : Any?> create(cls: Class<K>?): K {
         if (cls != null) {
-            val postsRepository = FileSystemRepository("data/social-production.csv")
+            val postsRepository = FileSystemPostRepository("data/social-production.csv")
 
             if (cls == Post::class.java) {
                 return Post(postsRepository, CliOutput()) as K

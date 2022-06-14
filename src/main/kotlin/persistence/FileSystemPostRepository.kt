@@ -11,7 +11,7 @@ import java.io.FileReader
 import java.io.FileWriter
 
 
-class FileSystemRepository(private val filePath: String): PostsRepository {
+class FileSystemPostRepository(private val filePath: String): PostsRepository {
     override fun save(posts: ArrayList<SocialPosts>): Boolean {
         try {
             File(filePath).parentFile.mkdirs()

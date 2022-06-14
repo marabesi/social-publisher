@@ -4,7 +4,13 @@ import cli.Configuration
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
+import org.junit.jupiter.params.provider.ValueSource
+import persistence.ConfigurationInMemoryRepository
 import picocli.CommandLine
+import java.util.stream.Stream
 
 class ConfigurationTest {
     private lateinit var app: Configuration
@@ -12,7 +18,7 @@ class ConfigurationTest {
 
     @BeforeEach
     fun setUp() {
-        app = Configuration(MockedOutput())
+        app = Configuration(MockedOutput(), ConfigurationInMemoryRepository())
         cmd = CommandLine(app)
     }
 
@@ -26,5 +32,24 @@ class ConfigurationTest {
     fun `should store json content as a configuration`() {
         cmd.execute("-c", "{}", "-p", "tmp")
         assertEquals("Configuration has been stored", cmd.getExecutionResult())
+    }
+
+    @ParameterizedTest
+    @MethodSource("configurationProvider")
+    fun `should show stored configuration`(configuration: String, path: String, expectedConfiguration: String) {
+        cmd.execute("-c", configuration, "-p", path)
+        cmd.execute("-l")
+
+        assertEquals(expectedConfiguration, cmd.getExecutionResult())
+    }
+
+    companion object {
+        @JvmStatic
+        fun configurationProvider(): Stream<Arguments> {
+            return Stream.of(
+                Arguments.of("{}", "tmp", """{"path":"tmp"}"""),
+                Arguments.of("{}", "123", """{"path":"123"}"""),
+            );
+        }
     }
 }

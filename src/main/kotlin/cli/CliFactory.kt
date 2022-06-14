@@ -1,5 +1,7 @@
 package cli
 
+import persistence.ConfigurationRepository
+import persistence.FileSystemConfigurationRepository
 import persistence.FileSystemRepository
 import persistence.FileSystemSchedulerRepository
 import picocli.CommandLine
@@ -22,7 +24,7 @@ class CliFactory: CommandLine.IFactory {
             }
 
             if (cls == Configuration::class.java) {
-                return Configuration(CliOutput()) as K
+                return Configuration(CliOutput(), FileSystemConfigurationRepository()) as K
             }
         }
         return CommandLine.defaultFactory().create(cls)

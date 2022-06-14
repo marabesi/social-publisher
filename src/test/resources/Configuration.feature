@@ -3,8 +3,8 @@ Feature: Configuration json that is required to use the cli
 
   Scenario: Creates a configuration
     Given A new cli
-    When I create a configuration with the path to "e2e"
+    When I create a configuration with the name to "e2e-file"
     Then Show successfully message "Configuration has been stored"
     Then I clean the output
-    Then I list the configuration from "e2e"
-    Then I see the configuration '{"path":"e2e/configuration.json"}'
+    Then I list the configuration from "e2e-file"
+    Then I see the configuration '{"path":"data/e2e-file.json"}'

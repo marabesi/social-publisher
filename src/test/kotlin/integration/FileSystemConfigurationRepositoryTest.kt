@@ -30,14 +30,14 @@ class FileSystemConfigurationRepositoryTest {
     fun storeConfiguration() {
         val repository = FileSystemConfigurationRepository()
 
-        Assertions.assertEquals("data/configuration.json", repository.save("data").path)
+        Assertions.assertEquals("data/configuration.json", repository.save("configuration").path)
     }
 
     @Test
     fun ensuresFileOrPathExistsBeforeCreatingFile() {
         val repository = FileSystemConfigurationRepository()
 
-        Assertions.assertEquals("whatever/configuration.json", repository.save("whatever").path)
+        Assertions.assertEquals("data/whatever.json", repository.save("whatever").path)
     }
 
     @Test
@@ -46,6 +46,6 @@ class FileSystemConfigurationRepositoryTest {
         repository.save("data")
 
         val config = repository.find("data")
-        Assertions.assertEquals(config.path, "data/configuration.json")
+        Assertions.assertEquals(config.path, "data/data.json")
     }
 }

@@ -76,7 +76,7 @@ class CreatePost: En {
         }
 
         When(
-            "I create a configuration with the path to {string}"
+            "I create a configuration with the name to {string}"
         ) { path: String ->
             exitCode = cmd.execute("configuration", "-c", "{}", "-p", path)
             assertEquals(0, exitCode)

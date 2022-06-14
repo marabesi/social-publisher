@@ -9,9 +9,9 @@ import java.io.FileReader
 import java.io.FileWriter
 
 class FileSystemConfigurationRepository: ConfigurationRepository {
-    private val configurationFileName = "configuration.json"
-    override fun save(path: String): SocialConfiguration {
-        val fullPath = "$path/$configurationFileName"
+    private val configurationPath = "data"
+    override fun save(fileName: String): SocialConfiguration {
+        val fullPath = "$configurationPath/$fileName.json"
         val file = File(fullPath)
 
         ensureFileExists(file)
@@ -24,8 +24,8 @@ class FileSystemConfigurationRepository: ConfigurationRepository {
         return socialConfiguration
     }
 
-    override fun find(path: String): SocialConfiguration {
-        val fullPath = "$path/$configurationFileName"
+    override fun find(fileName: String): SocialConfiguration {
+        val fullPath = "$configurationPath/$fileName.json"
 
         val reader = FileReader(fullPath)
         val string = reader.readText()

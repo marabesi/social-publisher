@@ -46,10 +46,10 @@ class ConfigurationTest {
         @JvmStatic
         fun configurationProvider(): Stream<Arguments> {
             return Stream.of(
-                Arguments.of("{}", "tmp", """{"path":"tmp/configuration.json"}"""),
-                Arguments.of("{}", "123", """{"path":"123/configuration.json"}"""),
+                Arguments.of("{}", "tmp", """{"path":"data/tmp.json"}"""),
+                Arguments.of("{}", "123", """{"path":"data/123.json"}"""),
                 // ignore unknown keys
-                Arguments.of("""{"banana":"banana"}""", "123", """{"path":"123/configuration.json"}"""),
+                Arguments.of("""{"banana":"banana"}""", "123", """{"path":"data/123.json"}"""),
             );
         }
     }

@@ -15,7 +15,7 @@ class Configuration(
     private val configurationRepository: ConfigurationRepository
 ): Callable<String> {
 
-    @CommandLine.Option(names = ["-p"], description = ["Path"])
+    @CommandLine.Option(names = ["-p"], description = ["Desired file name to store the configuration"])
     var path: String = ""
 
     @CommandLine.Option(names = ["-c"], description = ["JSON with the desired configuration"])

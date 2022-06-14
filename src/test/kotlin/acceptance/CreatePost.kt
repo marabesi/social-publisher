@@ -2,7 +2,6 @@ package acceptance
 
 import buildCommandLine
 import io.cucumber.java8.En
-import io.cucumber.java8.PendingException
 import org.junit.jupiter.api.Assertions.assertEquals
 import picocli.CommandLine
 import java.io.ByteArrayOutputStream

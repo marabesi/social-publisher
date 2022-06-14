@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import org.junit.jupiter.params.provider.ValueSource
 import persistence.ConfigurationInMemoryRepository
 import picocli.CommandLine
 import java.util.stream.Stream
@@ -49,6 +48,8 @@ class ConfigurationTest {
             return Stream.of(
                 Arguments.of("{}", "tmp", """{"path":"tmp"}"""),
                 Arguments.of("{}", "123", """{"path":"123"}"""),
+                // ignore unknown keys
+                Arguments.of("""{"banana":"banana"}""", "123", """{"path":"123"}"""),
             );
         }
     }

@@ -3,6 +3,6 @@ package persistence
 import socialPosts.SocialConfiguration
 
 interface ConfigurationRepository {
-    fun save(fileName: String): SocialConfiguration
-    fun find(fileName: String): SocialConfiguration
+    fun save(configuration: SocialConfiguration): SocialConfiguration
+    fun find(): SocialConfiguration
 }

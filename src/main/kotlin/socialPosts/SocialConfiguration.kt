@@ -2,5 +2,5 @@ package socialPosts
 
 @kotlinx.serialization.Serializable
 data class SocialConfiguration(
-    val path: String,
+    val fileName: String = "",
 )

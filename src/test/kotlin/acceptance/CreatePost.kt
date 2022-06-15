@@ -76,16 +76,16 @@ class CreatePost: En {
         }
 
         When(
-            "I create a configuration with the name to {string}"
-        ) { path: String ->
-            exitCode = cmd.execute("configuration", "-c", "{}", "-p", path)
+            "I create a configuration of type csv and store files under the name {string}"
+        ) { fileName: String ->
+            exitCode = cmd.execute("configuration", "-c", """{"storage":"csv","fileName":"$fileName"}""")
             assertEquals(0, exitCode)
             assertContains(outputStreamCaptor.toString(), "Configuration has been stored")
         }
 
         Then("I list the configuration from {string}"
-        ) { path: String ->
-            exitCode = cmd.execute("configuration", "-p", path, "-l")
+        ) {
+            exitCode = cmd.execute("configuration", "-l")
             assertEquals(0, exitCode)
         }
 

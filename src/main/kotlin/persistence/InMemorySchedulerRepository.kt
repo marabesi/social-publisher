@@ -9,9 +9,9 @@ class InMemorySchedulerRepository: SchedulerRepository{
     override fun save(scheduledItem: ScheduledItem): Boolean {
         return storedScheduler.add(
             ScheduledItem(
-            scheduledItem.post,
-            scheduledItem.publishDate
-        )
+                scheduledItem.post,
+                scheduledItem.publishDate
+            )
         )
     }
 

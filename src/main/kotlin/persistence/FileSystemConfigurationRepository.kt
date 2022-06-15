@@ -10,21 +10,22 @@ import java.io.FileWriter
 
 class FileSystemConfigurationRepository: ConfigurationRepository {
     private val configurationPath = "data"
-    override fun save(fileName: String): SocialConfiguration {
+    private val fileName = "global"
+
+    override fun save(configuration: SocialConfiguration): SocialConfiguration {
         val fullPath = "$configurationPath/$fileName.json"
         val file = File(fullPath)
 
         ensureFileExists(file)
 
         val writer = FileWriter(file)
-        val socialConfiguration = SocialConfiguration(fullPath)
-        writer.write(Json.encodeToString(socialConfiguration))
+        writer.write(Json.encodeToString(configuration))
         writer.close()
 
-        return socialConfiguration
+        return configuration
     }
 
-    override fun find(fileName: String): SocialConfiguration {
+    override fun find(): SocialConfiguration {
         val fullPath = "$configurationPath/$fileName.json"
 
         val reader = FileReader(fullPath)

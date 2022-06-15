@@ -1,10 +1,10 @@
 Feature: Configuration json that is required to use the cli
-  Background: With a new cli instance and no configuration in place
+  Background: With a new cli instance
 
   Scenario: Creates a configuration
     Given A new cli
-    When I create a configuration with the name to "e2e-file"
+    When I create a configuration of type csv and store files under the name "e2e-file"
     Then Show successfully message "Configuration has been stored"
     Then I clean the output
-    Then I list the configuration from "e2e-file"
-    Then I see the configuration '{"path":"data/e2e-file.json"}'
+    Then I list the configuration
+    Then I see the configuration '{"storage":"csv","fileName":"e2e-file.json"}'

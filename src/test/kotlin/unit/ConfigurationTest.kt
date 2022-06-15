@@ -27,16 +27,21 @@ class ConfigurationTest {
         assertEquals("Missing required fields", cmd.getExecutionResult())
     }
 
+    fun `should handle fetch configuration when it does not exists`() {
+        cmd.execute("-l")
+        assertEquals("There is no configuration stored", cmd.getExecutionResult())
+    }
+
     @Test
     fun `should store json content as a configuration`() {
-        cmd.execute("-c", "{}", "-p", "tmp")
+        cmd.execute("-c", "{}")
         assertEquals("Configuration has been stored", cmd.getExecutionResult())
     }
 
     @ParameterizedTest
     @MethodSource("configurationProvider")
-    fun `should show stored configuration`(configuration: String, path: String, expectedConfiguration: String) {
-        cmd.execute("-c", configuration, "-p", path)
+    fun `should show stored configuration`(configuration: String, expectedConfiguration: String) {
+        cmd.execute("-c", configuration)
         cmd.execute("-l")
 
         assertEquals(expectedConfiguration, cmd.getExecutionResult())
@@ -46,10 +51,10 @@ class ConfigurationTest {
         @JvmStatic
         fun configurationProvider(): Stream<Arguments> {
             return Stream.of(
-                Arguments.of("{}", "tmp", """{"path":"data/tmp.json"}"""),
-                Arguments.of("{}", "123", """{"path":"data/123.json"}"""),
+                Arguments.of("""{"fileName":"tmp"}""", """{"fileName":"tmp"}"""),
+                Arguments.of("""{"fileName":"123"}""", """{"fileName":"123"}"""),
                 // ignore unknown keys
-                Arguments.of("""{"banana":"banana"}""", "123", """{"path":"data/123.json"}"""),
+//                Arguments.of("""{"fileName":"123.json","banana":"banana"}""", """{"fileName":"123.json"}"""),
             );
         }
     }

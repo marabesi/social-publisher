@@ -23,8 +23,9 @@ class SocialPublisherSteps: En {
 
             System.setOut(PrintStream(outputStreamCaptor))
 
-            File("data/social-production.csv").delete()
-            File("data/scheduler-social-production.csv").delete()
+            File("data/").listFiles()?.forEach {
+                it.delete()
+            }
         }
 
         When(

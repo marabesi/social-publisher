@@ -1,5 +1,6 @@
 package persistence;
 
+import cli.MissingConfiguration
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -27,6 +28,10 @@ class FileSystemConfigurationRepository: ConfigurationRepository {
 
     override fun find(): SocialConfiguration {
         val fullPath = "$configurationPath/$fileName.json"
+
+        if (!File(fullPath).exists()) {
+            throw MissingConfiguration()
+        }
 
         val reader = FileReader(fullPath)
         val string = reader.readText()

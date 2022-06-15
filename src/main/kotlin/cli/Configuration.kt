@@ -24,8 +24,12 @@ class Configuration(
 
     override fun call(): String {
         if (list) {
-            val data: SocialConfiguration = configurationRepository.find()
-            return cliOutput.write(Json.encodeToString(data))
+            return try {
+                val data: SocialConfiguration = configurationRepository.find()
+                cliOutput.write(Json.encodeToString(data))
+            } catch (error: MissingConfiguration) {
+                cliOutput.write(error.message!!)
+            }
         }
 
         if (configuration.isEmpty()) {

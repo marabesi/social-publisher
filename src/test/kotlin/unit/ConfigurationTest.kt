@@ -27,6 +27,7 @@ class ConfigurationTest {
         assertEquals("Missing required fields", cmd.getExecutionResult())
     }
 
+    @Test
     fun `should handle fetch configuration when it does not exists`() {
         cmd.execute("-l")
         assertEquals("There is no configuration stored", cmd.getExecutionResult())

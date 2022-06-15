@@ -9,7 +9,7 @@ import java.io.File
 import java.io.PrintStream
 import kotlin.test.assertContains
 
-class CreatePost: En {
+class SocialPublisherSteps: En {
 
 //    private val standardOut = System.out
     private val outputStreamCaptor: ByteArrayOutputStream = ByteArrayOutputStream()

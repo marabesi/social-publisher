@@ -51,10 +51,8 @@ class ConfigurationTest {
         @JvmStatic
         fun configurationProvider(): Stream<Arguments> {
             return Stream.of(
-                Arguments.of("""{"fileName":"tmp"}""", """{"fileName":"tmp"}"""),
-                Arguments.of("""{"fileName":"123"}""", """{"fileName":"123"}"""),
-                // ignore unknown keys
-//                Arguments.of("""{"fileName":"123.json","banana":"banana"}""", """{"fileName":"123.json"}"""),
+                Arguments.of("""{"fileName":"tmp"}""", """{"fileName":"tmp","storage":"csv"}"""),
+                Arguments.of("""{"fileName":"123"}""", """{"fileName":"123","storage":"csv"}"""),
             );
         }
     }

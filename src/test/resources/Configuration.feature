@@ -7,4 +7,4 @@ Feature: Configuration json that is required to use the cli
     Then Show successfully message "Configuration has been stored"
     Then I clean the output
     Then I list the configuration
-    Then I see the configuration '{"storage":"csv","fileName":"e2e-file.json"}'
+    Then I see the configuration '{"fileName":"e2e-file","storage":"csv"}'

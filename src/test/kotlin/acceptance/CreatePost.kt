@@ -83,7 +83,7 @@ class CreatePost: En {
             assertContains(outputStreamCaptor.toString(), "Configuration has been stored")
         }
 
-        Then("I list the configuration from {string}"
+        Then("I list the configuration"
         ) {
             exitCode = cmd.execute("configuration", "-l")
             assertEquals(0, exitCode)
@@ -92,8 +92,7 @@ class CreatePost: En {
         Then(
             "I see the configuration {string}"
         ) { configuration: String ->
-            assertContains(outputStreamCaptor.toString(), configuration)
+            assertEquals(outputStreamCaptor.toString(), configuration)
         }
-
     }
 }

@@ -6,7 +6,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import application.persistence.ConfigurationRepository
 import picocli.CommandLine
-import application.socialPosts.SocialConfiguration
+import application.entities.SocialConfiguration
 import java.util.concurrent.Callable
 
 @CommandLine.Command(name = "configuration", mixinStandardHelpOptions = true, version = ["1.0"])

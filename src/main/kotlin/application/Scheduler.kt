@@ -4,7 +4,7 @@ import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
 import com.google.inject.Inject
 import picocli.CommandLine
-import application.socialPosts.ScheduledItem
+import application.entities.ScheduledItem
 import java.time.Instant
 import java.util.concurrent.Callable
 

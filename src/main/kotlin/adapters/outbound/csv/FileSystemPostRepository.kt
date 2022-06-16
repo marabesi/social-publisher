@@ -5,7 +5,7 @@ import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVPrinter
 import org.apache.commons.csv.CSVRecord
-import application.socialPosts.SocialPosts
+import application.entities.SocialPosts
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter

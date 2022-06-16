@@ -2,7 +2,7 @@ package adapters.outbound.inmemory
 
 import application.MissingConfiguration
 import application.persistence.ConfigurationRepository
-import application.socialPosts.SocialConfiguration
+import application.entities.SocialConfiguration
 
 class ConfigurationInMemoryRepository: ConfigurationRepository {
     private val configurationList: ArrayList<SocialConfiguration> = arrayListOf()

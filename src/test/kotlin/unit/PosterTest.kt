@@ -8,8 +8,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import adapters.outbound.inmemory.InMemorySchedulerRepository
 import picocli.CommandLine
-import application.socialPosts.ScheduledItem
-import application.socialPosts.SocialPosts
+import application.entities.ScheduledItem
+import application.entities.SocialPosts
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.time.Clock

@@ -10,7 +10,7 @@ import adapters.outbound.csv.FileSystemConfigurationRepository
 import adapters.outbound.csv.FileSystemPostRepository
 import adapters.outbound.csv.FileSystemSchedulerRepository
 import picocli.CommandLine
-import application.socialPosts.SocialConfiguration
+import application.entities.SocialConfiguration
 import java.time.Instant
 
 class CliFactory: CommandLine.IFactory {

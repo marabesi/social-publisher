@@ -1,6 +1,6 @@
 package application.persistence
 
-import application.socialPosts.ScheduledItem
+import application.entities.ScheduledItem
 
 interface SchedulerRepository {
     fun save(scheduledItem: ScheduledItem): Boolean

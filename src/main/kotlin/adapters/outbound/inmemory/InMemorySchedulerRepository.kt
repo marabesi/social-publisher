@@ -1,6 +1,6 @@
 package adapters.outbound.inmemory
 
-import application.socialPosts.ScheduledItem
+import application.entities.ScheduledItem
 import application.persistence.SchedulerRepository
 
 class InMemorySchedulerRepository: SchedulerRepository {

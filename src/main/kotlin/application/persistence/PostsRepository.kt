@@ -1,6 +1,6 @@
 package application.persistence
 
-import application.socialPosts.SocialPosts
+import application.entities.SocialPosts
 
 interface PostsRepository {
 

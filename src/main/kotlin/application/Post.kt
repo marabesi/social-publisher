@@ -3,7 +3,7 @@ package application
 import application.persistence.PostsRepository
 import com.google.inject.Inject
 import picocli.CommandLine
-import application.socialPosts.SocialPosts
+import application.entities.SocialPosts
 import java.util.concurrent.Callable
 
 @CommandLine.Command(name = "post", mixinStandardHelpOptions = true)

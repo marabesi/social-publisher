@@ -1,6 +1,6 @@
 package persistence;
 
-import cli.MissingConfiguration
+import adapters.inbound.cli.MissingConfiguration
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json

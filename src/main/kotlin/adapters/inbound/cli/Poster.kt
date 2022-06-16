@@ -1,4 +1,4 @@
-package cli
+package adapters.inbound.cli
 
 import SchedulerRepository
 import adapters.outbound.Output

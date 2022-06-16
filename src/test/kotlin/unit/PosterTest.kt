@@ -2,7 +2,7 @@ package unit
 
 import SchedulerRepository
 import buildCommandLine
-import cli.Poster
+import adapters.inbound.cli.Poster
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

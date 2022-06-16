@@ -1,4 +1,4 @@
-package cli
+package adapters.inbound.cli
 
 import adapters.outbound.Output
 

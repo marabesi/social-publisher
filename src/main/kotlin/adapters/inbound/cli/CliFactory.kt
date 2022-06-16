@@ -1,4 +1,4 @@
-package cli
+package adapters.inbound.cli
 
 import persistence.FileSystemConfigurationRepository
 import persistence.FileSystemPostRepository
@@ -13,7 +13,7 @@ class CliFactory: CommandLine.IFactory {
             val configuration = FileSystemConfigurationRepository()
             val currentConfiguration: SocialConfiguration = try {
                 configuration.find()
-            } catch (_:MissingConfiguration) {
+            } catch (_: MissingConfiguration) {
                 SocialConfiguration("production", "csv")
             }
 

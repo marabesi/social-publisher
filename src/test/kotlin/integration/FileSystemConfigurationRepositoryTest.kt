@@ -1,6 +1,6 @@
 package integration
 
-import cli.MissingConfiguration
+import adapters.inbound.cli.MissingConfiguration
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

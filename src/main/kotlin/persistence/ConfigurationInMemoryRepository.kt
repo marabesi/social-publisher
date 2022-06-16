@@ -1,6 +1,6 @@
 package persistence
 
-import cli.MissingConfiguration
+import adapters.inbound.cli.MissingConfiguration
 import socialPosts.SocialConfiguration
 
 class ConfigurationInMemoryRepository: ConfigurationRepository {

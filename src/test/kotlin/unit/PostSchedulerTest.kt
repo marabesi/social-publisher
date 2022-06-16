@@ -1,7 +1,7 @@
 package unit
 
 import socialPosts.ScheduledItem
-import cli.Scheduler
+import adapters.inbound.cli.Scheduler
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

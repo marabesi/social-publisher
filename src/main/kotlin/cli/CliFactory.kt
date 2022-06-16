@@ -16,18 +16,19 @@ class CliFactory: CommandLine.IFactory {
                 SocialConfiguration("production", "csv")
             }
 
+            val filePath = "data/scheduler-${currentConfiguration.fileName}.csv"
+            val scheduler = FileSystemSchedulerRepository(filePath)
+
             val postsRepository = FileSystemPostRepository("data/posts-${currentConfiguration.fileName}.csv")
 
             if (cls == Post::class.java) {
                 return Post(postsRepository, CliOutput()) as K
             }
             if (cls == Scheduler::class.java) {
-                val filePath = "data/scheduler-${currentConfiguration.fileName}.csv"
-                val scheduler = FileSystemSchedulerRepository(filePath)
                 return Scheduler(postsRepository, scheduler, CliOutput()) as K
             }
             if (cls == Poster::class.java) {
-                return Poster(postsRepository, CliOutput()) as K
+                return Poster(scheduler, CliOutput()) as K
             }
 
             if (cls == Configuration::class.java) {

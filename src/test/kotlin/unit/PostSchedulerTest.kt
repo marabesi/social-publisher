@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import org.junit.jupiter.params.provider.ValueSource
 import persistence.InMemoryRepository
 import persistence.InMemorySchedulerRepository
 import picocli.CommandLine
@@ -54,10 +55,11 @@ class PostSchedulerTest {
         """.trimIndent(), cmd.usageMessage)
     }
 
-    @Test
-    fun `should show message if post id does not exists`() {
-        cmd.execute("-p", "1", "-d", "2022-10-02 at 09:00 PM")
-        assertEquals("Couldn't find post with id 1", cmd.getExecutionResult())
+    @ParameterizedTest
+    @ValueSource(strings = ["1", "2"])
+    fun `should show message if post id does not exists`(id: String) {
+        cmd.execute("-p", id, "-d", "2022-10-02 at 09:00 PM")
+        assertEquals("Couldn't find post with id $id", cmd.getExecutionResult())
     }
 
     @Test

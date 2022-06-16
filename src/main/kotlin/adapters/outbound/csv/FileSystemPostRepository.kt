@@ -1,11 +1,11 @@
-package persistence
+package adapters.outbound.csv
 
-import adapters.outbound.persistence.PostsRepository
+import application.persistence.PostsRepository
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVPrinter
 import org.apache.commons.csv.CSVRecord
-import socialPosts.SocialPosts
+import application.socialPosts.SocialPosts
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter

@@ -1,11 +1,11 @@
-package persistence;
+package adapters.outbound.csv;
 
-import adapters.inbound.cli.MissingConfiguration
-import adapters.outbound.persistence.ConfigurationRepository
+import application.MissingConfiguration
+import application.persistence.ConfigurationRepository
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import socialPosts.SocialConfiguration
+import application.socialPosts.SocialConfiguration
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter

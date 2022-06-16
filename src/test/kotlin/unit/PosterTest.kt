@@ -1,15 +1,15 @@
 package unit
 
-import adapters.outbound.persistence.SchedulerRepository
+import application.persistence.SchedulerRepository
 import buildCommandLine
-import adapters.inbound.cli.Poster
+import application.Poster
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import persistence.InMemorySchedulerRepository
+import adapters.outbound.inmemory.InMemorySchedulerRepository
 import picocli.CommandLine
-import socialPosts.ScheduledItem
-import socialPosts.SocialPosts
+import application.socialPosts.ScheduledItem
+import application.socialPosts.SocialPosts
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.time.Clock
@@ -66,7 +66,8 @@ class PosterTest {
         val clock: Clock = Clock.fixed(Instant.parse(instantExpected), ZoneId.of("UTC"))
 
         currentDate = Instant.now(clock)
-        schedulerRepository.save(ScheduledItem(
+        schedulerRepository.save(
+            ScheduledItem(
                 SocialPosts(1, "random post text"),
                 Instant.parse("2014-12-22T10:15:30Z")
             )
@@ -85,7 +86,8 @@ class PosterTest {
         val clock: Clock = Clock.fixed(Instant.parse(instantExpected), ZoneId.of("UTC"))
 
         currentDate = Instant.now(clock)
-            schedulerRepository.save(ScheduledItem(
+            schedulerRepository.save(
+                ScheduledItem(
                 SocialPosts(1, "random post text"),
                 Instant.parse("2014-12-22T10:15:32Z")
             )

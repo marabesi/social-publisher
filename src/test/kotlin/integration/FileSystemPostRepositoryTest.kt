@@ -5,8 +5,8 @@ import junit.framework.TestCase.assertTrue
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import persistence.FileSystemPostRepository
-import socialPosts.SocialPosts
+import adapters.outbound.csv.FileSystemPostRepository
+import application.socialPosts.SocialPosts
 import java.io.File
 
 class FileSystemPostRepositoryTest {

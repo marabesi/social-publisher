@@ -2,11 +2,11 @@ package integration
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import junit.framework.TestCase.assertTrue
-import socialPosts.ScheduledItem
+import application.socialPosts.ScheduledItem
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
-import persistence.FileSystemSchedulerRepository
-import socialPosts.SocialPosts
+import adapters.outbound.csv.FileSystemSchedulerRepository
+import application.socialPosts.SocialPosts
 import java.io.File
 import java.time.Instant
 

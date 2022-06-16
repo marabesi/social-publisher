@@ -1,10 +1,16 @@
 package adapters.inbound.cli
 
-import persistence.FileSystemConfigurationRepository
-import persistence.FileSystemPostRepository
-import persistence.FileSystemSchedulerRepository
+import adapters.outbound.cli.CliOutput
+import application.Configuration
+import application.MissingConfiguration
+import application.Post
+import application.Poster
+import application.Scheduler
+import adapters.outbound.csv.FileSystemConfigurationRepository
+import adapters.outbound.csv.FileSystemPostRepository
+import adapters.outbound.csv.FileSystemSchedulerRepository
 import picocli.CommandLine
-import socialPosts.SocialConfiguration
+import application.socialPosts.SocialConfiguration
 import java.time.Instant
 
 class CliFactory: CommandLine.IFactory {

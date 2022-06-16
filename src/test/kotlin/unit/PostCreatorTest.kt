@@ -1,12 +1,12 @@
 package unit
 
 import buildCommandLine
-import adapters.inbound.cli.Post
+import application.Post
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import persistence.InMemoryRepository
+import adapters.outbound.inmemory.InMemoryRepository
 import picocli.CommandLine
 import java.io.PrintWriter
 import java.io.StringWriter

@@ -1,8 +1,8 @@
 import adapters.inbound.cli.CliFactory
-import adapters.inbound.cli.Configuration
-import adapters.inbound.cli.Post
-import adapters.inbound.cli.Poster
-import adapters.inbound.cli.Scheduler
+import application.Configuration
+import application.Post
+import application.Poster
+import application.Scheduler
 import picocli.CommandLine
 
 @CommandLine.Command(

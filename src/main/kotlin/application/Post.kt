@@ -1,10 +1,9 @@
-package adapters.inbound.cli
+package application
 
-import adapters.outbound.persistence.PostsRepository
-import adapters.outbound.cli.Output
+import application.persistence.PostsRepository
 import com.google.inject.Inject
 import picocli.CommandLine
-import socialPosts.SocialPosts
+import application.socialPosts.SocialPosts
 import java.util.concurrent.Callable
 
 @CommandLine.Command(name = "post", mixinStandardHelpOptions = true)

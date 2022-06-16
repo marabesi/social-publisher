@@ -1,6 +1,6 @@
-package adapters.inbound.cli
+package adapters.outbound.cli
 
-import adapters.outbound.cli.Output
+import application.Output
 
 class CliOutput: Output {
 

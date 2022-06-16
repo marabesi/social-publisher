@@ -1,6 +1,6 @@
 package unit
 
-import adapters.outbound.cli.Output
+import application.Output
 
 class MockedOutput : Output {
     override fun write(arguments: String): String {

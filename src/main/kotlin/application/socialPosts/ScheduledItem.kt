@@ -1,4 +1,4 @@
-package socialPosts
+package application.socialPosts
 
 import java.time.Instant
 

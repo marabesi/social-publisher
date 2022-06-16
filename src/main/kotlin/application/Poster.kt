@@ -1,7 +1,6 @@
-package adapters.inbound.cli
+package application
 
-import adapters.outbound.persistence.SchedulerRepository
-import adapters.outbound.cli.Output
+import application.persistence.SchedulerRepository
 import com.google.inject.Inject
 import picocli.CommandLine
 import java.time.Instant

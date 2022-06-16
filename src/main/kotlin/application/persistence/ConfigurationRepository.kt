@@ -1,6 +1,6 @@
-package adapters.outbound.persistence
+package application.persistence
 
-import socialPosts.SocialConfiguration
+import application.socialPosts.SocialConfiguration
 
 interface ConfigurationRepository {
     fun save(configuration: SocialConfiguration): SocialConfiguration

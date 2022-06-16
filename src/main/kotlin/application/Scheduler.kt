@@ -1,11 +1,10 @@
-package adapters.inbound.cli
+package application
 
-import adapters.outbound.persistence.PostsRepository
-import adapters.outbound.persistence.SchedulerRepository
-import adapters.outbound.cli.Output
+import application.persistence.PostsRepository
+import application.persistence.SchedulerRepository
 import com.google.inject.Inject
 import picocli.CommandLine
-import socialPosts.ScheduledItem
+import application.socialPosts.ScheduledItem
 import java.time.Instant
 import java.util.concurrent.Callable
 

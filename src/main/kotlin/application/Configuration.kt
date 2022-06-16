@@ -1,13 +1,12 @@
-package adapters.inbound.cli
+package application
 
-import adapters.outbound.cli.Output
 import com.google.inject.Inject
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import adapters.outbound.persistence.ConfigurationRepository
+import application.persistence.ConfigurationRepository
 import picocli.CommandLine
-import socialPosts.SocialConfiguration
+import application.socialPosts.SocialConfiguration
 import java.util.concurrent.Callable
 
 @CommandLine.Command(name = "configuration", mixinStandardHelpOptions = true, version = ["1.0"])

@@ -1,17 +1,17 @@
 package unit
 
-import socialPosts.ScheduledItem
-import adapters.inbound.cli.Scheduler
+import application.socialPosts.ScheduledItem
+import application.Scheduler
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.ValueSource
-import persistence.InMemoryRepository
-import persistence.InMemorySchedulerRepository
+import adapters.outbound.inmemory.InMemoryRepository
+import adapters.outbound.inmemory.InMemorySchedulerRepository
 import picocli.CommandLine
-import socialPosts.SocialPosts
+import application.socialPosts.SocialPosts
 import java.time.Instant
 
 class PostSchedulerTest {

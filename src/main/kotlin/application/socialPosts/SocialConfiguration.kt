@@ -1,4 +1,4 @@
-package socialPosts
+package application.socialPosts
 
 @kotlinx.serialization.Serializable
 data class SocialConfiguration(

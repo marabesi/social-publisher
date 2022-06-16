@@ -1,13 +1,13 @@
 package unit
 
-import adapters.inbound.cli.Configuration
+import application.Configuration
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import persistence.ConfigurationInMemoryRepository
+import adapters.outbound.inmemory.ConfigurationInMemoryRepository
 import picocli.CommandLine
 import java.util.stream.Stream
 

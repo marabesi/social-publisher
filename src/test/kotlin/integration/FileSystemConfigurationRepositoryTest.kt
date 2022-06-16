@@ -1,12 +1,12 @@
 package integration
 
-import adapters.inbound.cli.MissingConfiguration
+import application.MissingConfiguration
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import persistence.FileSystemConfigurationRepository
-import socialPosts.SocialConfiguration
+import adapters.outbound.csv.FileSystemConfigurationRepository
+import application.socialPosts.SocialConfiguration
 import java.io.File
 import kotlin.test.assertFailsWith
 

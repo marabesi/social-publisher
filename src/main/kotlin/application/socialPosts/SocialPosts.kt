@@ -1,4 +1,4 @@
-package socialPosts
+package application.socialPosts
 
 class SocialPosts(
     var id: Int? = null,

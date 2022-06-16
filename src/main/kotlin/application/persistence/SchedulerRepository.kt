@@ -1,6 +1,6 @@
-package adapters.outbound.persistence
+package application.persistence
 
-import socialPosts.ScheduledItem
+import application.socialPosts.ScheduledItem
 
 interface SchedulerRepository {
     fun save(scheduledItem: ScheduledItem): Boolean

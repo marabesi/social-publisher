@@ -1,6 +1,6 @@
-package adapters.outbound.persistence
+package application.persistence
 
-import socialPosts.SocialPosts
+import application.socialPosts.SocialPosts
 
 interface PostsRepository {
 

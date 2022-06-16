@@ -8,7 +8,8 @@ Feature: Create a post with a title
 
   Scenario: List no posts found
     Given A new cli
-    Then Show the created post "No post found"
+    When I list the posts
+    Then Show successfully message "No post found"
 
   Scenario: List the created post
     Given A new cli
@@ -29,3 +30,22 @@ Feature: Create a post with a title
     When I create a post with the text "caracters, our online editor can help you to improve word choice and writing style, and, optionally, help you to detect grammar mistakes and plagiarism. To check word count, simply 1"
     Then I clean the output
     Then Show the created post "caracters, our online editor can help you to impro..."
+
+  Scenario: Creates and lists posts
+    Given A new cli
+    When I list the posts
+    Then Show successfully message "No post found"
+    Then I clean the output
+    When I create a post with the text "banana"
+    Then Show successfully message "Post has been created"
+    Then I clean the output
+    When I create a post with the text "whatever"
+    Then Show successfully message "Post has been created"
+    Then I clean the output
+    When I create a post with the text "random"
+    Then Show successfully message "Post has been created"
+    Then I clean the output
+    When I list the posts
+    Then Show the created post "1. banana"
+    Then Show the created post "2. whatever"
+    Then Show the created post "3. random"

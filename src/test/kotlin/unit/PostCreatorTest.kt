@@ -1,7 +1,7 @@
 package unit
 
 import buildCommandLine
-import application.Post
+import adapters.inbound.cli.Post
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest

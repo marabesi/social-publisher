@@ -2,7 +2,6 @@ package adapters.inbound.cli
 
 import adapters.outbound.cli.CliOutput
 import application.persistence.configuration.MissingConfiguration
-import application.Post
 import application.Poster
 import application.Scheduler
 import adapters.outbound.csv.FileSystemConfigurationRepository

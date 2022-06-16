@@ -1,6 +1,6 @@
 import adapters.inbound.cli.CliFactory
 import adapters.inbound.cli.Configuration
-import application.Post
+import adapters.inbound.cli.Post
 import application.Poster
 import application.Scheduler
 import picocli.CommandLine

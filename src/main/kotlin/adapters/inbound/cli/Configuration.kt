@@ -8,7 +8,7 @@ import com.google.inject.Inject
 import picocli.CommandLine
 import java.util.concurrent.Callable
 
-@CommandLine.Command(name = "configuration", mixinStandardHelpOptions = true, version = ["1.0"])
+@CommandLine.Command(name = "configuration", mixinStandardHelpOptions = true)
 class Configuration(
     @Inject
     private val cliOutput: Output,

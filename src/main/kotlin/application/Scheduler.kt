@@ -8,7 +8,7 @@ import application.entities.ScheduledItem
 import java.time.Instant
 import java.util.concurrent.Callable
 
-@CommandLine.Command(name = "scheduler", mixinStandardHelpOptions = true, version = ["1.0"])
+@CommandLine.Command(name = "scheduler", mixinStandardHelpOptions = true)
 class Scheduler(
     @Inject
     private val postsRepository: PostsRepository,

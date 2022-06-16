@@ -3,6 +3,7 @@ package integration
 import org.junit.jupiter.api.Assertions.assertEquals
 import junit.framework.TestCase.assertTrue
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import persistence.FileSystemPostRepository
 import socialPosts.SocialPosts
@@ -12,10 +13,14 @@ class FileSystemPostRepositoryTest {
     private val filePath = "social-publisher.csv"
     private val filePathWithSubfolder = "data/social-publisher.csv"
 
+    @BeforeEach
+    fun beforeEach() {
+        cleanUp()
+    }
+
     @AfterEach
     fun afterEach() {
-        File(filePath).delete()
-        File(filePathWithSubfolder).delete()
+        cleanUp()
     }
 
     @Test
@@ -32,6 +37,16 @@ class FileSystemPostRepositoryTest {
         val repository = FileSystemPostRepository(filePathWithSubfolder)
 
         assertTrue(repository.save(arrayListOf(post)))
+    }
+
+    @Test
+    fun fetchEmptyPosts() {
+        val post = SocialPosts(1, "fetch from csv")
+        val repository = FileSystemPostRepository(filePath)
+
+        val storedPost: ArrayList<SocialPosts> = repository.findAll()
+
+        assertEquals(0, storedPost.size)
     }
 
     @Test
@@ -77,5 +92,10 @@ class FileSystemPostRepositoryTest {
         val findById = repository.findById("1")
         assertEquals(post.text, findById?.text)
         assertEquals("1", findById?.id.toString())
+    }
+
+    private fun cleanUp() {
+        File(filePath).delete()
+        File(filePathWithSubfolder).delete()
     }
 }

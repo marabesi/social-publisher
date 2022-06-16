@@ -6,6 +6,10 @@ Feature: Create a post with a title
     When I create a post with the text "Hello"
     Then Show successfully message "Post has been created"
 
+  Scenario: List no posts found
+    Given A new cli
+    Then Show the created post "No post found"
+
   Scenario: List the created post
     Given A new cli
     When I create a post with the text "Hello"

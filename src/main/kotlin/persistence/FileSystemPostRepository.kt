@@ -34,6 +34,8 @@ class FileSystemPostRepository(private val filePath: String): PostsRepository {
     }
 
     override fun findAll(): ArrayList<SocialPosts> {
+        ensureFileExists(File(filePath))
+
         val reader = FileReader(filePath)
         val parser = CSVParser(reader, CSVFormat.DEFAULT)
 
@@ -67,5 +69,11 @@ class FileSystemPostRepository(private val filePath: String): PostsRepository {
 
     private fun buildPostFromCsvRecord(record: CSVRecord): SocialPosts {
         return SocialPosts(record[1].toInt(), record[0])
+    }
+
+    private fun ensureFileExists(file: File) {
+        if (!file.exists()) {
+            file.createNewFile()
+        }
     }
 }

@@ -1,7 +1,7 @@
 package unit
 
 import application.entities.ScheduledItem
-import application.Scheduler
+import adapters.inbound.cli.Scheduler
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

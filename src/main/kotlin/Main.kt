@@ -2,7 +2,7 @@ import adapters.inbound.cli.CliFactory
 import adapters.inbound.cli.Configuration
 import adapters.inbound.cli.Post
 import application.Poster
-import application.Scheduler
+import adapters.inbound.cli.Scheduler
 import picocli.CommandLine
 
 @CommandLine.Command(

@@ -1,7 +1,7 @@
 package persistence
 
 import socialPosts.ScheduledItem
-import SchedulerRepository
+import adapters.outbound.persistence.SchedulerRepository
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVPrinter
@@ -12,7 +12,7 @@ import java.io.FileReader
 import java.io.FileWriter
 import java.time.Instant
 
-class FileSystemSchedulerRepository(private val filePath: String) : SchedulerRepository{
+class FileSystemSchedulerRepository(private val filePath: String) : SchedulerRepository {
     override fun save(scheduledItem: ScheduledItem): Boolean {
         val file = File(filePath)
 

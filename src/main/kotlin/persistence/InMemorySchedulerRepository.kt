@@ -1,9 +1,9 @@
 package persistence
 
 import socialPosts.ScheduledItem
-import SchedulerRepository
+import adapters.outbound.persistence.SchedulerRepository
 
-class InMemorySchedulerRepository: SchedulerRepository{
+class InMemorySchedulerRepository: SchedulerRepository {
 
     private var storedScheduler: ArrayList<ScheduledItem> = arrayListOf();
     override fun save(scheduledItem: ScheduledItem): Boolean {

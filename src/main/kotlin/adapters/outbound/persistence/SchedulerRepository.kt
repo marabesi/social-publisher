@@ -1,3 +1,5 @@
+package adapters.outbound.persistence
+
 import socialPosts.ScheduledItem
 
 interface SchedulerRepository {

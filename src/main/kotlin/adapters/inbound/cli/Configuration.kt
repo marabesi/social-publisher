@@ -1,11 +1,11 @@
 package adapters.inbound.cli
 
-import adapters.outbound.Output
+import adapters.outbound.cli.Output
 import com.google.inject.Inject
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import persistence.ConfigurationRepository
+import adapters.outbound.persistence.ConfigurationRepository
 import picocli.CommandLine
 import socialPosts.SocialConfiguration
 import java.util.concurrent.Callable

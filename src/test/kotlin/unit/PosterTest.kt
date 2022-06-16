@@ -1,6 +1,6 @@
 package unit
 
-import SchedulerRepository
+import adapters.outbound.persistence.SchedulerRepository
 import buildCommandLine
 import adapters.inbound.cli.Poster
 import org.junit.jupiter.api.Assertions

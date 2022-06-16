@@ -1,4 +1,4 @@
-package persistence
+package adapters.outbound.persistence
 
 import socialPosts.SocialConfiguration
 

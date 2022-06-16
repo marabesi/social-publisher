@@ -1,4 +1,4 @@
-package adapters.outbound
+package adapters.outbound.cli
 
 interface Output {
 

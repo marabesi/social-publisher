@@ -1,6 +1,6 @@
 package persistence
 
-import PostsRepository
+import adapters.outbound.persistence.PostsRepository
 import socialPosts.SocialPosts
 
 class InMemoryRepository: PostsRepository {

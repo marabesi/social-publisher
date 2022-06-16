@@ -1,8 +1,8 @@
 package adapters.inbound.cli
 
-import PostsRepository
-import SchedulerRepository
-import adapters.outbound.Output
+import adapters.outbound.persistence.PostsRepository
+import adapters.outbound.persistence.SchedulerRepository
+import adapters.outbound.cli.Output
 import com.google.inject.Inject
 import picocli.CommandLine
 import socialPosts.ScheduledItem

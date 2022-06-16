@@ -1,5 +1,6 @@
 package unit
 
+import MockedOutput
 import buildCommandLine
 import adapters.inbound.cli.Post
 import org.junit.jupiter.api.Assertions.assertEquals

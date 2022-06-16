@@ -1,5 +1,6 @@
 package unit
 
+import MockedOutput
 import adapters.inbound.cli.Configuration
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach

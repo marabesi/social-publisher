@@ -1,5 +1,6 @@
 package unit
 
+import MockedOutput
 import application.persistence.SchedulerRepository
 import buildCommandLine
 import application.Poster

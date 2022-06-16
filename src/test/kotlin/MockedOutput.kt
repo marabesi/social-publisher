@@ -1,5 +1,3 @@
-package unit
-
 import application.Output
 
 class MockedOutput : Output {

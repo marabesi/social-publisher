@@ -1,5 +1,6 @@
 package unit
 
+import MockedOutput
 import application.entities.ScheduledItem
 import adapters.inbound.cli.Scheduler
 import org.junit.jupiter.api.Assertions.assertEquals

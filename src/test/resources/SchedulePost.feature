@@ -15,5 +15,8 @@ Feature: Schedule a post to be posted
     Given A new cli
     When I create a post with the text "Post to schedule again"
     Then I clean the output
+    Then I list the posts
+    Then Show successfully message "1. Post to schedule again"
+    Then I clean the output
     And I schedule the post with id "1" to be published at "2022-10-02T09:00:00Z"
     Then Show the scheduled post "1. Post with id 1 will be published on 2022-10-02T09:00:00Z"

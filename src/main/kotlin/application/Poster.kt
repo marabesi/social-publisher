@@ -1,6 +1,7 @@
 package application
 
 import application.persistence.SchedulerRepository
+import application.poster.Executor
 import com.google.inject.Inject
 import picocli.CommandLine
 import java.time.Instant
@@ -24,16 +25,7 @@ class Poster(
 
     override fun call(): String {
         if (run) {
-            val posts = schedulerRepository.findAll()
-            if (posts.isEmpty()) {
-                return cliOutput.write("There are no posts to be posted")
-            }
-            posts.forEach {
-                if (currentDate < it.publishDate) {
-                    return cliOutput.write("Waiting for the date to come to publish post 1")
-                }
-            }
-            return cliOutput.write("Post 1 sent to twitter")
+            return Executor(schedulerRepository, cliOutput, currentDate).invoke()
         }
 
         return cliOutput.write("Post 1 set to twitter")

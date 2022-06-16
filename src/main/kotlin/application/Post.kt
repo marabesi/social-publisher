@@ -1,9 +1,9 @@
 package application
 
 import application.persistence.PostsRepository
+import application.post.Create
 import com.google.inject.Inject
 import picocli.CommandLine
-import application.entities.SocialPosts
 import java.util.concurrent.Callable
 
 @CommandLine.Command(name = "post", mixinStandardHelpOptions = true)
@@ -47,11 +47,6 @@ class Post(
             return cliOutput.write(output)
         }
 
-        if (text.isNotBlank()) {
-            postsRepository.save(arrayListOf(SocialPosts(null, text)))
-            return cliOutput.write("Post has been created")
-        }
-
-        return cliOutput.write("Missing required fields")
+        return Create(postsRepository, cliOutput).invoke(text)
     }
 }

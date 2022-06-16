@@ -7,6 +7,7 @@ import picocli.CommandLine
 import application.entities.ScheduledItem
 import java.time.Instant
 import java.util.concurrent.Callable
+import application.scheduler.List
 
 @CommandLine.Command(name = "scheduler", mixinStandardHelpOptions = true)
 class Scheduler(
@@ -38,13 +39,7 @@ class Scheduler(
         }
 
         if (list) {
-            var result = ""
-            val findAll = scheduleRepository.findAll()
-            for (post in findAll) {
-                result += "${post.post.id}. Post with id ${post.post.id} will be published on ${post.publishDate}"
-            }
-            val output = result.trimIndent()
-            return cliOutput.write(output)
+            return List(scheduleRepository, cliOutput).invoke()
         }
 
         return cliOutput.write("Missing required fields")

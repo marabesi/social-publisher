@@ -16,3 +16,10 @@ media. At the moment, the current medias are supported:
 # Running standalone
 
 kotlin -classpath "/home/marabesi/Downloads/picocli-4.6.2.jar:build/libs/social-1.0-SNAPSHOT.jar" MainKt post -l
+
+# Documentation
+
+## Architectural decisions
+
+- [Hex architecture - definition](https://marabesi.com/architecture/2022/04/13/hexagonal-architecture)
+- [Hex architecture - stackoverflow thread](https://stackoverflow.com/a/14659492/2258921)

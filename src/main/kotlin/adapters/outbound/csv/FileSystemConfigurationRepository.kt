@@ -1,7 +1,7 @@
 package adapters.outbound.csv;
 
-import application.MissingConfiguration
-import application.persistence.ConfigurationRepository
+import application.persistence.configuration.MissingConfiguration
+import application.persistence.configuration.ConfigurationRepository
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json

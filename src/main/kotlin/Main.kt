@@ -1,5 +1,5 @@
 import adapters.inbound.cli.CliFactory
-import application.Configuration
+import adapters.inbound.cli.Configuration
 import application.Post
 import application.Poster
 import application.Scheduler

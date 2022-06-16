@@ -1,8 +1,7 @@
 package adapters.inbound.cli
 
 import adapters.outbound.cli.CliOutput
-import application.Configuration
-import application.MissingConfiguration
+import application.persistence.configuration.MissingConfiguration
 import application.Post
 import application.Poster
 import application.Scheduler

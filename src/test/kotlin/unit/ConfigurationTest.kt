@@ -1,6 +1,6 @@
 package unit
 
-import application.Configuration
+import adapters.inbound.cli.Configuration
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

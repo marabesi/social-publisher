@@ -1,7 +1,7 @@
 package adapters.outbound.inmemory
 
-import application.MissingConfiguration
-import application.persistence.ConfigurationRepository
+import application.persistence.configuration.MissingConfiguration
+import application.persistence.configuration.ConfigurationRepository
 import application.entities.SocialConfiguration
 
 class ConfigurationInMemoryRepository: ConfigurationRepository {

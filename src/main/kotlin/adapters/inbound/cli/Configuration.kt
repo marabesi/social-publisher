@@ -1,13 +1,14 @@
-package application
+package adapters.inbound.cli
 
+import application.Output
+import application.entities.SocialConfiguration
+import application.persistence.configuration.ConfigurationRepository
 import com.google.inject.Inject
 import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import application.persistence.ConfigurationRepository
 import picocli.CommandLine
-import application.entities.SocialConfiguration
 import java.util.concurrent.Callable
+import application.configuration.List
 
 @CommandLine.Command(name = "configuration", mixinStandardHelpOptions = true, version = ["1.0"])
 class Configuration(
@@ -24,12 +25,7 @@ class Configuration(
 
     override fun call(): String {
         if (list) {
-            return try {
-                val data: SocialConfiguration = configurationRepository.find()
-                cliOutput.write(Json.encodeToString(data))
-            } catch (error: MissingConfiguration) {
-                cliOutput.write(error.message!!)
-            }
+            return List(cliOutput, configurationRepository).invoke()
         }
 
         if (configuration.isEmpty()) {

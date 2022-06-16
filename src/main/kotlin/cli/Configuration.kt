@@ -1,5 +1,6 @@
 package cli
 
+import adapters.outbound.Output
 import com.google.inject.Inject
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString

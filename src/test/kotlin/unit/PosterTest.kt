@@ -79,7 +79,6 @@ class PosterTest {
         Assertions.assertEquals("Post 1 sent to twitter", result)
     }
 
-
     @Test
     fun `should not post posts when publish date has not arrived yet`() {
         val instantExpected = "2014-12-22T10:15:31Z"

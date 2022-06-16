@@ -1,6 +1,7 @@
 package cli
 
 import SchedulerRepository
+import adapters.outbound.Output
 import com.google.inject.Inject
 import picocli.CommandLine
 import java.time.Instant

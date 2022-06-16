@@ -1,6 +1,7 @@
 package cli
 
 import PostsRepository
+import adapters.outbound.Output
 import com.google.inject.Inject
 import picocli.CommandLine
 import socialPosts.SocialPosts

@@ -15,7 +15,7 @@ import picocli.CommandLine
 import application.entities.SocialPosts
 import java.time.Instant
 
-class PostSchedulerTest {
+class SchedulerTest {
     private lateinit var app: Scheduler
     private lateinit var cmd: CommandLine
 

@@ -2,12 +2,11 @@ package application
 
 import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
+import application.scheduler.Create
+import application.scheduler.List
 import com.google.inject.Inject
 import picocli.CommandLine
-import application.entities.ScheduledItem
-import java.time.Instant
 import java.util.concurrent.Callable
-import application.scheduler.List
 
 @CommandLine.Command(name = "scheduler", mixinStandardHelpOptions = true)
 class Scheduler(
@@ -30,15 +29,8 @@ class Scheduler(
     var create: Boolean = false
 
     override fun call(): String {
-        if (create && postId.isNotEmpty() && targetDate.isNotEmpty()) {
-            val post = postsRepository.findById(postId) ?: return cliOutput.write("Couldn't find post with id $postId")
-
-            scheduleRepository.save(
-                ScheduledItem(
-                    post, Instant.parse(targetDate)
-                )
-            )
-            return cliOutput.write("Post has been scheduled")
+        if (create) {
+            return Create(postsRepository, scheduleRepository, cliOutput).invoke(postId, targetDate)
         }
 
         if (list) {

@@ -2,12 +2,14 @@ package acceptance
 
 import buildCommandLine
 import io.cucumber.java8.En
-import io.cucumber.java8.PendingException
 import org.junit.jupiter.api.Assertions.assertEquals
 import picocli.CommandLine
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.PrintStream
+import java.time.Clock
+import java.time.Instant
+import java.time.ZoneOffset
 import kotlin.test.assertContains
 
 class SocialPublisherSteps: En {
@@ -99,6 +101,22 @@ class SocialPublisherSteps: En {
 
         When("I list the posts") {
             exitCode = cmd.execute("post", "-l")
+        }
+
+        When(
+            "I define the system to use the date {string}"
+        ) { dateTime: String ->
+            Instant.now(
+                Clock.fixed(
+                Instant.parse(dateTime),
+                ZoneOffset.UTC)
+            )
+        }
+
+        Then("Poster should send post {string} to twitter") {
+            postId: String ->
+            exitCode = cmd.execute("poster", "-r")
+            assertEquals(outputStreamCaptor.toString(), "Post $postId sent to twitter")
         }
     }
 }

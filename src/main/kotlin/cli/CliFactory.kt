@@ -5,6 +5,7 @@ import persistence.FileSystemPostRepository
 import persistence.FileSystemSchedulerRepository
 import picocli.CommandLine
 import socialPosts.SocialConfiguration
+import java.time.Instant
 
 class CliFactory: CommandLine.IFactory {
     override fun <K : Any?> create(cls: Class<K>?): K {
@@ -28,7 +29,7 @@ class CliFactory: CommandLine.IFactory {
                 return Scheduler(postsRepository, scheduler, CliOutput()) as K
             }
             if (cls == Poster::class.java) {
-                return Poster(scheduler, CliOutput()) as K
+                return Poster(scheduler, CliOutput(), Instant.now()) as K
             }
 
             if (cls == Configuration::class.java) {

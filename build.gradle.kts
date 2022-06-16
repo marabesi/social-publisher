@@ -34,6 +34,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.1")
     implementation("org.hamcrest:hamcrest:2.2")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+    implementation("com.twitter:twitter-api-java-sdk:1.2.4")
 }
 
 tasks.test {

@@ -45,7 +45,8 @@ class PostSchedulerTest {
     fun `should show help message for schedule command`() {
         cmd.execute("--help")
         assertEquals("""
-            Usage: scheduler [-hlV] [-d=<targetDate>] [-p=<postId>]
+            Usage: scheduler [-chlV] [-d=<targetDate>] [-p=<postId>]
+              -c                 Sets the cli to schedule a post
               -d=<targetDate>    Target date
               -h, --help         Show this help message and exit.
               -l                 List scheduled posts
@@ -58,7 +59,7 @@ class PostSchedulerTest {
     @ParameterizedTest
     @ValueSource(strings = ["1", "2"])
     fun `should show message if post id does not exists`(id: String) {
-        cmd.execute("-p", id, "-d", "2022-10-02 at 09:00 PM")
+        cmd.execute("-c", "-p", id, "-d", "2022-10-02 at 09:00 PM")
         assertEquals("Couldn't find post with id $id", cmd.getExecutionResult())
     }
 
@@ -71,7 +72,7 @@ class PostSchedulerTest {
         val app = Scheduler(postsRepository, InMemorySchedulerRepository(), MockedOutput())
         val cmd = CommandLine(app)
 
-        cmd.execute("-p", "1", "-d", "2022-10-02T09:00:00Z")
+        cmd.execute("-c", "-p", "1", "-d", "2022-10-02T09:00:00Z")
         assertEquals("Post has been scheduled", cmd.getExecutionResult())
     }
 

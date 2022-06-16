@@ -26,8 +26,11 @@ class Scheduler(
     @CommandLine.Option(names = ["-l"], description = ["List scheduled posts"])
     var list: Boolean = false
 
+    @CommandLine.Option(names = ["-c"], description = ["Sets the cli to schedule a post"])
+    var create: Boolean = false
+
     override fun call(): String {
-        if (postId.isNotEmpty() && targetDate.isNotEmpty()) {
+        if (create && postId.isNotEmpty() && targetDate.isNotEmpty()) {
             val post = postsRepository.findById(postId) ?: return cliOutput.write("Couldn't find post with id $postId")
 
             scheduleRepository.save(

@@ -59,7 +59,7 @@ class SocialPublisherSteps: En {
         When(
             "I schedule the post with id {string} to be published at {string}"
         ) { postId: String, dateToBePublished: String ->
-            exitCode = cmd.execute("scheduler", "-p", postId, "-d", dateToBePublished)
+            exitCode = cmd.execute("scheduler", "-c", "-p", postId, "-d", dateToBePublished)
             assertEquals(0, exitCode)
         }
 

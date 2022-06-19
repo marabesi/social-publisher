@@ -1,5 +1,5 @@
 package application.socialnetwork
 
-interface SocialIntegration {
+interface TwitterClient {
     fun sendTweet(text: String): Boolean
 }

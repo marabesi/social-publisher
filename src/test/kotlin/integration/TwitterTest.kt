@@ -6,7 +6,7 @@ import application.entities.SocialConfiguration
 import application.entities.SocialPosts
 import application.entities.TwitterCredentials
 import application.socialnetwork.MissingConfigurationSetup
-import application.socialnetwork.SocialIntegration
+import application.socialnetwork.TwitterClient
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -22,9 +22,9 @@ class TwitterTest {
         Instant.parse("2014-12-22T10:15:30Z")
     )
 
-    private val socialIntegration: SocialIntegration = mockk()
+    private val socialIntegration: TwitterClient = mockk()
 
-    private fun buildTwitter(configuration: SocialConfiguration, twitterClient: SocialIntegration): TwitterIntegration {
+    private fun buildTwitter(configuration: SocialConfiguration, twitterClient: TwitterClient): TwitterIntegration {
         return TwitterIntegration(configuration, twitterClient)
     }
 

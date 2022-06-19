@@ -3,13 +3,13 @@ package adapters.outbound.social
 import application.entities.ScheduledItem
 import application.entities.SocialConfiguration
 import application.socialnetwork.MissingConfigurationSetup
-import application.socialnetwork.SocialIntegration
+import application.socialnetwork.TwitterClient
 import application.socialnetwork.SocialThirdParty
 
 
 class TwitterIntegration(
     private val configuration: SocialConfiguration,
-    private val twitterClient: SocialIntegration
+    private val twitterClient: TwitterClient
 ) : SocialThirdParty {
     override fun send(scheduledItem: ScheduledItem): Boolean {
         if (configuration.twitter == null) {

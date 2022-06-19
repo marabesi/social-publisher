@@ -26,6 +26,3 @@ Feature:  Post scheduled posts to twitter
     Then I clean the output
     Then Poster should show "Waiting for the date to come to publish post 1"
     Then Poster should show "Waiting for the date to come to publish post 2"
-
-#    Then Show the scheduled post "1. Post with id 1 will be published on 2022-11-02T09:00:00Z"
-#    Then Show the scheduled post "2. Post with id 2 will be published on 2022-11-02T09:00:00Z"

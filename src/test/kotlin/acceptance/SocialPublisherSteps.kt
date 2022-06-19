@@ -4,7 +4,6 @@ import application.entities.SocialConfiguration
 import application.entities.TwitterCredentials
 import buildCommandLine
 import io.cucumber.java8.En
-import io.cucumber.java8.PendingException
 import io.github.cdimascio.dotenv.dotenv
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json

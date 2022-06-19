@@ -104,9 +104,6 @@ class TwitterTest {
         assertEquals("Missing required configuration: token secret", exception.message)
     }
 
-    // should send tweet in the future
-    // should send tweet in the past
-
     @Test
     fun `should send a tweet to twitter api`() {
         val tweet = SocialPosts(

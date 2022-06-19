@@ -33,3 +33,4 @@ kotlin -classpath "/home/marabesi/Downloads/picocli-4.6.2.jar:build/libs/social-
   - https://developer.twitter.com/en/docs/authentication/api-reference/authorize
   - https://github.com/twitterdev/Twitter-API-v2-sample-code/blob/main/Manage-Tweets/create_tweet.js
 - https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-statuses-update
+- https://docs.spring.io/spring-social-twitter/docs/1.1.0.RELEASE/reference/htmlsingle

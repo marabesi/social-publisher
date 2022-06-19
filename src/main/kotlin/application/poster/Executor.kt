@@ -2,12 +2,14 @@ package application.poster
 
 import application.Output
 import application.persistence.SchedulerRepository
+import application.socialnetwork.SocialThirdParty
 import java.time.Instant
 
 class Executor(
     private val schedulerRepository: SchedulerRepository,
     private val cliOutput: Output,
-    private val currentDate: Instant
+    private val currentDate: Instant,
+    private val twitterClient: SocialThirdParty
 ) {
 
     fun invoke(): String {
@@ -19,7 +21,11 @@ class Executor(
             if (currentDate < it.publishDate) {
                 return cliOutput.write("Waiting for the date to come to publish post 1")
             }
+
+            twitterClient.send(it)
+
+            return cliOutput.write("Post ${it.post.id} sent to twitter")
         }
-        return cliOutput.write("Post 1 sent to twitter")
+        TODO()
     }
 }

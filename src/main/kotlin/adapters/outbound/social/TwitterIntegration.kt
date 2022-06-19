@@ -4,8 +4,8 @@ import application.entities.ScheduledItem
 import application.entities.SocialConfiguration
 import application.entities.SocialPosts
 import application.socialnetwork.MissingConfigurationSetup
-import application.socialnetwork.TwitterClient
 import application.socialnetwork.SocialThirdParty
+import application.socialnetwork.TwitterClient
 
 class TwitterIntegration(
     private val configuration: SocialConfiguration,

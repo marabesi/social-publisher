@@ -1,18 +1,21 @@
 package unit
 
 import MockedOutput
-import application.persistence.SchedulerRepository
-import buildCommandLine
+import adapters.outbound.inmemory.InMemorySchedulerRepository
 import application.Poster
+import application.entities.ScheduledItem
+import application.entities.SocialPosts
+import application.persistence.SchedulerRepository
+import application.socialnetwork.SocialThirdParty
+import buildCommandLine
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import adapters.outbound.inmemory.InMemorySchedulerRepository
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import picocli.CommandLine
-import application.entities.ScheduledItem
-import application.entities.SocialPosts
-import application.socialnetwork.SocialThirdParty
-import io.mockk.mockk
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.time.Clock
@@ -29,7 +32,7 @@ class PosterTest {
 
     @BeforeEach
     fun setUp() {
-        app = Poster(schedulerRepository, MockedOutput(), currentDate)
+        app = Poster(schedulerRepository, MockedOutput(), currentDate, socialThirdParty)
         cmd = CommandLine(app)
     }
 
@@ -64,24 +67,28 @@ class PosterTest {
         Assertions.assertEquals("There are no posts to be posted", result)
     }
 
-    @Test
-    fun `should send post with id 1 to twitter`() {
+    @ParameterizedTest
+    @ValueSource(strings = ["1", "2"])
+    fun `should send post to twitter`(id: String) {
         val instantExpected = "2014-12-22T10:15:31Z"
         val clock: Clock = Clock.fixed(Instant.parse(instantExpected), ZoneId.of("UTC"))
+        val scheduledItem = ScheduledItem(
+            SocialPosts(id, "random post text"),
+            Instant.parse("2014-12-22T10:15:30Z")
+        )
 
         currentDate = Instant.now(clock)
         schedulerRepository.save(
-            ScheduledItem(
-                SocialPosts("1", "random post text"),
-                Instant.parse("2014-12-22T10:15:30Z")
-            )
+            scheduledItem
         )
+
+        every { socialThirdParty.send(any()) } returns scheduledItem.post
 
         cmd.execute("-r")
 
         val result = cmd.getExecutionResult<String>()
 
-        Assertions.assertEquals("Post 1 sent to twitter", result)
+        Assertions.assertEquals("Post $id sent to twitter", result)
     }
 
     @Test
@@ -97,7 +104,7 @@ class PosterTest {
             )
         )
 
-        app = Poster(schedulerRepository, MockedOutput(), currentDate)
+        app = Poster(schedulerRepository, MockedOutput(), currentDate, socialThirdParty)
         cmd = CommandLine(app)
 
         cmd.execute("-r")

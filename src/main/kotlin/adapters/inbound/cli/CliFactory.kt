@@ -1,13 +1,15 @@
 package adapters.inbound.cli
 
 import adapters.outbound.cli.CliOutput
-import application.persistence.configuration.MissingConfiguration
-import application.Poster
 import adapters.outbound.csv.FileSystemConfigurationRepository
 import adapters.outbound.csv.FileSystemPostRepository
 import adapters.outbound.csv.FileSystemSchedulerRepository
-import picocli.CommandLine
+import adapters.outbound.social.SocialSpringTwitterClient
+import adapters.outbound.social.TwitterIntegration
+import application.Poster
 import application.entities.SocialConfiguration
+import application.persistence.configuration.MissingConfiguration
+import picocli.CommandLine
 import java.time.Instant
 
 class CliFactory(
@@ -34,7 +36,15 @@ class CliFactory(
                 return Scheduler(postsRepository, scheduler, CliOutput()) as K
             }
             if (cls == Poster::class.java) {
-                return Poster(scheduler, CliOutput(), currentTime) as K
+                return Poster(
+                    scheduler,
+                    CliOutput(),
+                    currentTime,
+                    TwitterIntegration(
+                        currentConfiguration,
+                        SocialSpringTwitterClient(currentConfiguration)
+                    )
+                ) as K
             }
 
             if (cls == Configuration::class.java) {

@@ -118,7 +118,12 @@ class TwitterTest {
 
         val twitter = buildTwitter(
             SocialConfiguration(
-                twitter = TwitterCredentials("123", "123", "123", "123")
+                twitter = TwitterCredentials(
+                    "123",
+                    "123",
+                    "123",
+                    "123"
+                )
             ),
             socialIntegration
         )

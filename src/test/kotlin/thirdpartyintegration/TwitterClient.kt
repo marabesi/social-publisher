@@ -8,6 +8,7 @@ import application.entities.SocialPosts
 import application.entities.TwitterCredentials
 import io.github.cdimascio.dotenv.dotenv
 import org.junit.jupiter.api.Test
+import org.springframework.social.twitter.api.impl.TwitterTemplate
 import java.time.Instant
 import kotlin.test.assertNotNull
 
@@ -36,8 +37,17 @@ class TwitterClient {
             SocialSpringTwitterClient(config)
         )
 
-        assertNotNull(
-            twitter.send(scheduledPost).socialMediaId
+        val tweet = twitter.send(scheduledPost)
+
+        assertNotNull(tweet.socialMediaId)
+
+        val client= TwitterTemplate(
+            dotenv["TWITTER_CONSUMER_KEY"],
+            dotenv["TWITTER_CONSUMER_SECRET"],
+            dotenv["TWITTER_TOKEN"],
+            dotenv["TWITTER_TOKEN_SECRET"],
         )
+
+        client.timelineOperations().deleteStatus(tweet.socialMediaId!!.toLong())
     }
 }

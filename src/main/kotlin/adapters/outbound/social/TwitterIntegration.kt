@@ -7,7 +7,6 @@ import application.socialnetwork.MissingConfigurationSetup
 import application.socialnetwork.TwitterClient
 import application.socialnetwork.SocialThirdParty
 
-
 class TwitterIntegration(
     private val configuration: SocialConfiguration,
     private val twitterClient: TwitterClient
@@ -33,7 +32,6 @@ class TwitterIntegration(
             throw MissingConfigurationSetup("token secret")
         }
 
-        val tweet = twitterClient.sendTweet(scheduledItem.post.text)
-        return scheduledItem.post
+        return twitterClient.sendTweet(scheduledItem.post.text)
     }
 }

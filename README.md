@@ -1,5 +1,6 @@
 # social-publisher
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4bff9459fd3e44aea930001415f66686)](https://app.codacy.com/gh/marabesi/social-publisher?utm_source=github.com&utm_medium=referral&utm_content=marabesi/social-publisher&utm_campaign=Badge_Grade_Settings)
 [![Coverage Status](https://coveralls.io/repos/github/marabesi/social-publisher/badge.svg?branch=main)](https://coveralls.io/github/marabesi/social-publisher?branch=main)
 
 Social publisher allows you to schedule and publish posts into social

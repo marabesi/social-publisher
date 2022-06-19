@@ -10,7 +10,9 @@ import picocli.CommandLine
 import application.entities.SocialConfiguration
 import java.time.Instant
 
-class CliFactory: CommandLine.IFactory {
+class CliFactory(
+    private val currentTime: Instant
+): CommandLine.IFactory {
     override fun <K : Any?> create(cls: Class<K>?): K {
         if (cls != null) {
             val configuration = FileSystemConfigurationRepository()
@@ -32,7 +34,7 @@ class CliFactory: CommandLine.IFactory {
                 return Scheduler(postsRepository, scheduler, CliOutput()) as K
             }
             if (cls == Poster::class.java) {
-                return Poster(scheduler, CliOutput(), Instant.now()) as K
+                return Poster(scheduler, CliOutput(), currentTime) as K
             }
 
             if (cls == Configuration::class.java) {

@@ -4,6 +4,7 @@ import adapters.inbound.cli.Post
 import application.Poster
 import adapters.inbound.cli.Scheduler
 import picocli.CommandLine
+import java.time.Instant
 
 @CommandLine.Command(
     name = "social",
@@ -18,8 +19,8 @@ import picocli.CommandLine
 class Application {
 }
 
-fun buildCommandLine(): CommandLine {
-    return CommandLine(Application::class.java, CliFactory())
+fun buildCommandLine(currentTime: Instant = Instant.now()): CommandLine {
+    return CommandLine(Application::class.java, CliFactory(currentTime))
 }
 
 fun main(args: Array<String>) {

@@ -23,10 +23,10 @@ jobs:
 
       - name: Set up .env
         run: |
-          echo "TWITTER_CONSUMER_KEY=${{ secrets.TWITTER_CONSUMER_KEY }}" >> .env
-          echo "TWITTER_CONSUMER_SECRET=${{ secrets.TWITTER_CONSUMER_SECRET }}" .env
-          echo "TWITTER_TOKEN=${{ secrets.TWITTER_TOKEN }}" .env
-          echo "TWITTER_TOKEN_SECRET=${{ secrets.TWITTER_TOKEN_SECRET }}" >> .env
+          echo TWITTER_CONSUMER_KEY=${{ secrets.TWITTER_CONSUMER_KEY }} >> .env
+          echo TWITTER_CONSUMER_SECRET=${{ secrets.TWITTER_CONSUMER_SECRET }} >> .env
+          echo TWITTER_TOKEN=${{ secrets.TWITTER_TOKEN }} >> .env
+          echo TWITTER_TOKEN_SECRET=${{ secrets.TWITTER_TOKEN_SECRET }} >> .env
 
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b

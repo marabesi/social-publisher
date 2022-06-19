@@ -32,15 +32,7 @@ class TwitterIntegration(
             throw MissingConfigurationSetup("token secret")
         }
 
-//        val twitter = TwitterTemplate(
-//            "AmONAp9GSQw6wcQG7MCZcRmT3",
-//            "rPI1IXsmKTA0DqKhXw6p3Q9sabcqJntbDMlIHhO4mZX8MxiBFA",
-//            "1537729846750679042-069q2NBGaL3mRXtBXHhTHGFbvEZZD5",
-//            "LKG3lZENbGpjePa3Hz5Mb3FNSfCrbmsLCtV4gqSvwVV65"
-//        )
-
         twitterClient.sendTweet(scheduledItem.post.text)
-//        twitter.timelineOperations().updateStatus("Spring Social is awesome!")
         return true
     }
 }

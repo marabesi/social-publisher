@@ -109,7 +109,7 @@ class TwitterTest {
 
     @Test
     fun `should send a tweet to twitter api`() {
-        every { socialIntegration.sendTweet(any()) } returns true
+        every { socialIntegration.sendTweet(any()) } returns Unit
 
         val twitter = buildTwitter(
             SocialConfiguration(

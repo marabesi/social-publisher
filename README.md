@@ -32,5 +32,10 @@ kotlin -classpath "/home/marabesi/Downloads/picocli-4.6.2.jar:build/libs/social-
   - https://developer.twitter.com/en/docs/authentication/api-reference/request_token
   - https://developer.twitter.com/en/docs/authentication/api-reference/authorize
   - https://github.com/twitterdev/Twitter-API-v2-sample-code/blob/main/Manage-Tweets/create_tweet.js
+- https://gist.github.com/robotdan/33f5834399b6b30fea2ae59e87823e1d
 - https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-statuses-update
 - https://docs.spring.io/spring-social-twitter/docs/1.1.0.RELEASE/reference/htmlsingle
+- https://github.com/spring-attic/spring-social-twitter
+
+### Junit + kotlin
+- https://www.baeldung.com/kotlin/assertfailswith

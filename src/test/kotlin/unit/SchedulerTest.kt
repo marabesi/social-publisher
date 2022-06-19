@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.ValueSource
-import adapters.outbound.inmemory.InMemoryRepository
+import adapters.outbound.inmemory.InMemoryPostRepository
 import adapters.outbound.inmemory.InMemorySchedulerRepository
 import picocli.CommandLine
 import application.entities.SocialPosts
@@ -21,7 +21,7 @@ class SchedulerTest {
 
     @BeforeEach
     fun setUp() {
-        app = Scheduler(InMemoryRepository(), InMemorySchedulerRepository(), MockedOutput())
+        app = Scheduler(InMemoryPostRepository(), InMemorySchedulerRepository(), MockedOutput())
         cmd = CommandLine(app)
     }
 
@@ -66,7 +66,7 @@ class SchedulerTest {
 
     @Test
     fun `should schedule post to be published`() {
-        val postsRepository = InMemoryRepository()
+        val postsRepository = InMemoryPostRepository()
         postsRepository.save(arrayListOf(
             SocialPosts(text = "anything")
         ))
@@ -79,7 +79,7 @@ class SchedulerTest {
 
     @Test
     fun `should list post with id 1 to be scheduled`() {
-        val postsRepository = InMemoryRepository()
+        val postsRepository = InMemoryPostRepository()
         val post = SocialPosts(text = "anything")
         postsRepository.save(arrayListOf(
             post

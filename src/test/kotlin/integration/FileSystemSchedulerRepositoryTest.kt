@@ -6,7 +6,7 @@ import application.entities.ScheduledItem
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import adapters.outbound.csv.FileSystemSchedulerRepository
-import adapters.outbound.inmemory.InMemoryRepository
+import adapters.outbound.inmemory.InMemoryPostRepository
 import application.entities.SocialPosts
 import java.io.File
 import java.time.Instant
@@ -24,7 +24,7 @@ class FileSystemSchedulerRepositoryTest {
     @Test
     fun storeScheduler() {
         val post = SocialPosts("1", "another post")
-        val repository = FileSystemSchedulerRepository(filePath, InMemoryRepository())
+        val repository = FileSystemSchedulerRepository(filePath, InMemoryPostRepository())
 
         assertTrue(repository.save(
             ScheduledItem(
@@ -36,7 +36,7 @@ class FileSystemSchedulerRepositoryTest {
     @Test
     fun fetchScheduledItem() {
         val post = SocialPosts("1", "another post")
-        val postsRepository = InMemoryRepository()
+        val postsRepository = InMemoryPostRepository()
         postsRepository.save(arrayListOf(post))
 
         val repository = FileSystemSchedulerRepository(filePath, postsRepository)

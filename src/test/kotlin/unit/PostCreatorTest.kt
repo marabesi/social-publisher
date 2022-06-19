@@ -7,13 +7,13 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import adapters.outbound.inmemory.InMemoryRepository
+import adapters.outbound.inmemory.InMemoryPostRepository
 import picocli.CommandLine
 import java.io.PrintWriter
 import java.io.StringWriter
 
 class PostCreatorTest {
-    private val cmd = CommandLine(Post(InMemoryRepository(), MockedOutput()))
+    private val cmd = CommandLine(Post(InMemoryPostRepository(), MockedOutput()))
 
     @Test
     fun `should show help message for post command`() {

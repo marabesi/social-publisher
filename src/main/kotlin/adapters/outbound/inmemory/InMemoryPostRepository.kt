@@ -3,7 +3,7 @@ package adapters.outbound.inmemory
 import application.persistence.PostsRepository
 import application.entities.SocialPosts
 
-class InMemoryRepository: PostsRepository {
+class InMemoryPostRepository: PostsRepository {
 
     private var storedPosts: ArrayList<SocialPosts> = arrayListOf();
 

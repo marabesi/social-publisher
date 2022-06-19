@@ -7,9 +7,7 @@ import picocli.CommandLine
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.PrintStream
-import java.time.Clock
 import java.time.Instant
-import java.time.ZoneOffset
 import kotlin.test.assertContains
 
 class SocialPublisherSteps: En {
@@ -17,18 +15,27 @@ class SocialPublisherSteps: En {
 //    private val standardOut = System.out
     private val outputStreamCaptor: ByteArrayOutputStream = ByteArrayOutputStream()
 
+    private fun cleanUp() {
+        System.setOut(PrintStream(outputStreamCaptor))
+
+        File("data/").listFiles()?.forEach {
+            it.delete()
+        }
+    }
+
     init {
         lateinit var cmd: CommandLine
         var exitCode: Int? = null
 
         Given("A new cli"){ ->
             cmd  = buildCommandLine()
+            cleanUp()
+        }
 
-            System.setOut(PrintStream(outputStreamCaptor))
-
-            File("data/").listFiles()?.forEach {
-                it.delete()
-            }
+        Given("A new cli with date set to {string}"){
+            dateTime: String ->
+            cmd  = buildCommandLine(Instant.parse(dateTime))
+            cleanUp()
         }
 
         When(
@@ -101,16 +108,6 @@ class SocialPublisherSteps: En {
 
         When("I list the posts") {
             exitCode = cmd.execute("post", "-l")
-        }
-
-        When(
-            "I define the system to use the date {string}"
-        ) { dateTime: String ->
-            Instant.now(
-                Clock.fixed(
-                Instant.parse(dateTime),
-                ZoneOffset.UTC)
-            )
         }
 
         Then("Poster should send post {string} to twitter") {

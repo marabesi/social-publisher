@@ -2,6 +2,7 @@ package adapters.outbound.social
 
 import application.entities.ScheduledItem
 import application.entities.SocialConfiguration
+import application.entities.SocialPosts
 import application.socialnetwork.MissingConfigurationSetup
 import application.socialnetwork.TwitterClient
 import application.socialnetwork.SocialThirdParty
@@ -11,7 +12,7 @@ class TwitterIntegration(
     private val configuration: SocialConfiguration,
     private val twitterClient: TwitterClient
 ) : SocialThirdParty {
-    override fun send(scheduledItem: ScheduledItem): Boolean {
+    override fun send(scheduledItem: ScheduledItem): SocialPosts {
         if (configuration.twitter == null) {
             throw MissingConfigurationSetup("twitter")
         }
@@ -32,7 +33,7 @@ class TwitterIntegration(
             throw MissingConfigurationSetup("token secret")
         }
 
-        twitterClient.sendTweet(scheduledItem.post.text)
-        return true
+        val tweet = twitterClient.sendTweet(scheduledItem.post.text)
+        return scheduledItem.post
     }
 }

@@ -109,7 +109,12 @@ class TwitterTest {
 
     @Test
     fun `should send a tweet to twitter api`() {
-        every { socialIntegration.sendTweet(any()) } returns Unit
+        val tweet = SocialPosts(
+            scheduledPost.post.id,
+            scheduledPost.post.text,
+            "twitter-id"
+        )
+        every { socialIntegration.sendTweet(any()) } returns tweet
 
         val twitter = buildTwitter(
             SocialConfiguration(

@@ -6,15 +6,15 @@ import application.entities.ScheduledItem
 import application.entities.SocialConfiguration
 import application.entities.SocialPosts
 import application.entities.TwitterCredentials
+import io.github.cdimascio.dotenv.dotenv
 import org.junit.jupiter.api.Test
 import java.time.Instant
-import kotlin.test.assertTrue
-import io.github.cdimascio.dotenv.dotenv
+import kotlin.test.assertNotNull
 
 class TwitterClient {
 
     private val scheduledPost = ScheduledItem(
-        SocialPosts("1", "Random tweet"),
+        SocialPosts("1", "Random tweet 123"),
         Instant.parse("2014-12-22T10:15:30Z")
     )
 
@@ -36,8 +36,8 @@ class TwitterClient {
             SocialSpringTwitterClient(config)
         )
 
-        assertTrue(
-            twitter.send(scheduledPost)
+        assertNotNull(
+            twitter.send(scheduledPost).socialMediaId
         )
     }
 }

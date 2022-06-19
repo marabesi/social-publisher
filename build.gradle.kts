@@ -36,12 +36,31 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
     testImplementation("io.mockk:mockk:1.12.4")
     implementation("org.springframework.social:spring-social-twitter:1.1.0.RELEASE")
+    implementation("io.github.cdimascio:dotenv-kotlin:6.3.1")
 }
 
 tasks.test {
     useJUnitPlatform()
     filter {
         excludeTestsMatching("acceptance.*")
+        excludeTestsMatching("thirdpartyintegration.*")
+    }
+}
+
+sourceSets {
+    create("intTest") {
+        compileClasspath += sourceSets.main.get().output
+        runtimeClasspath += sourceSets.main.get().output
+    }
+}
+
+val integrationTest = task<Test>("integrationTest") {
+    description = "Runs integration tests."
+    group = "verification"
+
+    useJUnitPlatform()
+    filter {
+        includeTestsMatching("thirdpartyintegration.*")
     }
 }
 

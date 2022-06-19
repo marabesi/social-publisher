@@ -6,7 +6,7 @@ import application.entities.ScheduledItem
 import application.entities.SocialConfiguration
 import application.entities.SocialPosts
 import application.entities.TwitterCredentials
-import io.github.cdimascio.dotenv.dotenv
+import io.github.cdimascio.dotenv.Dotenv
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.social.twitter.api.impl.TwitterTemplate
@@ -14,7 +14,10 @@ import java.time.Instant
 import kotlin.test.assertNotNull
 
 class TwitterClient {
-    private val dotenv = dotenv()
+    private val dotenv = Dotenv
+        .configure()
+        .systemProperties()
+        .load()
     private lateinit var credentials: TwitterCredentials
 
     private val scheduledPost = ScheduledItem(

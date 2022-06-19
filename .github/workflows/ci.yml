@@ -35,5 +35,10 @@ jobs:
 
       - name: Test integration with twitter
         uses: gradle/gradle-build-action@4137be6a8bf7d7133955359dbd952c0ca73b1021
+        env:
+          TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
+          TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
+          TWITTER_TOKEN: ${{ secrets.TWITTER_TOKEN }}
+          TWITTER_TOKEN_SECRET: ${{ secrets.TWITTER_TOKEN_SECRET }}
         with:
           arguments: integrationTest

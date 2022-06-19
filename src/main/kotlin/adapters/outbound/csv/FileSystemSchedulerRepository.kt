@@ -41,6 +41,6 @@ class FileSystemSchedulerRepository(private val filePath: String) : SchedulerRep
     }
 
     private fun buildPostFromCsvRecord(record: CSVRecord): ScheduledItem {
-        return ScheduledItem(SocialPosts(record[0].toInt(), ""), Instant.parse(record[1]))
+        return ScheduledItem(SocialPosts(record[0], ""), Instant.parse(record[1]))
     }
 }

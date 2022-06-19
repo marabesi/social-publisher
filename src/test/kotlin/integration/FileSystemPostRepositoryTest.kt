@@ -25,7 +25,7 @@ class FileSystemPostRepositoryTest {
 
     @Test
     fun storePostsInAFile() {
-        val post = SocialPosts(1, "another post")
+        val post = SocialPosts("1", "another post")
         val repository = FileSystemPostRepository(filePath)
 
         assertTrue(repository.save(arrayListOf(post)))
@@ -33,7 +33,7 @@ class FileSystemPostRepositoryTest {
 
     @Test
     fun storePostsInAFileUnderAPath() {
-        val post = SocialPosts(1, "my_another_post")
+        val post = SocialPosts("1", "my_another_post")
         val repository = FileSystemPostRepository(filePathWithSubfolder)
 
         assertTrue(repository.save(arrayListOf(post)))
@@ -41,7 +41,7 @@ class FileSystemPostRepositoryTest {
 
     @Test
     fun fetchEmptyPosts() {
-        val post = SocialPosts(1, "fetch from csv")
+        val post = SocialPosts("1", "fetch from csv")
         val repository = FileSystemPostRepository(filePath)
 
         val storedPost: ArrayList<SocialPosts> = repository.findAll()
@@ -51,7 +51,7 @@ class FileSystemPostRepositoryTest {
 
     @Test
     fun fetchPostFromCsv() {
-        val post = SocialPosts(1, "fetch from csv")
+        val post = SocialPosts("1", "fetch from csv")
         val repository = FileSystemPostRepository(filePath)
 
         repository.save(
@@ -78,8 +78,8 @@ class FileSystemPostRepositoryTest {
             )
         )
 
-        assertEquals(1, repository.findAll()[0].id)
-        assertEquals(2, repository.findAll()[1].id)
+        assertEquals("1", repository.findAll()[0].id)
+        assertEquals("2", repository.findAll()[1].id)
     }
 
     @Test

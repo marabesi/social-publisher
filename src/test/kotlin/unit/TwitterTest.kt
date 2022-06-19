@@ -18,7 +18,7 @@ import kotlin.test.assertFailsWith
 class TwitterTest {
 
     private val scheduledPost = ScheduledItem(
-        SocialPosts(1, "Random tweet"),
+        SocialPosts("1", "Random tweet"),
         Instant.parse("2014-12-22T10:15:30Z")
     )
 

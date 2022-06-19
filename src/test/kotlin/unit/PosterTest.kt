@@ -72,7 +72,7 @@ class PosterTest {
         currentDate = Instant.now(clock)
         schedulerRepository.save(
             ScheduledItem(
-                SocialPosts(1, "random post text"),
+                SocialPosts("1", "random post text"),
                 Instant.parse("2014-12-22T10:15:30Z")
             )
         )
@@ -92,7 +92,7 @@ class PosterTest {
         currentDate = Instant.now(clock)
             schedulerRepository.save(
                 ScheduledItem(
-                SocialPosts(1, "random post text"),
+                SocialPosts("1", "random post text"),
                 Instant.parse("2014-12-22T10:15:32Z")
             )
         )

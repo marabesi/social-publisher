@@ -1,6 +1,6 @@
 package application.entities
 
 class SocialPosts(
-    var id: Int? = null,
+    var id: String? = null,
     val text: String
 )

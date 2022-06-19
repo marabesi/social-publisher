@@ -9,7 +9,8 @@ class InMemoryRepository: PostsRepository {
 
     override fun save(posts: ArrayList<SocialPosts>): Boolean {
         for (post in posts) {
-            post.id = storedPosts.size + 1
+            val id = storedPosts.size + 1
+            post.id = id.toString()
             storedPosts.add(post)
         }
         return true

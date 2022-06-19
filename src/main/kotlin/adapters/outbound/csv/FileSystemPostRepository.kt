@@ -68,7 +68,7 @@ class FileSystemPostRepository(private val filePath: String): PostsRepository {
     }
 
     private fun buildPostFromCsvRecord(record: CSVRecord): SocialPosts {
-        return SocialPosts(record[1].toInt(), record[0])
+        return SocialPosts(record[1], record[0])
     }
 
     private fun ensureFileExists(file: File) {

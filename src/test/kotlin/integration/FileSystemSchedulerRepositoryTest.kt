@@ -22,7 +22,7 @@ class FileSystemSchedulerRepositoryTest {
 
     @Test
     fun storeScheduler() {
-        val post = SocialPosts(1, "another post")
+        val post = SocialPosts("1", "another post")
         val repository = FileSystemSchedulerRepository(filePath)
 
         assertTrue(repository.save(
@@ -34,7 +34,7 @@ class FileSystemSchedulerRepositoryTest {
 
     @Test
     fun fetchScheduledItem() {
-        val post = SocialPosts(1, "another post")
+        val post = SocialPosts("1", "another post")
         val repository = FileSystemSchedulerRepository(filePath)
 
         repository.save(

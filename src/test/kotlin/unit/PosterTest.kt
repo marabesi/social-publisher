@@ -11,6 +11,8 @@ import adapters.outbound.inmemory.InMemorySchedulerRepository
 import picocli.CommandLine
 import application.entities.ScheduledItem
 import application.entities.SocialPosts
+import application.socialnetwork.SocialThirdParty
+import io.mockk.mockk
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.time.Clock
@@ -22,6 +24,7 @@ class PosterTest {
     private lateinit var app: Poster
     private lateinit var cmd: CommandLine
     private val schedulerRepository: SchedulerRepository = InMemorySchedulerRepository()
+    private val socialThirdParty: SocialThirdParty = mockk()
     private var currentDate: Instant = Instant.now()
 
     @BeforeEach

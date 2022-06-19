@@ -51,6 +51,7 @@ class FileSystemConfigurationRepositoryTest {
         val repository = FileSystemConfigurationRepository()
         assertFailsWith(
             exceptionClass = MissingConfiguration::class,
+            message = "There is no configuration stored",
             block = {
                 repository.find()
             }

@@ -1,5 +1,6 @@
-package application
+package adapters.inbound.cli
 
+import application.Output
 import application.persistence.SchedulerRepository
 import application.poster.Executor
 import application.socialnetwork.SocialThirdParty

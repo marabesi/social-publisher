@@ -2,7 +2,7 @@ package unit
 
 import MockedOutput
 import adapters.outbound.inmemory.InMemorySchedulerRepository
-import application.Poster
+import adapters.inbound.cli.Poster
 import application.entities.ScheduledItem
 import application.entities.SocialPosts
 import application.persistence.SchedulerRepository

@@ -6,7 +6,6 @@ import adapters.outbound.csv.FileSystemPostRepository
 import adapters.outbound.csv.FileSystemSchedulerRepository
 import adapters.outbound.social.SocialSpringTwitterClient
 import adapters.outbound.social.TwitterIntegration
-import application.Poster
 import application.entities.SocialConfiguration
 import application.persistence.configuration.MissingConfiguration
 import picocli.CommandLine

@@ -1,8 +1,14 @@
 package acceptance
 
+import application.entities.SocialConfiguration
+import application.entities.TwitterCredentials
 import buildCommandLine
 import io.cucumber.java8.En
+import io.github.cdimascio.dotenv.dotenv
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.springframework.social.twitter.api.impl.TwitterTemplate
 import picocli.CommandLine
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -12,8 +18,14 @@ import kotlin.test.assertContains
 
 class SocialPublisherSteps: En {
 
-//    private val standardOut = System.out
     private val outputStreamCaptor: ByteArrayOutputStream = ByteArrayOutputStream()
+    private val dotenv = dotenv()
+    private val twitterCredentials = TwitterCredentials(
+        dotenv["TWITTER_CONSUMER_KEY"],
+        dotenv["TWITTER_CONSUMER_SECRET"],
+        dotenv["TWITTER_TOKEN"],
+        dotenv["TWITTER_TOKEN_SECRET"],
+    )
 
     private fun cleanUp() {
         System.setOut(PrintStream(outputStreamCaptor))
@@ -110,10 +122,36 @@ class SocialPublisherSteps: En {
             exitCode = cmd.execute("post", "-l")
         }
 
-        Then("Poster should send post {string} to twitter") {
-            postId: String ->
+        Then("Poster should send post {string} with text {string} to twitter") {
+            postId: String,
+            postText: String ->
             exitCode = cmd.execute("poster", "-r")
             assertEquals(outputStreamCaptor.toString(), "Post $postId sent to twitter")
+
+            val client = TwitterTemplate(
+                twitterCredentials.consumerKey,
+                twitterCredentials.consumerSecret,
+                twitterCredentials.accessToken,
+                twitterCredentials.accessTokenSecret
+            )
+
+            client.timelineOperations().homeTimeline.forEach {
+                if (it.text.equals(postText)) {
+                    client.timelineOperations().deleteStatus(it.id)
+                }
+            }
+        }
+
+        Given("the twitter credentials in place") {
+            val socialConfiguration = SocialConfiguration(
+                "twitter",
+                "csv",
+                twitterCredentials
+            )
+            val configuration = Json.encodeToString(socialConfiguration)
+
+            exitCode = cmd.execute("configuration", "-c", configuration)
+            assertContains(outputStreamCaptor.toString(), "Configuration has been stored")
         }
     }
 }

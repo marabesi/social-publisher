@@ -50,7 +50,7 @@ class TwitterClient {
 
         assertNotNull(tweet.socialMediaId)
 
-        val client= TwitterTemplate(
+        val client = TwitterTemplate(
             credentials.consumerKey,
             credentials.consumerSecret,
             credentials.accessToken,

@@ -24,10 +24,11 @@ class CliFactory(
                 SocialConfiguration("production", "csv")
             }
 
-            val filePath = "data/scheduler-${currentConfiguration.fileName}.csv"
-            val scheduler = FileSystemSchedulerRepository(filePath)
-
             val postsRepository = FileSystemPostRepository("data/posts-${currentConfiguration.fileName}.csv")
+
+            val filePath = "data/scheduler-${currentConfiguration.fileName}.csv"
+            val scheduler = FileSystemSchedulerRepository(filePath, postsRepository)
+
 
             if (cls == Post::class.java) {
                 return Post(postsRepository, CliOutput()) as K

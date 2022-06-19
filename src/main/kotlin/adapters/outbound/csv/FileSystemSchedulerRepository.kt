@@ -6,13 +6,16 @@ import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVPrinter
 import org.apache.commons.csv.CSVRecord
-import application.entities.SocialPosts
+import application.persistence.PostsRepository
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 import java.time.Instant
 
-class FileSystemSchedulerRepository(private val filePath: String) : SchedulerRepository {
+class FileSystemSchedulerRepository(
+    private val filePath: String,
+    private val postsRepository: PostsRepository
+) : SchedulerRepository {
     override fun save(scheduledItem: ScheduledItem): Boolean {
         val file = File(filePath)
 
@@ -41,6 +44,9 @@ class FileSystemSchedulerRepository(private val filePath: String) : SchedulerRep
     }
 
     private fun buildPostFromCsvRecord(record: CSVRecord): ScheduledItem {
-        return ScheduledItem(SocialPosts(record[0], ""), Instant.parse(record[1]))
+        val postId = record[0]
+        val socialPost = postsRepository.findById(postId)
+        val publishDate = record[1]
+        return ScheduledItem(socialPost!!, Instant.parse(publishDate))
     }
 }

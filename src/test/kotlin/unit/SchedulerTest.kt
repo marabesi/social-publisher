@@ -1,18 +1,21 @@
 package unit
 
 import MockedOutput
-import application.entities.ScheduledItem
 import adapters.inbound.cli.Scheduler
+import adapters.outbound.inmemory.InMemoryPostRepository
+import adapters.outbound.inmemory.InMemorySchedulerRepository
+import application.entities.ScheduledItem
+import application.entities.SocialPosts
+import buildCommandLine
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.ValueSource
-import adapters.outbound.inmemory.InMemoryPostRepository
-import adapters.outbound.inmemory.InMemorySchedulerRepository
 import picocli.CommandLine
-import application.entities.SocialPosts
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.time.Instant
 
 class SchedulerTest {
@@ -44,9 +47,15 @@ class SchedulerTest {
 
     @Test
     fun `should show help message for schedule command`() {
-        cmd.execute("--help")
+        val cmd = buildCommandLine()
+
+        val sw = StringWriter()
+        cmd.out = PrintWriter(sw)
+        cmd.err = PrintWriter(sw)
+
+        cmd.execute("scheduler", "--help")
         assertEquals("""
-            Usage: scheduler [-chlV] [-d=<targetDate>] [-p=<postId>]
+            Usage: social scheduler [-chlV] [-d=<targetDate>] [-p=<postId>]
               -c                 Sets the cli to schedule a post
               -d=<targetDate>    Target date
               -h, --help         Show this help message and exit.
@@ -54,7 +63,7 @@ class SchedulerTest {
               -p=<postId>        Post id
               -V, --version      Print version information and exit.
         
-        """.trimIndent(), cmd.usageMessage)
+        """.trimIndent(), sw.toString())
     }
 
     @ParameterizedTest

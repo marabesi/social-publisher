@@ -15,7 +15,7 @@ class FileSystemPostRepository(private val filePath: String): PostsRepository {
         try {
             File(filePath).parentFile.mkdirs()
         } catch (ex: NullPointerException) {
-            print(ex.message)
+//            print(ex.message)
         }
 
         val file = File(filePath)

@@ -28,7 +28,6 @@ class CliFactory(
             val filePath = "data/scheduler-${currentConfiguration.fileName}.csv"
             val scheduler = FileSystemSchedulerRepository(filePath, postsRepository)
 
-
             if (cls == Post::class.java) {
                 return Post(postsRepository, CliOutput()) as K
             }

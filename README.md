@@ -1,6 +1,6 @@
 # social-publisher
 
-[![Coverage Status](https://coveralls.io/repos/github/marabesi/social-publisher/badge.svg?branch=main)](https://coveralls.io/github/marabesi/social-publisher?branch=main)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/c7b738b1eb434894a1927f5a6aba588c)](https://www.codacy.com/gh/marabesi/social-publisher/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=marabesi/social-publisher&amp;utm_campaign=Badge_Grade) [![Coverage Status](https://coveralls.io/repos/github/marabesi/social-publisher/badge.svg?branch=main)](https://coveralls.io/github/marabesi/social-publisher?branch=main)
 
 Social publisher allows you to schedule and publish posts into social
 media. At the moment, the current medias are supported:

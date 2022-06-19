@@ -100,4 +100,36 @@ class SchedulerTest {
             1. Post with id 1 will be published on 2022-10-02T09:00:00Z
         """.trimIndent(), cmd.getExecutionResult())
     }
+
+    @Test
+    fun `should list posts to be scheduled`() {
+        val postsRepository = InMemoryPostRepository()
+        val post1 = SocialPosts(text = "anything")
+        val post2 = SocialPosts(text = "anything-2")
+        postsRepository.save(arrayListOf(
+            post1,
+            post2
+        ))
+
+        val scheduleRepository = InMemorySchedulerRepository()
+        scheduleRepository.save(
+            ScheduledItem(
+                post1, Instant.parse("2022-10-02T09:00:00Z")
+            ),
+        )
+        scheduleRepository.save(
+            ScheduledItem(
+                post2, Instant.parse("2022-11-02T10:00:00Z")
+            ),
+        )
+
+        val app = Scheduler(postsRepository, scheduleRepository, MockedOutput())
+        val cmd = CommandLine(app)
+        cmd.execute("-l")
+
+        assertEquals("""
+            1. Post with id 1 will be published on 2022-10-02T09:00:00Z
+            2. Post with id 2 will be published on 2022-11-02T10:00:00Z
+        """.trimIndent(), cmd.getExecutionResult())
+    }
 }

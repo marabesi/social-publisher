@@ -12,3 +12,20 @@ Feature:  Post scheduled posts to twitter
     And I set the post "1" to "twitter"
     Then I clean the output
     Then Poster should send post "1" with text "Post to schedule" to twitter
+
+  Scenario: List scheduled posts in the future
+    When I create a post with the text "Post to schedule-1"
+    When I create a post with the text "Post to schedule-2"
+    Then I clean the output
+    And I schedule the post with id "1" to be published at "2022-11-02T09:00:00Z"
+    And I schedule the post with id "2" to be published at "2022-11-02T09:00:00Z"
+    Then I clean the output
+    And I set the post "1" to "twitter"
+    Then I clean the output
+    And I set the post "2" to "twitter"
+    Then I clean the output
+    Then Poster should show "Waiting for the date to come to publish post 1"
+    Then Poster should show "Waiting for the date to come to publish post 2"
+
+#    Then Show the scheduled post "1. Post with id 1 will be published on 2022-11-02T09:00:00Z"
+#    Then Show the scheduled post "2. Post with id 2 will be published on 2022-11-02T09:00:00Z"

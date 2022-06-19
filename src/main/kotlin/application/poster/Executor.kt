@@ -17,15 +17,23 @@ class Executor(
         if (posts.isEmpty()) {
             return cliOutput.write("There are no posts to be posted")
         }
+        var index = 1
+        var result = ""
         posts.forEach {
             if (currentDate < it.publishDate) {
-                return cliOutput.write("Waiting for the date to come to publish post 1")
+                val isLast: Boolean = posts.size == index
+                result += if (isLast) {
+                    "Waiting for the date to come to publish post ${it.post.id}"
+                } else {
+                    "Waiting for the date to come to publish post ${it.post.id}\n"
+                }
+                index++
+            } else {
+                twitterClient.send(it)
+
+                return cliOutput.write("Post ${it.post.id} sent to twitter")
             }
-
-            twitterClient.send(it)
-
-            return cliOutput.write("Post ${it.post.id} sent to twitter")
         }
-        TODO()
+        return cliOutput.write(result)
     }
 }

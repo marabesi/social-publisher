@@ -35,6 +35,6 @@ class Poster(
             ).invoke()
         }
 
-        return cliOutput.write("Post 1 set to twitter")
+        return cliOutput.write("Post $postId set to twitter")
     }
 }

@@ -69,11 +69,29 @@ class PosterTest {
 
     @ParameterizedTest
     @ValueSource(strings = ["1", "2"])
-    fun `should send post to twitter`(id: String) {
+    fun `set post to be sent to twitter`(id: String) {
+        val scheduledItem = ScheduledItem(
+            SocialPosts(id, "random post text"),
+            Instant.parse("2014-12-22T10:15:30Z")
+        )
+
+        schedulerRepository.save(
+            scheduledItem
+        )
+
+        cmd.execute("-p", id)
+
+        val result = cmd.getExecutionResult<String>()
+
+        Assertions.assertEquals("Post $id set to twitter", result)
+    }
+
+    @Test
+    fun `should send post to twitter`() {
         val instantExpected = "2014-12-22T10:15:31Z"
         val clock: Clock = Clock.fixed(Instant.parse(instantExpected), ZoneId.of("UTC"))
         val scheduledItem = ScheduledItem(
-            SocialPosts(id, "random post text"),
+            SocialPosts("1", "random post text"),
             Instant.parse("2014-12-22T10:15:30Z")
         )
 
@@ -88,11 +106,11 @@ class PosterTest {
 
         val result = cmd.getExecutionResult<String>()
 
-        Assertions.assertEquals("Post $id sent to twitter", result)
+        Assertions.assertEquals("Post 1 sent to twitter", result)
     }
 
     @Test
-    fun `should not post posts when publish date has not arrived yet`() {
+    fun `should not post when publish date has not arrived yet`() {
         val instantExpected = "2014-12-22T10:15:31Z"
         val clock: Clock = Clock.fixed(Instant.parse(instantExpected), ZoneId.of("UTC"))
 
@@ -112,5 +130,37 @@ class PosterTest {
         val result = cmd.getExecutionResult<String>()
 
         Assertions.assertEquals("Waiting for the date to come to publish post 1", result)
+    }
+
+    @Test
+    fun `should not post posts when publish date has not arrived yet`() {
+        val instantExpected = "2014-12-22T10:15:31Z"
+        val clock: Clock = Clock.fixed(Instant.parse(instantExpected), ZoneId.of("UTC"))
+
+        currentDate = Instant.now(clock)
+        schedulerRepository.save(
+            ScheduledItem(
+                SocialPosts("1", "random post text"),
+                Instant.parse("2014-12-22T10:15:32Z")
+            )
+        )
+        schedulerRepository.save(
+            ScheduledItem(
+                SocialPosts("2", "random post text"),
+                Instant.parse("2014-12-22T10:15:32Z")
+            )
+        )
+
+        app = Poster(schedulerRepository, MockedOutput(), currentDate, socialThirdParty)
+        cmd = CommandLine(app)
+
+        cmd.execute("-r")
+
+        val result = cmd.getExecutionResult<String>()
+
+        Assertions.assertEquals("""
+            Waiting for the date to come to publish post 1
+            Waiting for the date to come to publish post 2
+        """.trimIndent(), result)
     }
 }

@@ -8,3 +8,11 @@ Feature: Configuration json that is required to use the cli
     Then I clean the output
     Then I list the configuration
     Then I see the configuration '{"fileName":"e2e-file","storage":"csv"}'
+
+  Scenario: Creates a configuration with twitter credentials
+    Given A new cli
+    When I create a configuration with '{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"1","consumerSecret":"1","accessToken":"1","accessTokenSecret":"1"}}'
+    Then Show successfully message "Configuration has been stored"
+    Then I clean the output
+    Then I list the configuration
+    Then I see the configuration '{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"1","consumerSecret":"1","accessToken":"1","accessTokenSecret":"1"}}'

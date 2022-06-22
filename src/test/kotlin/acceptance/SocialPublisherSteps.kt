@@ -4,6 +4,7 @@ import application.entities.SocialConfiguration
 import application.entities.TwitterCredentials
 import buildCommandLine
 import io.cucumber.java8.En
+import io.cucumber.java8.PendingException
 import io.github.cdimascio.dotenv.dotenv
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -159,6 +160,13 @@ class SocialPublisherSteps: En {
         ) { output: String ->
             exitCode = cmd.execute("poster", "-r")
             assertContains(outputStreamCaptor.toString(), output)
+        }
+
+        When(
+            "I create a configuration with {string}"
+        ) { jsonConfiguration: String ->
+            exitCode = cmd.execute("configuration", "-c", jsonConfiguration)
+            assertContains(outputStreamCaptor.toString(), "Configuration has been stored")
         }
     }
 }

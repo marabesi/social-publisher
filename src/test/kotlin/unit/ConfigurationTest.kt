@@ -55,6 +55,8 @@ class ConfigurationTest {
             return Stream.of(
                 Arguments.of("""{"fileName":"tmp"}""", """{"fileName":"tmp","storage":"csv"}"""),
                 Arguments.of("""{"fileName":"123"}""", """{"fileName":"123","storage":"csv"}"""),
+//                Arguments.of("""{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"","consumerSecret":"","accessToken":"","accessTokenSecret":""}}""", """{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"","consumerSecret":"","accessToken":"","accessTokenSecret":""}}"""),
+                Arguments.of("""{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"1","consumerSecret":"1","accessToken":"1","accessTokenSecret":"1"}}""", """{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"1","consumerSecret":"1","accessToken":"1","accessTokenSecret":"1"}}""")
             );
         }
     }

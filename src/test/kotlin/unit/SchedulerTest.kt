@@ -66,6 +66,12 @@ class SchedulerTest {
         """.trimIndent(), sw.toString())
     }
 
+    @Test
+    fun `should show message if scheduler is empty`() {
+        cmd.execute("-l")
+        assertEquals("No posts scheduled", cmd.getExecutionResult())
+    }
+
     @ParameterizedTest
     @ValueSource(strings = ["1", "2"])
     fun `should show message if post id does not exists`(id: String) {

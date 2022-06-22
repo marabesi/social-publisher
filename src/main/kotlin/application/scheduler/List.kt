@@ -22,6 +22,11 @@ class List(
             }
             index++
         }
+
+        if (findAll.isEmpty()) {
+            result = "No posts scheduled"
+        }
+        
         val output = result.trimIndent()
         return cliOutput.write(output)
     }

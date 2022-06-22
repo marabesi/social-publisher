@@ -51,4 +51,13 @@ class FileSystemSchedulerRepositoryTest {
         assertEquals(post.id, scheduledItem.post.id)
         assertEquals(post.text, scheduledItem.post.text)
     }
+
+    @Test
+    fun ensureFileExistsWhenCallingFetchScheduledItems() {
+        val repository = FileSystemSchedulerRepository(filePath, InMemoryPostRepository())
+
+        val scheduledItems = repository.findAll()
+
+        assertEquals(0, scheduledItems.size)
+    }
 }

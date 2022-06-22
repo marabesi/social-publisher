@@ -29,6 +29,8 @@ class FileSystemSchedulerRepository(
     }
 
     override fun findAll(): ArrayList<ScheduledItem> {
+        ensureFileExists(File(filePath))
+
         val reader = FileReader(filePath)
         val parser = CSVParser(reader, CSVFormat.DEFAULT)
 
@@ -48,5 +50,11 @@ class FileSystemSchedulerRepository(
         val socialPost = postsRepository.findById(postId)
         val publishDate = record[1]
         return ScheduledItem(socialPost!!, Instant.parse(publishDate))
+    }
+
+    private fun ensureFileExists(file: File) {
+        if (!file.exists()) {
+            file.createNewFile()
+        }
     }
 }

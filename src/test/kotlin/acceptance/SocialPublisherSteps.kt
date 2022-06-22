@@ -4,7 +4,6 @@ import application.entities.SocialConfiguration
 import application.entities.TwitterCredentials
 import buildCommandLine
 import io.cucumber.java8.En
-import io.cucumber.java8.PendingException
 import io.github.cdimascio.dotenv.dotenv
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -74,6 +73,10 @@ class SocialPublisherSteps: En {
             exitCode = cmd.execute("post", "-l")
             assertEquals(0, exitCode)
             assertContains(outputStreamCaptor.toString(), text)
+        }
+
+        When("I list the scheduled posts") {
+            exitCode = cmd.execute("scheduler", "-l")
         }
 
         When(

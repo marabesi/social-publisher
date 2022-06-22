@@ -1,6 +1,11 @@
 Feature: Schedule a post to be posted
   Background: With a new cli instance and no configuration in place
 
+  Scenario: List empty list without posts scheduled
+    Given A new cli
+    When I list the scheduled posts
+    Then Show successfully message "No posts scheduled"
+
   Scenario: Schedule a post created on "2022-10-02 at 09:00 PM" to be posted on "2022-10:02 at 10:00 PM"
     Given A new cli
     When I create a post with the text "Post to schedule"

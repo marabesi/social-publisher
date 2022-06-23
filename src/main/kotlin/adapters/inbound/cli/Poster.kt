@@ -36,6 +36,10 @@ class Poster(
             ).invoke()
         }
 
+        if (postId.isEmpty()) {
+            return cliOutput.write("Missing required fields")
+        }
+
         return cliOutput.write("Post $postId set to twitter")
     }
 }

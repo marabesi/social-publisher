@@ -59,6 +59,15 @@ class PosterTest {
     }
 
     @Test
+    fun `should display friendly message if there is no arguments given`() {
+        cmd.execute()
+
+        val result = cmd.getExecutionResult<String>()
+
+        Assertions.assertEquals("Missing required fields", result)
+    }
+
+    @Test
     fun `should display friendly message if there is no posts to send to twitter`() {
         cmd.execute("-r")
 

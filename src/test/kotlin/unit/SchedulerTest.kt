@@ -93,6 +93,33 @@ class SchedulerTest {
     }
 
     @Test
+    fun `should not schedule post twice on the same date time to be published`() {
+        val postsRepository = InMemoryPostRepository()
+        postsRepository.save(arrayListOf(
+            SocialPosts(text = "anything")
+        ))
+        val app = Scheduler(postsRepository, InMemorySchedulerRepository(), MockedOutput())
+        val cmd = CommandLine(app)
+
+        cmd.execute("-c", "-p", "1", "-d", "2022-10-02T09:00:00Z")
+        cmd.execute("-c", "-p", "1", "-d", "2022-10-02T09:00:00Z")
+        assertEquals("Post is already scheduled for 2022-10-02T09:00:00Z", cmd.getExecutionResult())
+    }
+
+    @Test
+    fun `should warn when invalid date is given to be published`() {
+        val postsRepository = InMemoryPostRepository()
+        postsRepository.save(arrayListOf(
+            SocialPosts(text = "anything")
+        ))
+        val app = Scheduler(postsRepository, InMemorySchedulerRepository(), MockedOutput())
+        val cmd = CommandLine(app)
+
+        cmd.execute("-c", "-p", "1", "-d", "2022")
+        assertEquals("Invalid date time to schedule post", cmd.getExecutionResult())
+    }
+
+    @Test
     fun `should list post with id 1 to be scheduled`() {
         val postsRepository = InMemoryPostRepository()
         val post = SocialPosts(text = "anything")

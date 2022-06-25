@@ -55,12 +55,15 @@ class SchedulerTest {
 
         cmd.execute("scheduler", "--help")
         assertEquals("""
-            Usage: social scheduler [-chlV] [-d=<targetDate>] [-p=<postId>]
+            Usage: social scheduler [-chlrV] [-d=<targetDate>] [-p=<postId>]
+                                    [-s=<scheduleId>]
               -c                 Sets the cli to schedule a post
               -d=<targetDate>    Target date
               -h, --help         Show this help message and exit.
               -l                 List scheduled posts
               -p=<postId>        Post id
+              -r                 Sets the cli to remove a scheduled post
+              -s=<scheduleId>    Scheduled id
               -V, --version      Print version information and exit.
         
         """.trimIndent(), sw.toString())
@@ -144,6 +147,36 @@ class SchedulerTest {
     }
 
     @Test
+    fun `should schedule same post twice each on different days`() {
+        val postsRepository = InMemoryPostRepository()
+        val post = SocialPosts(text = "first day")
+        postsRepository.save(arrayListOf(
+            post,
+        ))
+
+        val scheduleRepository = InMemorySchedulerRepository()
+        scheduleRepository.save(
+            ScheduledItem(
+                post, Instant.parse("2022-10-02T09:00:00Z")
+            )
+        )
+        scheduleRepository.save(
+            ScheduledItem(
+                post, Instant.parse("2022-10-03T09:00:00Z")
+            )
+        )
+
+        val app = Scheduler(postsRepository, scheduleRepository, MockedOutput())
+        val cmd = CommandLine(app)
+        cmd.execute("-l")
+
+        assertEquals("""
+            1. Post with id 1 will be published on 2022-10-02T09:00:00Z
+            2. Post with id 1 will be published on 2022-10-03T09:00:00Z
+        """.trimIndent(), cmd.getExecutionResult())
+    }
+
+    @Test
     fun `should list posts to be scheduled`() {
         val postsRepository = InMemoryPostRepository()
         val post1 = SocialPosts(text = "anything")
@@ -173,5 +206,46 @@ class SchedulerTest {
             1. Post with id 1 will be published on 2022-10-02T09:00:00Z
             2. Post with id 2 will be published on 2022-11-02T10:00:00Z
         """.trimIndent(), cmd.getExecutionResult())
+    }
+
+    @Test
+    fun `should not allow remove parameter without post id`() {
+        val postsRepository = InMemoryPostRepository()
+        val scheduleRepository = InMemorySchedulerRepository()
+
+        val app = Scheduler(postsRepository, scheduleRepository, MockedOutput())
+        val cmd = CommandLine(app)
+        cmd.execute("-r")
+
+        assertEquals("Missing required fields", cmd.getExecutionResult())
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["1"])
+    fun `should remove schedule from posts by id`(scheduleId: String) {
+        val postsRepository = InMemoryPostRepository()
+        val post1 = SocialPosts(id= scheduleId, text = "anything")
+        val post2 = SocialPosts(id= scheduleId, text = "second post")
+        postsRepository.save(arrayListOf(
+            post1,
+        ))
+
+        val scheduleRepository = InMemorySchedulerRepository()
+        scheduleRepository.save(
+            ScheduledItem(
+                post1, Instant.parse("2022-10-02T09:00:00Z")
+            ),
+        )
+        scheduleRepository.save(
+            ScheduledItem(
+                post2, Instant.parse("2022-10-02T09:00:00Z")
+            ),
+        )
+
+        val app = Scheduler(postsRepository, scheduleRepository, MockedOutput())
+        val cmd = CommandLine(app)
+        cmd.execute("-r", "-s", scheduleId)
+
+        assertEquals("Schedule $scheduleId has been removed from post 1", cmd.getExecutionResult())
     }
 }

@@ -4,6 +4,7 @@ import application.entities.SocialConfiguration
 import application.entities.TwitterCredentials
 import buildCommandLine
 import io.cucumber.java8.En
+import io.cucumber.java8.PendingException
 import io.github.cdimascio.dotenv.dotenv
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -171,5 +172,13 @@ class SocialPublisherSteps: En {
             exitCode = cmd.execute("configuration", "-c", jsonConfiguration)
             assertContains(outputStreamCaptor.toString(), "Configuration has been stored")
         }
+
+        Then(
+            "I remove schedule from post with id {string}"
+        ) { scheduleId: String ->
+            exitCode = cmd.execute("scheduler", "-r", "-s", scheduleId)
+            assertContains(outputStreamCaptor.toString(), "Schedule 1 has been removed from post 1")
+        }
+
     }
 }

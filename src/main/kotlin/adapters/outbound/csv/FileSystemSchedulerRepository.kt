@@ -22,7 +22,13 @@ class FileSystemSchedulerRepository(
         val writer = FileWriter(file, true)
         val printer = CSVPrinter(writer, CSVFormat.DEFAULT)
 
-        printer.printRecord(scheduledItem.post.id, scheduledItem.publishDate)
+        val nextId = findAll().size + 1
+
+        printer.printRecord(
+            scheduledItem.post.id,
+            scheduledItem.publishDate,
+            nextId
+        )
         printer.close()
 
         return true
@@ -45,11 +51,23 @@ class FileSystemSchedulerRepository(
         return scheduledItems
     }
 
+    override fun deleteById(id: String): Boolean {
+        val filterOutScheduledItem = findAll().filter { it.id != id }
+
+        val file = File(filePath)
+        file.delete()
+
+        filterOutScheduledItem.forEach {
+            save(it)
+        }
+        return true
+    }
+
     private fun buildPostFromCsvRecord(record: CSVRecord): ScheduledItem {
         val postId = record[0]
         val socialPost = postsRepository.findById(postId)
         val publishDate = record[1]
-        return ScheduledItem(socialPost!!, Instant.parse(publishDate))
+        return ScheduledItem(socialPost!!, Instant.parse(publishDate), record[2])
     }
 
     private fun ensureFileExists(file: File) {

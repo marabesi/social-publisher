@@ -25,3 +25,12 @@ Feature: Schedule a post to be posted
     Then I clean the output
     And I schedule the post with id "1" to be published at "2022-10-02T09:00:00Z"
     Then Show the scheduled post "1. Post with id 1 will be published on 2022-10-02T09:00:00Z"
+
+  Scenario: Removes scheduled post
+    Given A new cli
+    When I create a post with the text "Post to be removed"
+    Then I clean the output
+    And I schedule the post with id "1" to be published at "2022-10-02T09:00:00Z"
+    Then I clean the output
+    Then I remove schedule from post with id "1"
+    Then Show successfully message "Schedule 1 has been removed from post 1"

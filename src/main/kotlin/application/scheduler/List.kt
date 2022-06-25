@@ -13,12 +13,12 @@ class List(
         val findAll = scheduleRepository.findAll()
         var index = 1;
 
-        for (post in findAll) {
+        for (scheduledItem in findAll) {
             val isLast: Boolean = findAll.size == index
             result += if (isLast) {
-                "${post.post.id}. Post with id ${post.post.id} will be published on ${post.publishDate}"
+                "${scheduledItem.id}. Post with id ${scheduledItem.post.id} will be published on ${scheduledItem.publishDate}"
             } else {
-                "${post.post.id}. Post with id ${post.post.id} will be published on ${post.publishDate}\n"
+                "${scheduledItem.id}. Post with id ${scheduledItem.post.id} will be published on ${scheduledItem.publishDate}\n"
             }
             index++
         }

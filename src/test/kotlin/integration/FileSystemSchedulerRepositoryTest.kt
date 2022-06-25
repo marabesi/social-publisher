@@ -50,6 +50,7 @@ class FileSystemSchedulerRepositoryTest {
         val scheduledItem: ScheduledItem = repository.findAll()[0]
         assertEquals(post.id, scheduledItem.post.id)
         assertEquals(post.text, scheduledItem.post.text)
+        assertEquals("1", scheduledItem.id)
     }
 
     @Test
@@ -59,5 +60,29 @@ class FileSystemSchedulerRepositoryTest {
         val scheduledItems = repository.findAll()
 
         assertEquals(0, scheduledItems.size)
+    }
+
+    @Test
+    fun shouldDeleteScheduledItem() {
+        val post = SocialPosts( text = "another post")
+        val postsRepository = InMemoryPostRepository()
+        postsRepository.save(arrayListOf(post))
+
+        val fileSystemRepository = FileSystemSchedulerRepository(filePath, postsRepository)
+
+        fileSystemRepository.save(
+            ScheduledItem(
+                post, Instant.parse("2021-11-25T11:00:00Z")
+            )
+        )
+        fileSystemRepository.save(
+            ScheduledItem(
+                post, Instant.parse("2021-11-26T11:00:00Z")
+            )
+        )
+
+        fileSystemRepository.deleteById("2")
+
+        assertEquals(1, fileSystemRepository.findAll().size)
     }
 }

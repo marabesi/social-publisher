@@ -7,15 +7,23 @@ class InMemorySchedulerRepository: SchedulerRepository {
 
     private var storedScheduler: ArrayList<ScheduledItem> = arrayListOf();
     override fun save(scheduledItem: ScheduledItem): Boolean {
+        val id = findAll().size + 1
         return storedScheduler.add(
             ScheduledItem(
                 scheduledItem.post,
-                scheduledItem.publishDate
+                scheduledItem.publishDate,
+                id.toString(),
             )
         )
     }
 
     override fun findAll(): ArrayList<ScheduledItem> {
         return storedScheduler
+    }
+
+    override fun deleteById(id: String): Boolean {
+        return storedScheduler.removeIf {
+            it.post.id == id
+        }
     }
 }

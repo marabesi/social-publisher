@@ -20,19 +20,23 @@ class Executor(
         var index = 1
         var result = ""
         posts.forEach {
-            if (currentDate < it.publishDate) {
-                val isLast: Boolean = posts.size == index
-                result += if (isLast) {
+            val isLast: Boolean = posts.size == index
+            result += if (currentDate < it.publishDate) {
+                if (isLast) {
                     "Waiting for the date to come to publish post ${it.post.id}"
                 } else {
                     "Waiting for the date to come to publish post ${it.post.id}\n"
                 }
-                index++
             } else {
                 twitterClient.send(it)
 
-                return cliOutput.write("Post ${it.post.id} sent to twitter")
+                if (isLast) {
+                    "Post ${it.post.id} sent to twitter"
+                } else {
+                    "Post ${it.post.id} sent to twitter\n"
+                }
             }
+            index++
         }
         return cliOutput.write(result)
     }

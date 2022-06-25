@@ -40,14 +40,13 @@ class SocialPublisherSteps: En {
         lateinit var cmd: CommandLine
         var exitCode: Int? = null
 
-        Given("A new cli"){ ->
-            cmd  = buildCommandLine()
+        Given("A new cli") { ->
+            cmd = buildCommandLine()
             cleanUp()
         }
 
-        Given("A new cli with date set to {string}"){
-            dateTime: String ->
-            cmd  = buildCommandLine(Instant.parse(dateTime))
+        Given("A new cli with date set to {string}") { dateTime: String ->
+            cmd = buildCommandLine(Instant.parse(dateTime))
             cleanUp()
         }
 
@@ -62,6 +61,13 @@ class SocialPublisherSteps: En {
         ) { successMessage: String? ->
             assertEquals(0, exitCode)
             assertEquals(successMessage, outputStreamCaptor.toString())
+        }
+
+        Then(
+            "Show successfully message"
+        ) { docString: String ->
+            assertEquals(0, exitCode)
+            assertEquals(docString, outputStreamCaptor.toString())
         }
 
         Then("I clean the output") {
@@ -127,12 +133,12 @@ class SocialPublisherSteps: En {
             exitCode = cmd.execute("post", "-l")
         }
 
-        Then("Poster should send post {string} with text {string} to twitter") {
-            postId: String,
-            postText: String ->
+        Then("Poster should execute routine to send posts") {
             exitCode = cmd.execute("poster", "-r")
-            assertEquals(outputStreamCaptor.toString(), "Post $postId sent to twitter")
+        }
 
+        Then("I remove post {string} from twitter") {
+                postText: String ->
             val client = TwitterTemplate(
                 twitterCredentials.consumerKey,
                 twitterCredentials.consumerSecret,

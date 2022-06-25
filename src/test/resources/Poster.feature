@@ -11,7 +11,12 @@ Feature:  Post scheduled posts to twitter
     Then I clean the output
     And I set the post "1" to "twitter"
     Then I clean the output
-    Then Poster should send post "1" with text "Post to schedule" to twitter
+    Then Poster should execute routine to send posts
+    Then Show successfully message
+    """
+    Post 1 sent to twitter
+    """
+    Then I remove post "Post to schedule" from twitter
 
   Scenario: List scheduled posts in the future
     When I create a post with the text "Post to schedule-1"
@@ -26,3 +31,22 @@ Feature:  Post scheduled posts to twitter
     Then I clean the output
     Then Poster should show "Waiting for the date to come to publish post 1"
     Then Poster should show "Waiting for the date to come to publish post 2"
+
+  Scenario: Avoid posting twice the same post
+    When I create a post with the text "Post to schedule-3"
+    When I create a post with the text "Post to schedule-4"
+    Then I clean the output
+    And I schedule the post with id "1" to be published at "2022-09-02T09:00:00Z"
+    And I schedule the post with id "2" to be published at "2022-09-02T09:00:00Z"
+    And I set the post "1" to "twitter"
+    Then I clean the output
+    And I set the post "2" to "twitter"
+    Then I clean the output
+    Then Poster should execute routine to send posts
+    Then Show successfully message
+    """
+    Post 1 sent to twitter
+    Post 2 sent to twitter
+    """
+    Then I remove post "Post to schedule-3" from twitter
+    Then I remove post "Post to schedule-4" from twitter

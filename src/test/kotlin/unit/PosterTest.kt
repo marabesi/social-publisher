@@ -119,6 +119,42 @@ class PosterTest {
     }
 
     @Test
+    fun `should send multiple posts to twitter`() {
+        currentDate = Instant.parse("2014-12-22T10:15:31Z")
+
+        val scheduledItem = ScheduledItem(
+            SocialPosts(id = "1", text = "random post text"),
+            Instant.parse("2014-12-22T10:15:30Z"),
+            "1"
+        )
+
+        val scheduledItem2 = ScheduledItem(
+            SocialPosts(id = "2", text = "another post"),
+            Instant.parse("2014-12-22T09:15:30Z"),
+            "2"
+        )
+
+        schedulerRepository.save(
+            scheduledItem
+        )
+        schedulerRepository.save(
+            scheduledItem2
+        )
+
+        every { socialThirdParty.send(scheduledItem) } returns scheduledItem.post
+        every { socialThirdParty.send(scheduledItem2) } returns scheduledItem2.post
+
+        cmd.execute("-r")
+
+        val result = cmd.getExecutionResult<String>()
+
+        Assertions.assertEquals("""
+            Post 1 sent to twitter
+            Post 2 sent to twitter
+        """.trimIndent(), result)
+    }
+
+    @Test
     fun `should not post when publish date has not arrived yet`() {
         val instantExpected = "2014-12-22T10:15:31Z"
         val clock: Clock = Clock.fixed(Instant.parse(instantExpected), ZoneId.of("UTC"))

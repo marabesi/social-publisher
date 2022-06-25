@@ -21,9 +21,11 @@ class InMemorySchedulerRepository: SchedulerRepository {
         return storedScheduler
     }
 
-    override fun deleteById(id: String): Boolean {
-        return storedScheduler.removeIf {
+    override fun deleteById(id: String): ScheduledItem? {
+        val toBeDeleted = findAll().find { it.id == id }
+        storedScheduler.removeIf {
             it.post.id == id
         }
+        return toBeDeleted
     }
 }

@@ -45,8 +45,9 @@ class Scheduler(
         }
 
         if (deletes && scheduleId.isNotEmpty()) {
-            if (scheduleRepository.deleteById(scheduleId)) {
-                return cliOutput.write("Schedule 1 has been removed from post 1")
+            val scheduledItem = scheduleRepository.deleteById(scheduleId)
+            if (scheduledItem != null) {
+                return cliOutput.write("Schedule $scheduleId has been removed from post ${scheduledItem.post.id}")
             }
         }
 

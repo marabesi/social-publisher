@@ -11,12 +11,15 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.CsvSource
+import org.junit.jupiter.params.provider.MethodSource
 import org.junit.jupiter.params.provider.ValueSource
 import picocli.CommandLine
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.time.Instant
+import java.util.stream.Stream
 
 class SchedulerTest {
     private lateinit var app: Scheduler
@@ -221,11 +224,10 @@ class SchedulerTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = ["1"])
-    fun `should remove schedule from posts by id`(scheduleId: String) {
+    @MethodSource("scheduleProvider")
+    fun `should remove schedule from posts by schedule id`(scheduleId: String, postId: String) {
         val postsRepository = InMemoryPostRepository()
-        val post1 = SocialPosts(id= scheduleId, text = "anything")
-        val post2 = SocialPosts(id= scheduleId, text = "second post")
+        val post1 = SocialPosts(id = postId, text = "anything")
         postsRepository.save(arrayListOf(
             post1,
         ))
@@ -238,7 +240,7 @@ class SchedulerTest {
         )
         scheduleRepository.save(
             ScheduledItem(
-                post2, Instant.parse("2022-10-02T09:00:00Z")
+                post1, Instant.parse("2022-10-02T09:00:00Z")
             ),
         )
 
@@ -246,6 +248,16 @@ class SchedulerTest {
         val cmd = CommandLine(app)
         cmd.execute("-r", "-s", scheduleId)
 
-        assertEquals("Schedule $scheduleId has been removed from post 1", cmd.getExecutionResult())
+        assertEquals("Schedule $scheduleId has been removed from post $postId", cmd.getExecutionResult())
+    }
+
+    companion object {
+        @JvmStatic
+        fun scheduleProvider(): Stream<Arguments> {
+            return Stream.of(
+                Arguments.of("1", "1"),
+                Arguments.of("2", "1"),
+            )
+        }
     }
 }

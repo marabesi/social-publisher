@@ -51,8 +51,11 @@ class FileSystemSchedulerRepository(
         return scheduledItems
     }
 
-    override fun deleteById(id: String): Boolean {
-        val filterOutScheduledItem = findAll().filter { it.id != id }
+    override fun deleteById(id: String): ScheduledItem? {
+        val toBeDeleted = findAll().find { it.id == id }
+        val filterOutScheduledItem = findAll().filter {
+            it.id != id
+        }
 
         val file = File(filePath)
         file.delete()
@@ -60,7 +63,7 @@ class FileSystemSchedulerRepository(
         filterOutScheduledItem.forEach {
             save(it)
         }
-        return true
+        return toBeDeleted
     }
 
     private fun buildPostFromCsvRecord(record: CSVRecord): ScheduledItem {

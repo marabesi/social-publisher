@@ -179,10 +179,8 @@ class PosterTest {
 
     @Test
     fun `should not post posts when publish date has not arrived yet`() {
-        val instantExpected = "2014-12-22T10:15:31Z"
-        val clock: Clock = Clock.fixed(Instant.parse(instantExpected), ZoneId.of("UTC"))
+        currentDate = Instant.parse("2014-12-22T10:15:31Z")
 
-        currentDate = Instant.now(clock)
         schedulerRepository.save(
             ScheduledItem(
                 SocialPosts("1", "random post text"),

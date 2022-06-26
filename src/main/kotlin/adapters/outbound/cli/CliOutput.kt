@@ -5,7 +5,7 @@ import application.Output
 class CliOutput: Output {
 
     override fun write(arguments: String): String {
-        print(arguments)
+        println(arguments)
         return arguments
     }
 }

@@ -59,14 +59,14 @@ class SocialPublisherSteps: En {
             "Show successfully message {string}"
         ) { successMessage: String? ->
             assertEquals(0, exitCode)
-            assertEquals(successMessage, outputStreamCaptor.toString())
+            assertEquals(successMessage + "\n", outputStreamCaptor.toString())
         }
 
         Then(
             "Show successfully message"
         ) { docString: String ->
             assertEquals(0, exitCode)
-            assertEquals(docString, outputStreamCaptor.toString())
+            assertEquals(docString + "\n", outputStreamCaptor.toString())
         }
 
         Then("I clean the output") {
@@ -125,7 +125,7 @@ class SocialPublisherSteps: En {
         Then(
             "I see the configuration {string}"
         ) { configuration: String ->
-            assertEquals(outputStreamCaptor.toString(), configuration)
+            assertEquals(outputStreamCaptor.toString(), configuration + "\n")
         }
 
         When("I list the posts") {
@@ -185,5 +185,11 @@ class SocialPublisherSteps: En {
             assertContains(outputStreamCaptor.toString(), "Schedule 1 has been removed from post 1")
         }
 
+        Then(
+            "I list scheduled posts with {string}"
+        ) { params: String ->
+            exitCode = cmd.execute("scheduler", params)
+            assertEquals(0, exitCode)
+        }
     }
 }

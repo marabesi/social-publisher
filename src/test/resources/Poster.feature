@@ -18,7 +18,7 @@ Feature:  Post scheduled posts to twitter
     """
     Then I remove post "Post to schedule" from twitter
 
-  Scenario: List scheduled posts in the future
+  Scenario: Warn user when poster found only posts in the future
     When I create a post with the text "Post to schedule-1"
     When I create a post with the text "Post to schedule-2"
     Then I clean the output

@@ -125,7 +125,7 @@ class PosterTest {
         val scheduledItem = ScheduledItem(
             SocialPosts(id = "1", text = "random post text"),
             Instant.parse("2014-12-22T10:15:30Z"),
-            "1"
+            "1",
         )
 
         val scheduledItem2 = ScheduledItem(
@@ -205,5 +205,34 @@ class PosterTest {
             Waiting for the date to come to publish post 1
             Waiting for the date to come to publish post 2
         """.trimIndent(), result)
+    }
+
+    @Test
+    fun `should not post posts twice`() {
+        currentDate = Instant.parse("2014-12-22T10:15:31Z")
+
+        schedulerRepository.save(
+            ScheduledItem(
+                SocialPosts("1", "random post text"),
+                Instant.parse("2014-12-21T10:15:32Z")
+            )
+        )
+        schedulerRepository.save(
+            ScheduledItem(
+                SocialPosts("2", "random post text 2"),
+                Instant.parse("2014-12-21T10:15:32Z")
+            )
+        )
+        every { socialThirdParty.send(any()) } returns mockk()
+
+        app = Poster(schedulerRepository, MockedOutput(), currentDate, socialThirdParty)
+        cmd = CommandLine(app)
+
+        cmd.execute("-r")
+        cmd.execute("-r")
+
+        val result = cmd.getExecutionResult<String>()
+
+        Assertions.assertEquals("There are no posts to be posted", result)
     }
 }

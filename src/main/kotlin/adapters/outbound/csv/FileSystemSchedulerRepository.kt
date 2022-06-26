@@ -1,12 +1,12 @@
 package adapters.outbound.csv
 
 import application.entities.ScheduledItem
+import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVPrinter
 import org.apache.commons.csv.CSVRecord
-import application.persistence.PostsRepository
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
@@ -22,12 +22,17 @@ class FileSystemSchedulerRepository(
         val writer = FileWriter(file, true)
         val printer = CSVPrinter(writer, CSVFormat.DEFAULT)
 
-        val nextId = findAll().size + 1
+        val nextId = if (scheduledItem.id.isNullOrEmpty()) {
+            (findAll().size + 1).toString()
+        } else{
+            scheduledItem.id
+        }
 
         printer.printRecord(
             scheduledItem.post.id,
             scheduledItem.publishDate,
-            nextId
+            nextId,
+            scheduledItem.published.toString()
         )
         printer.close()
 
@@ -63,14 +68,31 @@ class FileSystemSchedulerRepository(
         filterOutScheduledItem.forEach {
             save(it)
         }
+
         return toBeDeleted
+    }
+
+    override fun markAsSent(scheduledItem: ScheduledItem): ScheduledItem {
+        val deleted = deleteById(scheduledItem.id!!)
+
+        deleted!!.published = true
+
+        save(deleted)
+
+        return deleted
     }
 
     private fun buildPostFromCsvRecord(record: CSVRecord): ScheduledItem {
         val postId = record[0]
         val socialPost = postsRepository.findById(postId)
         val publishDate = record[1]
-        return ScheduledItem(socialPost!!, Instant.parse(publishDate), record[2])
+        val scheduleId = record[2]
+        return ScheduledItem(
+            socialPost!!,
+            Instant.parse(publishDate),
+            scheduleId,
+            record[3].toBooleanStrict(),
+        )
     }
 
     private fun ensureFileExists(file: File) {

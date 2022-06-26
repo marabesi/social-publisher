@@ -37,7 +37,7 @@ Feature:  Post scheduled posts to twitter
     When I create a post with the text "Post to schedule-4"
     Then I clean the output
     And I schedule the post with id "1" to be published at "2022-09-02T09:00:00Z"
-    And I schedule the post with id "2" to be published at "2022-09-02T09:00:00Z"
+    And I schedule the post with id "2" to be published at "2022-09-03T08:00:00Z"
     And I set the post "1" to "twitter"
     Then I clean the output
     And I set the post "2" to "twitter"
@@ -50,3 +50,6 @@ Feature:  Post scheduled posts to twitter
     """
     Then I remove post "Post to schedule-3" from twitter
     Then I remove post "Post to schedule-4" from twitter
+    Then I clean the output
+    Then Poster should execute routine to send posts
+    Then Show successfully message "There are no posts to be posted"

@@ -13,7 +13,7 @@ class Executor(
 ) {
 
     fun invoke(): String {
-        val posts = schedulerRepository.findAll()
+        val posts = schedulerRepository.findAll().filter { !it.published }
         if (posts.isEmpty()) {
             return cliOutput.write("There are no posts to be posted")
         }
@@ -29,6 +29,7 @@ class Executor(
                 }
             } else {
                 twitterClient.send(it)
+                schedulerRepository.markAsSent(it)
 
                 if (isLast) {
                     "Post ${it.post.id} sent to twitter"

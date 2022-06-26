@@ -28,4 +28,11 @@ class InMemorySchedulerRepository: SchedulerRepository {
         }
         return toBeDeleted
     }
+
+    override fun markAsSent(scheduledItem: ScheduledItem): ScheduledItem {
+        val toBeMarkedAsPublished = findAll().find { it.id == scheduledItem.id }
+        toBeMarkedAsPublished!!.published = true
+
+        return toBeMarkedAsPublished
+    }
 }

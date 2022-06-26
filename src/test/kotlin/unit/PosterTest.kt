@@ -174,7 +174,10 @@ class PosterTest {
 
         val result = cmd.getExecutionResult<String>()
 
-        Assertions.assertEquals("Waiting for the date to come to publish post 1", result)
+        Assertions.assertEquals(
+            "Waiting for the date to come to publish post 1 (scheduled for 22 Dec 2014 10:15:32)",
+            result
+        )
     }
 
     @Test
@@ -202,8 +205,8 @@ class PosterTest {
         val result = cmd.getExecutionResult<String>()
 
         Assertions.assertEquals("""
-            Waiting for the date to come to publish post 1
-            Waiting for the date to come to publish post 2
+            Waiting for the date to come to publish post 1 (scheduled for 22 Dec 2014 10:15:32)
+            Waiting for the date to come to publish post 2 (scheduled for 22 Dec 2014 10:15:32)
         """.trimIndent(), result)
     }
 

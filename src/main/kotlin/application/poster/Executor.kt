@@ -3,7 +3,12 @@ package application.poster
 import application.Output
 import application.persistence.SchedulerRepository
 import application.socialnetwork.SocialThirdParty
+import java.text.SimpleDateFormat
 import java.time.Instant
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.util.Date
+
 
 class Executor(
     private val schedulerRepository: SchedulerRepository,
@@ -22,10 +27,13 @@ class Executor(
         posts.forEach {
             val isLast: Boolean = posts.size == index
             result += if (currentDate < it.publishDate) {
+                val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm:ss")
+                    .withZone(ZoneOffset.UTC)
+
                 if (isLast) {
-                    "Waiting for the date to come to publish post ${it.post.id}"
+                    "Waiting for the date to come to publish post ${it.post.id} (scheduled for ${formatter.format(it.publishDate)})"
                 } else {
-                    "Waiting for the date to come to publish post ${it.post.id}\n"
+                    "Waiting for the date to come to publish post ${it.post.id} (scheduled for ${formatter.format(it.publishDate)})\n"
                 }
             } else {
                 twitterClient.send(it)

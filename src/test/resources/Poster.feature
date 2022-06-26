@@ -29,8 +29,8 @@ Feature:  Post scheduled posts to twitter
     Then I clean the output
     And I set the post "2" to "twitter"
     Then I clean the output
-    Then Poster should show "Waiting for the date to come to publish post 1"
-    Then Poster should show "Waiting for the date to come to publish post 2"
+    Then Poster should show "Waiting for the date to come to publish post 1 (scheduled for 02 Nov 2022 09:00:00)"
+    Then Poster should show "Waiting for the date to come to publish post 2 (scheduled for 02 Nov 2022 09:00:00)"
 
   Scenario: Avoid posting twice the same post
     When I create a post with the text "Post to schedule-3"

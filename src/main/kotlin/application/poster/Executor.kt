@@ -3,11 +3,9 @@ package application.poster
 import application.Output
 import application.persistence.SchedulerRepository
 import application.socialnetwork.SocialThirdParty
-import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
-import java.util.Date
 
 
 class Executor(

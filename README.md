@@ -6,12 +6,16 @@ Social publisher allows you to schedule and publish posts into social
 media. At the moment, the current medias are supported:
 
 - Twitter
+
+# Planned to be supported
+
 - Linkedin
 
 # Refs
 
 - https://kotlinlang.org/docs/command-line.html#compile-a-library
-- https://picocli.info/
+- https://picocli.info
+- https://cucumber.io/docs/gherkin/reference
 
 # Running standalone
 
@@ -25,6 +29,7 @@ kotlin -classpath "/home/marabesi/Downloads/picocli-4.6.2.jar:build/libs/social-
 - [Hex architecture - stackoverflow thread](https://stackoverflow.com/a/14659492/2258921)
 
 ## Integrations
+
 ### Twitter
 
 - https://developer.twitter.com/en/docs/authentication/oauth-1-0a
@@ -38,4 +43,5 @@ kotlin -classpath "/home/marabesi/Downloads/picocli-4.6.2.jar:build/libs/social-
 - https://github.com/spring-attic/spring-social-twitter
 
 ### Junit + kotlin
+
 - https://www.baeldung.com/kotlin/assertfailswith

@@ -9,12 +9,14 @@ class SocialSpringTwitterClient(
     private val configuration: SocialConfiguration,
 ): TwitterClient {
     override fun sendTweet(text: String): SocialPosts {
-        val twitter = TwitterTemplate(
-            configuration.twitter!!.consumerKey,
-            configuration.twitter!!.consumerSecret,
-            configuration.twitter!!.accessToken,
-            configuration.twitter!!.accessTokenSecret,
-        )
+        val twitter = with(configuration.twitter!!) {
+            TwitterTemplate(
+                consumerKey,
+                consumerSecret,
+                accessToken,
+                accessTokenSecret,
+            )
+        }
 
         val tweet = twitter.timelineOperations().updateStatus(text)
         return SocialPosts(

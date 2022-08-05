@@ -58,16 +58,17 @@ class SchedulerTest {
 
         cmd.execute("scheduler", "--help")
         assertEquals("""
-            Usage: social scheduler [-chlrV] [-d=<targetDate>] [-p=<postId>]
-                                    [-s=<scheduleId>]
-              -c                 Sets the cli to schedule a post
-              -d=<targetDate>    Target date
-              -h, --help         Show this help message and exit.
-              -l                 List scheduled posts
-              -p=<postId>        Post id
-              -r                 Sets the cli to remove a scheduled post
-              -s=<scheduleId>    Scheduled id
-              -V, --version      Print version information and exit.
+            Usage: social scheduler [-chlrV] [-d=<targetDate>] [-id=<scheduleId>]
+                                    [-p=<postId>] [-s=<socialMedia>]
+              -c                     Sets the cli to schedule a post
+              -d=<targetDate>        Target date
+              -h, --help             Show this help message and exit.
+                  -id=<scheduleId>   Scheduled id
+              -l                     List scheduled posts
+              -p=<postId>            Post id
+              -r                     Sets the cli to remove a scheduled post
+              -s=<socialMedia>       Social media
+              -V, --version          Print version information and exit.
         
         """.trimIndent(), sw.toString())
     }
@@ -246,7 +247,7 @@ class SchedulerTest {
 
         val app = Scheduler(postsRepository, scheduleRepository, MockedOutput())
         val cmd = CommandLine(app)
-        cmd.execute("-r", "-s", scheduleId)
+        cmd.execute("-r", "-id", scheduleId)
 
         assertEquals("Schedule $scheduleId has been removed from post $postId", cmd.getExecutionResult())
     }

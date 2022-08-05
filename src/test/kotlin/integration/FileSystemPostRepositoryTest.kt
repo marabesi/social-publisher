@@ -41,7 +41,6 @@ class FileSystemPostRepositoryTest {
 
     @Test
     fun fetchEmptyPosts() {
-        val post = SocialPosts("1", "fetch from csv")
         val repository = FileSystemPostRepository(filePath)
 
         val storedPost: ArrayList<SocialPosts> = repository.findAll()

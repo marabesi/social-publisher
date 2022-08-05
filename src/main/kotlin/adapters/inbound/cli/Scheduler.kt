@@ -5,6 +5,7 @@ import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
 import application.scheduler.Create
 import application.scheduler.List
+import application.scheduler.SocialMedia
 import com.google.inject.Inject
 import picocli.CommandLine
 import java.util.concurrent.Callable
@@ -33,7 +34,7 @@ class Scheduler(
     var deletes: Boolean = false
 
     @CommandLine.Option(names = ["-s"], description = ["Social media"])
-    var socialMedia: String = "twitter"
+    var socialMedia: SocialMedia = SocialMedia.TWITTER
 
     @CommandLine.Option(names = ["-id"], description = ["Scheduled id"])
     var scheduleId: String = ""

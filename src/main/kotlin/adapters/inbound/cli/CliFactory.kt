@@ -35,7 +35,7 @@ class CliFactory(
             }
 
             if (cls == Scheduler::class.java) {
-                return Scheduler(postsRepository, scheduler, cliOutput) as K
+                return Scheduler(postsRepository, scheduler, cliOutput, currentTime) as K
             }
 
             if (cls == Poster::class.java) {

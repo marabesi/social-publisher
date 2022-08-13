@@ -8,6 +8,7 @@ import application.scheduler.List
 import application.scheduler.SocialMedia
 import com.google.inject.Inject
 import picocli.CommandLine
+import java.time.Instant
 import java.util.concurrent.Callable
 
 @CommandLine.Command(name = "scheduler", mixinStandardHelpOptions = true)
@@ -15,7 +16,8 @@ class Scheduler(
     @Inject
     private val postsRepository: PostsRepository,
     private val scheduleRepository: SchedulerRepository,
-    private val cliOutput: Output
+    private val cliOutput: Output,
+    currentTime: Instant
 ): Callable<String> {
 
     @CommandLine.Option(names = ["-p"], description = ["Post id"])

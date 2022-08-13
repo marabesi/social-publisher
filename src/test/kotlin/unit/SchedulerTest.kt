@@ -59,25 +59,20 @@ class SchedulerTest {
 
         cmd.execute("scheduler", "--help")
         assertEquals("""
-            Usage: social scheduler [-chlrV] [-d=<targetDate>] [-id=<scheduleId>]
-                                    [-p=<postId>] [-s=<socialMedia>]
+            Usage: social scheduler [-chrV] [-d=<targetDate>] [-id=<scheduleId>]
+                                    [-p=<postId>] [-s=<socialMedia>] [COMMAND]
               -c                     Sets the cli to schedule a post
               -d=<targetDate>        Target date
               -h, --help             Show this help message and exit.
                   -id=<scheduleId>   Scheduled id
-              -l                     List scheduled posts
               -p=<postId>            Post id
               -r                     Sets the cli to remove a scheduled post
               -s=<socialMedia>       Social media
               -V, --version          Print version information and exit.
-        
-        """.trimIndent(), sw.toString())
-    }
+            Commands:
+              list
 
-    @Test
-    fun `should show message if scheduler is empty`() {
-        cmd.execute("-l")
-        assertEquals("No posts scheduled", cmd.getExecutionResult())
+        """.trimIndent(), sw.toString())
     }
 
     @ParameterizedTest
@@ -125,92 +120,6 @@ class SchedulerTest {
 
         cmd.execute("-c", "-p", "1", "-d", "2022")
         assertEquals("Invalid date time to schedule post", cmd.getExecutionResult())
-    }
-
-    @Test
-    fun `should list post with id 1 to be scheduled`() {
-        val postsRepository = InMemoryPostRepository()
-        val post = SocialPosts(text = "anything")
-        postsRepository.save(arrayListOf(
-            post
-        ))
-
-        val scheduleRepository = InMemorySchedulerRepository()
-        scheduleRepository.save(
-            ScheduledItem(
-                post, Instant.parse("2022-10-02T09:00:00Z")
-            )
-        )
-
-        val app = Scheduler(postsRepository, scheduleRepository, MockedOutput(), currentTime)
-        val cmd = CommandLine(app)
-        cmd.execute("-l")
-
-        assertEquals("""
-            1. Post with id 1 will be published on 2022-10-02T09:00:00Z
-        """.trimIndent(), cmd.getExecutionResult())
-    }
-
-    @Test
-    fun `should schedule same post twice each on different days`() {
-        val postsRepository = InMemoryPostRepository()
-        val post = SocialPosts(text = "first day")
-        postsRepository.save(arrayListOf(
-            post,
-        ))
-
-        val scheduleRepository = InMemorySchedulerRepository()
-        scheduleRepository.save(
-            ScheduledItem(
-                post, Instant.parse("2022-10-02T09:00:00Z")
-            )
-        )
-        scheduleRepository.save(
-            ScheduledItem(
-                post, Instant.parse("2022-10-03T09:00:00Z")
-            )
-        )
-
-        val app = Scheduler(postsRepository, scheduleRepository, MockedOutput(), currentTime)
-        val cmd = CommandLine(app)
-        cmd.execute("-l")
-
-        assertEquals("""
-            1. Post with id 1 will be published on 2022-10-02T09:00:00Z
-            2. Post with id 1 will be published on 2022-10-03T09:00:00Z
-        """.trimIndent(), cmd.getExecutionResult())
-    }
-
-    @Test
-    fun `should list posts to be scheduled`() {
-        val postsRepository = InMemoryPostRepository()
-        val post1 = SocialPosts(text = "anything")
-        val post2 = SocialPosts(text = "anything-2")
-        postsRepository.save(arrayListOf(
-            post1,
-            post2
-        ))
-
-        val scheduleRepository = InMemorySchedulerRepository()
-        scheduleRepository.save(
-            ScheduledItem(
-                post1, Instant.parse("2022-10-02T09:00:00Z")
-            ),
-        )
-        scheduleRepository.save(
-            ScheduledItem(
-                post2, Instant.parse("2022-11-02T10:00:00Z")
-            ),
-        )
-
-        val app = Scheduler(postsRepository, scheduleRepository, MockedOutput(), currentTime)
-        val cmd = CommandLine(app)
-        cmd.execute("-l")
-
-        assertEquals("""
-            1. Post with id 1 will be published on 2022-10-02T09:00:00Z
-            2. Post with id 2 will be published on 2022-11-02T10:00:00Z
-        """.trimIndent(), cmd.getExecutionResult())
     }
 
     @Test

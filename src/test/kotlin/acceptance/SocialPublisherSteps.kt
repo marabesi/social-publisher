@@ -82,7 +82,7 @@ class SocialPublisherSteps: En {
         }
 
         When("I list the scheduled posts") {
-            exitCode = cmd.execute("scheduler", "-l")
+            exitCode = cmd.execute("scheduler", "list")
         }
 
         When(
@@ -95,7 +95,7 @@ class SocialPublisherSteps: En {
         Then(
             "Show the scheduled post {string}"
         ) { text: String ->
-            exitCode = cmd.execute("scheduler", "-l")
+            exitCode = cmd.execute("scheduler", "list")
             assertEquals(0, exitCode)
             assertContains(outputStreamCaptor.toString(), text)
         }

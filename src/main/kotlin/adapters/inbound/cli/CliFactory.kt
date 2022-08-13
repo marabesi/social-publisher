@@ -1,5 +1,6 @@
 package adapters.inbound.cli
 
+import adapters.inbound.cli.scheduler.SchedulerList
 import adapters.outbound.cli.CliOutput
 import adapters.outbound.csv.FileSystemConfigurationRepository
 import adapters.outbound.csv.FileSystemPostRepository
@@ -32,6 +33,10 @@ class CliFactory(
 
             if (cls == Post::class.java) {
                 return Post(postsRepository, cliOutput) as K
+            }
+
+            if (cls == SchedulerList::class.java) {
+                return SchedulerList(scheduler, cliOutput, currentTime) as K
             }
 
             if (cls == Scheduler::class.java) {

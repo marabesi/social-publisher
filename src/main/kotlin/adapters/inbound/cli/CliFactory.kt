@@ -11,6 +11,7 @@ import application.persistence.configuration.MissingConfiguration
 import picocli.CommandLine
 import java.time.Instant
 
+@Suppress("UNCHECKED_CAST")
 class CliFactory(
     private val currentTime: Instant
 ): CommandLine.IFactory {

@@ -27,17 +27,20 @@ class CliFactory(
 
             val filePath = "data/scheduler-${currentConfiguration.fileName}.csv"
             val scheduler = FileSystemSchedulerRepository(filePath, postsRepository)
+            val cliOutput = CliOutput()
 
             if (cls == Post::class.java) {
-                return Post(postsRepository, CliOutput()) as K
+                return Post(postsRepository, cliOutput) as K
             }
+
             if (cls == Scheduler::class.java) {
-                return Scheduler(postsRepository, scheduler, CliOutput()) as K
+                return Scheduler(postsRepository, scheduler, cliOutput) as K
             }
+
             if (cls == Poster::class.java) {
                 return Poster(
                     scheduler,
-                    CliOutput(),
+                    cliOutput,
                     currentTime,
                     TwitterIntegration(
                         currentConfiguration,
@@ -47,7 +50,7 @@ class CliFactory(
             }
 
             if (cls == Configuration::class.java) {
-                return Configuration(CliOutput(), FileSystemConfigurationRepository()) as K
+                return Configuration(cliOutput, FileSystemConfigurationRepository()) as K
             }
         }
         return CommandLine.defaultFactory().create(cls)

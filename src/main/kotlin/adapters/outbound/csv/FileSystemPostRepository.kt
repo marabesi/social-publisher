@@ -10,6 +10,7 @@ import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 
+@Suppress("TooGenericExceptionCaught", "SwallowedException")
 class FileSystemPostRepository(private val filePath: String): PostsRepository {
     override fun save(posts: ArrayList<SocialPosts>): Boolean {
         try {

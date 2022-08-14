@@ -12,6 +12,11 @@ import java.io.FileReader
 import java.io.FileWriter
 import java.time.Instant
 
+private const val IS_PUBLISHED_INDEX = 3
+private const val POST_ID_INDEX = 0
+private const val PUBLISH_DATE_INDEX = 1
+private const val SCHEDULE_ITEM_ID_INDEX = 2
+
 class FileSystemSchedulerRepository(
     private val filePath: String,
     private val postsRepository: PostsRepository
@@ -23,7 +28,7 @@ class FileSystemSchedulerRepository(
         val printer = CSVPrinter(writer, CSVFormat.DEFAULT)
 
         val nextId = if (scheduledItem.id.isNullOrEmpty()) {
-            (findAll().size + 1).toString()
+            (findAll().size + PUBLISH_DATE_INDEX).toString()
         } else{
             scheduledItem.id
         }
@@ -83,15 +88,16 @@ class FileSystemSchedulerRepository(
     }
 
     private fun buildPostFromCsvRecord(record: CSVRecord): ScheduledItem {
-        val postId = record[0]
+        val postId = record[POST_ID_INDEX]
         val socialPost = postsRepository.findById(postId)
-        val publishDate = record[1]
-        val scheduleId = record[2]
+        val publishDate = record[PUBLISH_DATE_INDEX]
+        val scheduleId = record[SCHEDULE_ITEM_ID_INDEX]
+        val isPublished = record[IS_PUBLISHED_INDEX]
         return ScheduledItem(
             socialPost!!,
             Instant.parse(publishDate),
             scheduleId,
-            record[3].toBooleanStrict(),
+            isPublished.toBooleanStrict(),
         )
     }
 

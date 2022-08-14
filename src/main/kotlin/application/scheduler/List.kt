@@ -21,7 +21,6 @@ class List(
             findAll = findAll.filter { it.publishDate > currentTime } as ArrayList<ScheduledItem>
         }
 
-
         for (scheduledItem in findAll) {
             val isLast: Boolean = findAll.size == index
             result += if (isLast) {

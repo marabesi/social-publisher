@@ -16,7 +16,7 @@ class Configuration(
 ): Callable<String> {
 
     @CommandLine.Option(names = ["-c"], description = ["JSON with the desired configuration"])
-    var configuration: String = ""
+    var jsonConfiguration: String = ""
 
     @CommandLine.Option(names = ["-l"], description = ["List the stored configuration"])
     var list: Boolean = false
@@ -26,6 +26,6 @@ class Configuration(
             return List(cliOutput, configurationRepository).invoke()
         }
 
-        return Create(cliOutput, configurationRepository).invoke(configuration)
+        return Create(cliOutput, configurationRepository).invoke(jsonConfiguration)
     }
 }

@@ -72,6 +72,7 @@ tasks.withType<KotlinCompile> {
 
 detekt {
     buildUponDefaultConfig = true // preconfigure defaults
+    config = files("detek.yml")
     allRules = false // activate all available (even unstable) rules.
 }
 

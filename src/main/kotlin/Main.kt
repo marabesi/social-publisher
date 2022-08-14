@@ -16,12 +16,13 @@ import java.time.Instant
         Configuration::class,
     ]
 )
-class Application
+class Main
 
 fun buildCommandLine(currentTime: Instant = Instant.now()): CommandLine {
-    return CommandLine(Application::class.java, CliFactory(currentTime))
+    return CommandLine(Main::class.java, CliFactory(currentTime))
 }
 
+@Suppress("SpreadOperator")
 fun main(args: Array<String>) {
     buildCommandLine().execute(*args)
 }

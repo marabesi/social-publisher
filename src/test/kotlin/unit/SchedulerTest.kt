@@ -24,7 +24,6 @@ import java.util.stream.Stream
 class SchedulerTest {
     private lateinit var app: Scheduler
     private lateinit var cmd: CommandLine
-    private val currentTime = Instant.parse("2022-08-13T11:11:00Z")
 
     @BeforeEach
     fun setUp() {

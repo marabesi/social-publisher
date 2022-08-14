@@ -7,6 +7,7 @@ import java.time.Instant
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
+@Suppress("MaxLineLength")
 class Executor(
     private val schedulerRepository: SchedulerRepository,
     private val cliOutput: Output,

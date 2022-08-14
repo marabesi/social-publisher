@@ -10,6 +10,7 @@ import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 
+@Suppress("TooGenericExceptionCaught")
 class FileSystemConfigurationRepository: ConfigurationRepository {
     private val configurationPath = "data"
     private val fileName = "global"

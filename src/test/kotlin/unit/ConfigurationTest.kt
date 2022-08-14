@@ -12,6 +12,7 @@ import adapters.outbound.inmemory.ConfigurationInMemoryRepository
 import picocli.CommandLine
 import java.util.stream.Stream
 
+@Suppress("MaxLineLength")
 class ConfigurationTest {
     private lateinit var app: Configuration
     private lateinit var cmd: CommandLine

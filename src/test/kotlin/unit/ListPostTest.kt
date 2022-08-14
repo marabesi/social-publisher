@@ -11,6 +11,7 @@ import adapters.outbound.inmemory.InMemoryPostRepository
 import picocli.CommandLine
 import java.util.stream.Stream
 
+@Suppress("MaxLineLength")
 class ListPostTest {
     private val cmd = CommandLine(Post(InMemoryPostRepository(), MockedOutput()))
 

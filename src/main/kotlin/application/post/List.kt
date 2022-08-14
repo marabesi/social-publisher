@@ -3,6 +3,8 @@ package application.post
 import application.Output
 import application.persistence.PostsRepository
 
+const val ALLOWED_CHARACTERS_TO_SHOW = 50
+
 class List(
     private val postsRepository: PostsRepository,
     private val cliOutput: Output
@@ -20,8 +22,8 @@ class List(
             val isLast: Boolean = index == findAll.size
 
             result += when {
-                post.text.length > 50 -> {
-                    post.id.toString() + ". " + post.text.substring(0, 50) + "..."
+                post.text.length > ALLOWED_CHARACTERS_TO_SHOW -> {
+                    post.id.toString() + ". " + post.text.substring(0, ALLOWED_CHARACTERS_TO_SHOW) + "..."
                 }
                 else -> {
                     post.id.toString() + ". " + post.text

@@ -2,7 +2,7 @@ import adapters.inbound.cli.CliFactory
 import adapters.inbound.cli.Configuration
 import adapters.inbound.cli.Post
 import adapters.inbound.cli.Poster
-import adapters.inbound.cli.scheduler.Scheduler
+import adapters.inbound.cli.scheduler.SchedulerCrud
 import picocli.CommandLine
 import java.time.Instant
 
@@ -11,7 +11,7 @@ import java.time.Instant
     description = ["post to any social media"],
     subcommands = [
         Post::class,
-        Scheduler::class,
+        SchedulerCrud::class,
         Poster::class,
         Configuration::class,
     ]

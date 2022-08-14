@@ -1,7 +1,7 @@
 package unit
 
 import MockedOutput
-import adapters.inbound.cli.scheduler.Scheduler
+import adapters.inbound.cli.scheduler.SchedulerCrud
 import adapters.inbound.cli.scheduler.SchedulerList
 import adapters.outbound.inmemory.InMemoryPostRepository
 import adapters.outbound.inmemory.InMemorySchedulerRepository
@@ -66,7 +66,7 @@ class SchedulerListTest {
             )
         )
 
-        val cmdParent = CommandLine(Scheduler(postsRepository, scheduleRepository, MockedOutput()))
+        val cmdParent = CommandLine(SchedulerCrud(postsRepository, scheduleRepository, MockedOutput()))
         cmdParent.execute("-c", "-p", "1", "-d", "2022-10-02T09:00:00Z")
 
         cmd.execute()
@@ -95,7 +95,7 @@ class SchedulerListTest {
             )
         )
 
-        val cmdParent = CommandLine(Scheduler(postsRepository, scheduleRepository, MockedOutput()))
+        val cmdParent = CommandLine(SchedulerCrud(postsRepository, scheduleRepository, MockedOutput()))
         cmdParent.execute("-c", "-p", "1", "-d", "2022-10-02T09:00:00Z")
         cmdParent.execute("-c", "-p", "2", "-d", "2022-10-03T09:00:00Z")
 
@@ -117,7 +117,7 @@ class SchedulerListTest {
             post2
         ))
 
-        val cmdParent = CommandLine(Scheduler(postsRepository, scheduleRepository, MockedOutput()))
+        val cmdParent = CommandLine(SchedulerCrud(postsRepository, scheduleRepository, MockedOutput()))
         cmdParent.execute("-c", "-p", "1", "-d", "2022-10-02T09:00:00Z")
         cmdParent.execute("-c", "-p", "2", "-d", "2022-11-02T10:00:00Z")
 
@@ -139,7 +139,7 @@ class SchedulerListTest {
             post2
         ))
 
-        val cmdParent = CommandLine(Scheduler(postsRepository, scheduleRepository, MockedOutput()))
+        val cmdParent = CommandLine(SchedulerCrud(postsRepository, scheduleRepository, MockedOutput()))
         cmdParent.execute("-c", "-p", "1", "-d", "2021-10-02T09:00:00Z")
         cmdParent.execute("-c", "-p", "2", "-d", "2023-11-02T10:00:00Z")
 

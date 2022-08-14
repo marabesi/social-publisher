@@ -12,7 +12,7 @@ import java.util.concurrent.Callable
 @CommandLine.Command(name = "scheduler", mixinStandardHelpOptions = true, subcommands = [
     SchedulerList::class
 ])
-class Scheduler(
+class SchedulerCrud(
     @Inject
     private val postsRepository: PostsRepository,
     private val scheduleRepository: SchedulerRepository,

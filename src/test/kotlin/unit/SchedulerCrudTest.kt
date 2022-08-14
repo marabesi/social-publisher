@@ -1,7 +1,7 @@
 package unit
 
 import MockedOutput
-import adapters.inbound.cli.scheduler.Scheduler
+import adapters.inbound.cli.scheduler.SchedulerCrud
 import adapters.outbound.inmemory.InMemoryPostRepository
 import adapters.outbound.inmemory.InMemorySchedulerRepository
 import application.entities.ScheduledItem
@@ -21,13 +21,13 @@ import java.io.StringWriter
 import java.time.Instant
 import java.util.stream.Stream
 
-class SchedulerTest {
-    private lateinit var app: Scheduler
+class SchedulerCrudTest {
+    private lateinit var app: SchedulerCrud
     private lateinit var cmd: CommandLine
 
     @BeforeEach
     fun setUp() {
-        app = Scheduler(InMemoryPostRepository(), InMemorySchedulerRepository(), MockedOutput())
+        app = SchedulerCrud(InMemoryPostRepository(), InMemorySchedulerRepository(), MockedOutput())
         cmd = CommandLine(app)
     }
 
@@ -87,7 +87,7 @@ class SchedulerTest {
         postsRepository.save(arrayListOf(
             SocialPosts(text = "anything")
         ))
-        val app = Scheduler(postsRepository, InMemorySchedulerRepository(), MockedOutput())
+        val app = SchedulerCrud(postsRepository, InMemorySchedulerRepository(), MockedOutput())
         val cmd = CommandLine(app)
 
         cmd.execute("-c", "-p", "1", "-d", "2022-10-02T09:00:00Z")
@@ -100,7 +100,7 @@ class SchedulerTest {
         postsRepository.save(arrayListOf(
             SocialPosts(text = "anything")
         ))
-        val app = Scheduler(postsRepository, InMemorySchedulerRepository(), MockedOutput())
+        val app = SchedulerCrud(postsRepository, InMemorySchedulerRepository(), MockedOutput())
         val cmd = CommandLine(app)
 
         cmd.execute("-c", "-p", "1", "-d", "2022-10-02T09:00:00Z")
@@ -114,7 +114,7 @@ class SchedulerTest {
         postsRepository.save(arrayListOf(
             SocialPosts(text = "anything")
         ))
-        val app = Scheduler(postsRepository, InMemorySchedulerRepository(), MockedOutput())
+        val app = SchedulerCrud(postsRepository, InMemorySchedulerRepository(), MockedOutput())
         val cmd = CommandLine(app)
 
         cmd.execute("-c", "-p", "1", "-d", "2022")
@@ -126,7 +126,7 @@ class SchedulerTest {
         val postsRepository = InMemoryPostRepository()
         val scheduleRepository = InMemorySchedulerRepository()
 
-        val app = Scheduler(postsRepository, scheduleRepository, MockedOutput())
+        val app = SchedulerCrud(postsRepository, scheduleRepository, MockedOutput())
         val cmd = CommandLine(app)
         cmd.execute("-r")
 
@@ -154,7 +154,7 @@ class SchedulerTest {
             ),
         )
 
-        val app = Scheduler(postsRepository, scheduleRepository, MockedOutput())
+        val app = SchedulerCrud(postsRepository, scheduleRepository, MockedOutput())
         val cmd = CommandLine(app)
         cmd.execute("-r", "-id", scheduleId)
 

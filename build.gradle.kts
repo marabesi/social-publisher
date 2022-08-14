@@ -77,7 +77,14 @@ detekt {
 
 pitest {
     targetClasses.addAll("adapters.*" , "application.*")
-    targetTests.addAll("unit.*")
+    targetTests.addAll("unit.*", "integration.*")
+    threads.set(1)
+    testPlugin.set("junit5")
+    junit5PluginVersion.set("0.15")
+    useClasspathFile.set(true)
+    outputFormats.set(setOf("XML", "HTML"))
+    mutators.set(setOf("STRONGER", "DEFAULTS"))
+    avoidCallsTo.set(setOf("kotlin.jvm.internal", "kotlinx.coroutines"))
 }
 
 task("cucumber") {

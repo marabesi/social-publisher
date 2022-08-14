@@ -8,6 +8,7 @@ plugins {
     jacoco
     id("com.github.nbaztec.coveralls-jacoco") version "1.2.14"
     id("io.gitlab.arturbosch.detekt").version("1.21.0")
+    id("info.solidsoft.pitest").version("1.7.4")
 }
 
 group = "me.marabesi"
@@ -72,6 +73,11 @@ tasks.withType<KotlinCompile> {
 detekt {
     buildUponDefaultConfig = true // preconfigure defaults
     allRules = false // activate all available (even unstable) rules.
+}
+
+pitest {
+    targetClasses.addAll("adapters.*" , "application.*")
+    targetTests.addAll("unit.*")
 }
 
 task("cucumber") {

@@ -1,6 +1,5 @@
-package adapters.inbound.cli
+package adapters.inbound.cli.scheduler
 
-import adapters.inbound.cli.scheduler.SchedulerList
 import application.Output
 import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository

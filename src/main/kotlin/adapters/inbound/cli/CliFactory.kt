@@ -1,5 +1,6 @@
 package adapters.inbound.cli
 
+import adapters.inbound.cli.scheduler.Scheduler
 import adapters.inbound.cli.scheduler.SchedulerList
 import adapters.outbound.cli.CliOutput
 import adapters.outbound.csv.FileSystemConfigurationRepository

@@ -2,7 +2,7 @@ import adapters.inbound.cli.CliFactory
 import adapters.inbound.cli.Configuration
 import adapters.inbound.cli.Post
 import adapters.inbound.cli.Poster
-import adapters.inbound.cli.Scheduler
+import adapters.inbound.cli.scheduler.Scheduler
 import picocli.CommandLine
 import java.time.Instant
 

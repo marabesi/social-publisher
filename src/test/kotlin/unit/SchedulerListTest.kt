@@ -1,7 +1,7 @@
 package unit
 
 import MockedOutput
-import adapters.inbound.cli.Scheduler
+import adapters.inbound.cli.scheduler.Scheduler
 import adapters.inbound.cli.scheduler.SchedulerList
 import adapters.outbound.inmemory.InMemoryPostRepository
 import adapters.outbound.inmemory.InMemorySchedulerRepository

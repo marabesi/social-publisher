@@ -7,6 +7,7 @@ plugins {
     java
     jacoco
     id("com.github.nbaztec.coveralls-jacoco") version "1.2.14"
+    id("io.gitlab.arturbosch.detekt").version("1.21.0")
 }
 
 group = "me.marabesi"
@@ -66,6 +67,11 @@ val integrationTest = task<Test>("integrationTest") {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "11"
+}
+
+detekt {
+    buildUponDefaultConfig = true // preconfigure defaults
+    allRules = false // activate all available (even unstable) rules.
 }
 
 task("cucumber") {

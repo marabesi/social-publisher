@@ -16,8 +16,7 @@ import java.time.Instant
         Configuration::class,
     ]
 )
-class Application {
-}
+class Application
 
 fun buildCommandLine(currentTime: Instant = Instant.now()): CommandLine {
     return CommandLine(Application::class.java, CliFactory(currentTime))

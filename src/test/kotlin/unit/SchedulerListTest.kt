@@ -146,7 +146,7 @@ class SchedulerListTest {
         cmd.execute("--future-only")
 
         assertEquals("""
-            2. Post with id 2 will be published on 2023-11-02T10:00:00Z
+            1. Post with id 2 will be published on 2023-11-02T10:00:00Z
         """.trimIndent(), cmd.getExecutionResult())
     }
 }

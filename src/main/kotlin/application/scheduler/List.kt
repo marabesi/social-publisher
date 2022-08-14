@@ -25,9 +25,9 @@ class List(
         for (scheduledItem in findAll) {
             val isLast: Boolean = findAll.size == index
             result += if (isLast) {
-                "${scheduledItem.id}. Post with id ${scheduledItem.post.id} will be published on ${scheduledItem.publishDate}"
+                "$index. Post with id ${scheduledItem.post.id} will be published on ${scheduledItem.publishDate}"
             } else {
-                "${scheduledItem.id}. Post with id ${scheduledItem.post.id} will be published on ${scheduledItem.publishDate}\n"
+                "$index. Post with id ${scheduledItem.post.id} will be published on ${scheduledItem.publishDate}\n"
             }
             index++
         }

@@ -43,10 +43,12 @@ class SchedulerListTest {
 
         cmd.execute("scheduler", "list",  "--help")
         assertEquals("""
-            Usage: social scheduler list [-hV] [--future-only]
-                  --future-only   list posts that are beyond the future date
-              -h, --help          Show this help message and exit.
-              -V, --version       Print version information and exit.
+            Usage: social scheduler list [-hV] [--future-only] [--group-by=<groupBy>]
+                  --future-only          list posts that are beyond the future date
+                  --group-by=<groupBy>   Outputs the scheduled posts grouped by a given
+                                           criteria
+              -h, --help                 Show this help message and exit.
+              -V, --version              Print version information and exit.
 
         """.trimIndent(), sw.toString())
     }
@@ -153,6 +155,57 @@ class SchedulerListTest {
 
         assertEquals("""
             1. Post with id 2 will be published on 2023-11-02T10:00:00Z
+        """.trimIndent(), cmd.getExecutionResult())
+    }
+
+    @Test
+    fun `should group list by posts with single post`() {
+        val postsRepository = InMemoryPostRepository()
+        val post1 = SocialPosts(text = "anything")
+        postsRepository.save(arrayListOf(
+            post1,
+        ))
+
+        scheduleRepository.save(
+            ScheduledItem(
+                post1, Instant.parse("2021-10-02T09:00:00Z")
+            )
+        )
+
+        cmd.execute("--group-by", "post")
+
+        assertEquals("""
+            1. Post with id 1 posted 1 time(s)
+        """.trimIndent(), cmd.getExecutionResult())
+    }
+
+    @Test
+    fun `should group list by posts with multiple post`() {
+        val postsRepository = InMemoryPostRepository()
+        val post1 = SocialPosts(id = "1", text = "anything")
+        val post2 = SocialPosts(id = "2", text = "anything-2")
+        postsRepository.save(arrayListOf(
+            post1,
+            post2
+        ))
+
+        scheduleRepository.save(
+            ScheduledItem(
+                post1, Instant.parse("2021-10-02T09:00:00Z")
+            )
+        )
+
+        scheduleRepository.save(
+            ScheduledItem(
+                post2, Instant.parse("2022-11-02T09:00:00Z")
+            )
+        )
+
+        cmd.execute("--group-by", "post")
+
+        assertEquals("""
+            1. Post with id 1 posted 1 time(s)
+            2. Post with id 2 posted 1 time(s)
         """.trimIndent(), cmd.getExecutionResult())
     }
 }

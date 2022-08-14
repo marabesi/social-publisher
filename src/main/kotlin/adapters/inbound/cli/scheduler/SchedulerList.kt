@@ -19,7 +19,10 @@ open class SchedulerList(
     @CommandLine.Option(names = ["--future-only"], description = ["list posts that are beyond the future date"])
     var futureOnly: Boolean = false
 
+    @CommandLine.Option(names = ["--group-by"], description = ["Outputs the scheduled posts grouped by a given criteria"])
+    var groupBy: String = ""
+
     override fun call(): String {
-        return List(scheduleRepository, cliOutput, currentTime, futureOnly).invoke()
+        return List(scheduleRepository, cliOutput, currentTime, futureOnly, groupBy).invoke()
     }
 }

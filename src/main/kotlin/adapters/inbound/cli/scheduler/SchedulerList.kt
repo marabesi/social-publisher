@@ -8,14 +8,18 @@ import picocli.CommandLine
 import java.time.Instant
 import java.util.concurrent.Callable
 
-@CommandLine.Command(name = "list")
+@CommandLine.Command(name = "list", mixinStandardHelpOptions = true)
 open class SchedulerList(
     @Inject
     private val scheduleRepository: SchedulerRepository,
     private val cliOutput: Output,
-    currentTime: Instant
+    private val currentTime: Instant
 ): Callable<String> {
+
+    @CommandLine.Option(names = ["--future-only"], description = ["list posts that are beyond the future date"])
+    var futureOnly: Boolean = false
+
     override fun call(): String {
-        return List(scheduleRepository, cliOutput).invoke()
+        return List(scheduleRepository, cliOutput, currentTime, futureOnly).invoke()
     }
 }

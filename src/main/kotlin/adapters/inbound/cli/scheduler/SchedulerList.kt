@@ -9,7 +9,6 @@ import java.time.Instant
 import java.util.concurrent.Callable
 
 @CommandLine.Command(name = "list", mixinStandardHelpOptions = true)
-@Suppress("MaxLineLength")
 open class SchedulerList(
     @Inject
     private val scheduleRepository: SchedulerRepository,
@@ -20,7 +19,9 @@ open class SchedulerList(
     @CommandLine.Option(names = ["--future-only"], description = ["list posts that are beyond the future date"])
     var futureOnly: Boolean = false
 
-    @CommandLine.Option(names = ["--group-by"], description = ["Outputs the scheduled posts grouped by a given criteria"])
+    @CommandLine.Option(names = ["--group-by"], description = [
+        "Outputs the scheduled posts grouped by a given criteria"
+    ])
     var groupBy: String = ""
 
     override fun call(): String {

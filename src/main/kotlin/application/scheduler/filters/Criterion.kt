@@ -1,5 +1,7 @@
 package application.scheduler.filters
 
+import application.entities.ScheduledItem
+
 data class Filter (
     val key: String,
     val predicate: String,
@@ -7,5 +9,6 @@ data class Filter (
 )
 
 interface Criterion {
-    fun apply(): Filter
+    fun getFilter(): Filter
+    fun applyPredicateFor(item: ScheduledItem): Boolean
 }

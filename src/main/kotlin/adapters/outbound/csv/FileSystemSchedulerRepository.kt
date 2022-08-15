@@ -62,17 +62,10 @@ class FileSystemSchedulerRepository(
         parser.close()
 
         val iterator = filters.iterator()
-        while (iterator.hasNext()) {
-            val parse: Filter = iterator.next().apply()
 
-            scheduledItems = scheduledItems.filter {
-                if (parse.key == "publishDate" && parse.predicate == ">=") {
-                    val date = parse.value as Instant
-                    it.publishDate >= date
-                } else {
-                    false
-                }
-            } as ArrayList<ScheduledItem>
+        while (iterator.hasNext()) {
+            val criterion = iterator.next()
+            scheduledItems = scheduledItems.filter {criterion.applyPredicateFor(it)} as ArrayList<ScheduledItem>
         }
 
         return scheduledItems

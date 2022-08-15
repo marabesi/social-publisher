@@ -3,8 +3,6 @@ package adapters.outbound.inmemory
 import application.entities.ScheduledItem
 import application.persistence.SchedulerRepository
 import application.scheduler.filters.Criterion
-import application.scheduler.filters.Filter
-import java.time.Instant
 
 class InMemorySchedulerRepository: SchedulerRepository {
     private var storedScheduler: ArrayList<ScheduledItem> = arrayListOf();
@@ -24,16 +22,8 @@ class InMemorySchedulerRepository: SchedulerRepository {
         val iterator = filters.iterator()
         var scheduledItems = storedScheduler
         while (iterator.hasNext()) {
-            val parse: Filter = iterator.next().apply()
-
-            scheduledItems = scheduledItems.filter {
-                if (parse.key == "publishDate" && parse.predicate == ">=") {
-                    val date = parse.value as Instant
-                    it.publishDate >= date
-                } else {
-                    false
-                }
-            } as ArrayList<ScheduledItem>
+            val criterion = iterator.next()
+            scheduledItems = scheduledItems.filter {criterion.applyPredicateFor(it)} as ArrayList<ScheduledItem>
         }
         return scheduledItems
     }

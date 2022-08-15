@@ -19,20 +19,6 @@ Feature:  Post scheduled posts to twitter
     """
     Then I remove post "Post to schedule" from twitter
 
-  Scenario: Warn user when poster found only posts in the future
-    When I create a post with the text "Post to schedule-1"
-    When I create a post with the text "Post to schedule-2"
-    Then I clean the output
-    And I schedule the post with id "1" to be published at "2022-11-02T09:00:00Z"
-    And I schedule the post with id "2" to be published at "2022-11-02T09:00:00Z"
-    Then I clean the output
-    And I set the post "1" to "twitter"
-    Then I clean the output
-    And I set the post "2" to "twitter"
-    Then I clean the output
-    Then Poster should show "Waiting for the date to come to publish post 1 (scheduled for 02 Nov 2022 09:00:00)"
-    Then Poster should show "Waiting for the date to come to publish post 2 (scheduled for 02 Nov 2022 09:00:00)"
-
   @interactsWithTwitter
   Scenario: Avoid posting twice the same post
     When I create a post with the text "Post to schedule-3"
@@ -55,3 +41,17 @@ Feature:  Post scheduled posts to twitter
     Then I clean the output
     Then Poster should execute routine to send posts
     Then Show successfully message "There are no posts to be posted"
+
+  Scenario: Warn user when poster found only posts in the future
+    When I create a post with the text "Post to schedule-1"
+    When I create a post with the text "Post to schedule-2"
+    Then I clean the output
+    And I schedule the post with id "1" to be published at "2022-11-02T09:00:00Z"
+    And I schedule the post with id "2" to be published at "2022-11-02T09:00:00Z"
+    Then I clean the output
+    And I set the post "1" to "twitter"
+    Then I clean the output
+    And I set the post "2" to "twitter"
+    Then I clean the output
+    Then Poster should show "Waiting for the date to come to publish post 1 (scheduled for 02 Nov 2022 09:00:00)"
+    Then Poster should show "Waiting for the date to come to publish post 2 (scheduled for 02 Nov 2022 09:00:00)"

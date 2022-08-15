@@ -1,5 +1,6 @@
 package adapters.inbound.cli.scheduler
 
+import application.Messages
 import application.Output
 import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
@@ -28,7 +29,7 @@ class SchedulerCreate(
 
     override fun call(): String {
         if (targetDate.isEmpty()) {
-            return cliOutput.write("Missing required fields")
+            return cliOutput.write(Messages.MISSING_REQUIRED_FIELDS)
         }
 
         return Create(postsRepository, scheduleRepository, cliOutput).invoke(postId, targetDate)

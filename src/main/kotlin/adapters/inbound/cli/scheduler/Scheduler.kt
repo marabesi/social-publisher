@@ -1,5 +1,6 @@
 package adapters.inbound.cli.scheduler
 
+import application.Messages
 import application.Output
 import picocli.CommandLine
 import java.util.concurrent.Callable
@@ -14,6 +15,6 @@ class Scheduler(
 ): Callable<String> {
 
     override fun call(): String {
-        return cliOutput.write("Missing required fields")
+        return cliOutput.write(Messages.MISSING_REQUIRED_FIELDS)
     }
 }

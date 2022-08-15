@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import adapters.outbound.inmemory.InMemoryPostRepository
+import application.Messages
 import picocli.CommandLine
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -38,9 +39,7 @@ class PostCreatorTest {
     fun `should show friendly message when no arguments is provided to post`() {
         cmd.execute()
 
-        val result = cmd.getExecutionResult<String>()
-
-        assertEquals("Missing required fields", result)
+        assertEquals(Messages.MISSING_REQUIRED_FIELDS, cmd.getExecutionResult())
     }
 
     @ParameterizedTest

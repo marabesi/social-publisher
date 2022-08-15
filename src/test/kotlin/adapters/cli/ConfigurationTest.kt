@@ -9,6 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import adapters.outbound.inmemory.ConfigurationInMemoryRepository
+import application.Messages
 import picocli.CommandLine
 import java.util.stream.Stream
 
@@ -26,7 +27,7 @@ class ConfigurationTest {
     @Test
     fun `should show friendly message when required fields are not provided`() {
         cmd.execute()
-        assertEquals("Missing required fields", cmd.getExecutionResult())
+        assertEquals(Messages.MISSING_REQUIRED_FIELDS, cmd.getExecutionResult())
     }
 
     @Test

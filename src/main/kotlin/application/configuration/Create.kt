@@ -1,5 +1,6 @@
 package application.configuration
 
+import application.Messages
 import application.Output
 import application.entities.SocialConfiguration
 import application.persistence.configuration.ConfigurationRepository
@@ -12,7 +13,7 @@ class Create(
 ) {
     fun invoke(configuration: String): String {
         if (configuration.isEmpty()) {
-            return cliOutput.write("Missing required fields")
+            return cliOutput.write(Messages.MISSING_REQUIRED_FIELDS)
         }
         val data = Json.decodeFromString<SocialConfiguration>(configuration)
 

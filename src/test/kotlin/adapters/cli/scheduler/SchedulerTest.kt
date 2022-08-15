@@ -2,6 +2,7 @@ package adapters.cli.scheduler
 
 import MockedOutput
 import adapters.inbound.cli.scheduler.Scheduler
+import application.Messages
 import buildCommandLine
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -23,7 +24,7 @@ class SchedulerTest {
     @Test
     fun `should show friendly message when required fields are not provided`() {
         cmd.execute()
-        assertEquals("Missing required fields", cmd.getExecutionResult())
+        assertEquals(Messages.MISSING_REQUIRED_FIELDS, cmd.getExecutionResult())
     }
 
     @Test

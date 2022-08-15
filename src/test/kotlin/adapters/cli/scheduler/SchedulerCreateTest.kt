@@ -4,6 +4,7 @@ import MockedOutput
 import adapters.inbound.cli.scheduler.SchedulerCreate
 import adapters.outbound.inmemory.InMemoryPostRepository
 import adapters.outbound.inmemory.InMemorySchedulerRepository
+import application.Messages
 import application.entities.SocialPosts
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -27,7 +28,7 @@ class SchedulerCreateTest {
     @Test
     fun `should show friendly message when required fields are not provided`() {
         cmd.execute()
-        assertEquals("Missing required fields", cmd.getExecutionResult())
+        assertEquals(Messages.MISSING_REQUIRED_FIELDS, cmd.getExecutionResult())
     }
 
     @ParameterizedTest
@@ -46,7 +47,7 @@ class SchedulerCreateTest {
     @ParameterizedTest
     fun `should show friendly message on empty date`(postId: String?, targetDate: String?) {
         cmd.execute("-p", postId, "-d", targetDate)
-        assertEquals("Missing required fields", cmd.getExecutionResult())
+        assertEquals(Messages.MISSING_REQUIRED_FIELDS, cmd.getExecutionResult())
     }
 
     @Test

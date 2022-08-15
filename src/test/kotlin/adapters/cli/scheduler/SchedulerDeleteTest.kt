@@ -3,6 +3,7 @@ package adapters.cli.scheduler
 import MockedOutput
 import adapters.inbound.cli.scheduler.SchedulerDelete
 import adapters.outbound.inmemory.InMemorySchedulerRepository
+import application.Messages
 import application.entities.ScheduledItem
 import application.entities.SocialPosts
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -30,7 +31,7 @@ class SchedulerDeleteTest {
     fun `should not allow remove parameter without post id`() {
         cmd.execute()
 
-        assertEquals("Missing required fields", cmd.getExecutionResult())
+        assertEquals(Messages.MISSING_REQUIRED_FIELDS, cmd.getExecutionResult())
     }
 
     @ParameterizedTest

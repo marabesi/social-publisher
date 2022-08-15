@@ -1,5 +1,6 @@
 package application.scheduler
 
+import application.Messages
 import application.Output
 import application.entities.ScheduledItem
 import application.persistence.PostsRepository
@@ -38,6 +39,6 @@ class Create(
             return cliOutput.write("Post has been scheduled")
         }
 
-        return cliOutput.write("Missing required fields")
+        return cliOutput.write(Messages.MISSING_REQUIRED_FIELDS)
     }
 }

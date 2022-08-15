@@ -1,5 +1,6 @@
 package adapters.inbound.cli
 
+import application.Messages
 import application.Output
 import application.persistence.SchedulerRepository
 import application.poster.Executor
@@ -37,7 +38,7 @@ class Poster(
         }
 
         if (postId.isEmpty()) {
-            return cliOutput.write("Missing required fields")
+            return cliOutput.write(Messages.MISSING_REQUIRED_FIELDS)
         }
 
         return cliOutput.write("Post $postId set to twitter")

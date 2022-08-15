@@ -3,6 +3,7 @@ package adapters.cli
 import MockedOutput
 import adapters.outbound.inmemory.InMemorySchedulerRepository
 import adapters.inbound.cli.Poster
+import application.Messages
 import application.entities.ScheduledItem
 import application.entities.SocialPosts
 import application.persistence.SchedulerRepository
@@ -62,9 +63,7 @@ class PosterTest {
     fun `should display friendly message if there is no arguments given`() {
         cmd.execute()
 
-        val result = cmd.getExecutionResult<String>()
-
-        Assertions.assertEquals("Missing required fields", result)
+        Assertions.assertEquals(Messages.MISSING_REQUIRED_FIELDS, cmd.getExecutionResult())
     }
 
     @Test

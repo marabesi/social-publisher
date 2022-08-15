@@ -3,6 +3,7 @@ Feature:  Post scheduled posts to twitter
     Given A new cli with date set to "2022-10-02T09:01:00Z"
     And the twitter credentials in place
 
+  @interactsWithTwitter
   Scenario: Schedule a post created on "2022-10-02 at 09:00 PM" to be posted on "2022-10:02 at 10:00 PM"
     When I create a post with the text "Post to schedule"
     Then I clean the output
@@ -32,6 +33,7 @@ Feature:  Post scheduled posts to twitter
     Then Poster should show "Waiting for the date to come to publish post 1 (scheduled for 02 Nov 2022 09:00:00)"
     Then Poster should show "Waiting for the date to come to publish post 2 (scheduled for 02 Nov 2022 09:00:00)"
 
+  @interactsWithTwitter
   Scenario: Avoid posting twice the same post
     When I create a post with the text "Post to schedule-3"
     When I create a post with the text "Post to schedule-4"

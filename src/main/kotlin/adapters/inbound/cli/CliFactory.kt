@@ -2,6 +2,7 @@ package adapters.inbound.cli
 
 import adapters.inbound.cli.scheduler.SchedulerCreate
 import adapters.inbound.cli.scheduler.SchedulerCrud
+import adapters.inbound.cli.scheduler.SchedulerDelete
 import adapters.inbound.cli.scheduler.SchedulerList
 import adapters.outbound.cli.CliOutput
 import adapters.outbound.csv.FileSystemConfigurationRepository
@@ -42,7 +43,11 @@ class CliFactory(
             }
 
             if (cls == SchedulerCrud::class.java) {
-                return SchedulerCrud(scheduler, cliOutput) as K
+                return SchedulerCrud(cliOutput) as K
+            }
+
+            if (cls == SchedulerDelete::class.java) {
+                return SchedulerDelete(scheduler, cliOutput) as K
             }
 
             if (cls == SchedulerCreate::class.java) {

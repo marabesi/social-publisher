@@ -181,7 +181,7 @@ class SocialPublisherSteps: En {
         Then(
             "I remove schedule from post with id {string}"
         ) { scheduleId: String ->
-            exitCode = cmd.execute("scheduler", "-r", "-id", scheduleId)
+            exitCode = cmd.execute("scheduler", "delete", "-id", scheduleId)
             assertContains(outputStreamCaptor.toString(), "Schedule 1 has been removed from post 1")
         }
 

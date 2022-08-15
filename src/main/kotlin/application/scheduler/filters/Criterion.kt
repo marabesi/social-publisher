@@ -14,3 +14,4 @@ interface Criterion {
 }
 
 const val EQUALS_AND_GREATER_THAN = ">="
+const val EQUALS_AND_LESS_THAN = "<="

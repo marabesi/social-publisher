@@ -5,6 +5,7 @@ import adapters.outbound.csv.FileSystemSchedulerRepository
 import adapters.outbound.inmemory.InMemoryPostRepository
 import application.entities.ScheduledItem
 import application.entities.SocialPosts
+import application.scheduler.filters.UntilDate
 import junit.framework.TestCase.assertTrue
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -81,9 +82,39 @@ class FileSystemSchedulerRepositoryTest {
             )
         )
 
-        val scheduledItem = repository.findAll(arrayListOf(FutureOnly(Instant.parse("2022-12-01T11:00:00Z"))))
+        val scheduledList = repository.findAll(arrayListOf(FutureOnly(Instant.parse("2022-12-01T11:00:00Z"))))
 
-        assertEquals(1, scheduledItem.size)
+        assertEquals(1, scheduledList.size)
+    }
+
+    @Test
+    fun fetchScheduledItemsUntilGivenDate() {
+        val post = SocialPosts("1", "another post")
+        val post2 = SocialPosts("2", "another post")
+        val postsRepository = InMemoryPostRepository()
+        postsRepository.save(arrayListOf(post, post2))
+
+        val repository = FileSystemSchedulerRepository(filePath, postsRepository)
+
+        repository.save(
+            ScheduledItem(
+                post, Instant.parse("2021-11-25T11:00:00Z"), published = true
+            )
+        )
+        repository.save(
+            ScheduledItem(
+                post2, Instant.parse("2023-11-25T11:00:00Z"), published = true
+            )
+        )
+
+        val scheduledList = repository.findAll(
+            arrayListOf(
+                UntilDate(Instant.parse("2022-12-01T11:00:00Z"))
+            )
+        )
+
+        assertEquals(1, scheduledList.size)
+        assertEquals("1", scheduledList[0].post.id)
     }
 
     @Test

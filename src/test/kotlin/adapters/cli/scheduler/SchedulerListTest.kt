@@ -44,7 +44,9 @@ class SchedulerListTest {
 
         cmd.execute("scheduler", "list",  "--help")
         assertEquals("""
-            Usage: social scheduler list [-hV] [--future-only] [--group-by=<groupBy>]
+            Usage: social scheduler list [-hV] [--future-only] [--end-date=<endDate>]
+                                         [--group-by=<groupBy>]
+                  --end-date=<endDate>   list posts until this date
                   --future-only          list posts that are beyond the future date
                   --group-by=<groupBy>   Outputs the scheduled posts grouped by a given
                                            criteria
@@ -152,6 +154,33 @@ class SchedulerListTest {
 
         assertEquals("""
             1. Post with id 2 will be published on 2023-11-02T10:00:00Z
+        """.trimIndent(), cmd.getExecutionResult())
+    }
+
+    @Test
+    fun `should list posts until a given date`() {
+        val post1 = SocialPosts(text = "anything")
+        val post2 = SocialPosts(text = "anything-2")
+        postsRepository.save(arrayListOf(
+            post1,
+            post2
+        ))
+
+        scheduleRepository.save(
+            ScheduledItem(
+                post1, Instant.parse("2024-01-02T09:00:00Z")
+            )
+        )
+        scheduleRepository.save(
+            ScheduledItem(
+                post2, Instant.parse("2024-11-02T10:00:00Z")
+            )
+        )
+
+        cmd.execute("--end-date", "2024-02-02T09:00:00Z")
+
+        assertEquals("""
+            1. Post with id 1 will be published on 2024-01-02T09:00:00Z
         """.trimIndent(), cmd.getExecutionResult())
     }
 

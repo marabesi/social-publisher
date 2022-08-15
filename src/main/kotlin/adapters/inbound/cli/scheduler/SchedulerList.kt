@@ -5,6 +5,7 @@ import application.persistence.SchedulerRepository
 import application.scheduler.filters.Criterion
 import application.scheduler.List
 import application.scheduler.filters.FutureOnly
+import application.scheduler.filters.UntilDate
 import com.google.inject.Inject
 import picocli.CommandLine
 import java.time.Instant
@@ -21,6 +22,9 @@ open class SchedulerList(
     @CommandLine.Option(names = ["--future-only"], description = ["list posts that are beyond the future date"])
     var futureOnly: Boolean = false
 
+    @CommandLine.Option(names = ["--end-date"], description = ["list posts until this date"])
+    var endDate: String = ""
+
     @CommandLine.Option(names = ["--group-by"], description = [
         "Outputs the scheduled posts grouped by a given criteria"
     ])
@@ -35,6 +39,10 @@ open class SchedulerList(
 
         if (futureOnly) {
             filters.add(FutureOnly(currentTime))
+        }
+
+        if (endDate.isNotEmpty()) {
+            filters.add(UntilDate(Instant.parse(endDate)))
         }
 
         return List(scheduleRepository, cliOutput, filters, groupBy).invoke()

@@ -1,5 +1,6 @@
 Feature: Schedule a post to be posted
   Background: With a new cli instance and no configuration in place
+    Given A new cli with date set to "2022-10-02T09:01:00Z"
 
   Scenario: List empty list without posts scheduled
     Given A new cli

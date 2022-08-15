@@ -85,6 +85,15 @@ class SocialPublisherSteps: En {
             exitCode = cmd.execute("scheduler", "list")
         }
 
+        When("I list the scheduled posts in the future") {
+            exitCode = cmd.execute("scheduler", "list", "--future-only")
+        }
+
+        When("I list the scheduled posts with the end date for {string}") {
+            endDate: String ->
+            exitCode = cmd.execute("scheduler", "list", "--end-date", endDate)
+        }
+
         When(
             "I schedule the post with id {string} to be published at {string}"
         ) { postId: String, dateToBePublished: String ->

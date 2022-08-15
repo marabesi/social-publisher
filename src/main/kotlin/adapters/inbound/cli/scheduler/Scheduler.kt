@@ -9,7 +9,7 @@ import java.util.concurrent.Callable
     SchedulerCreate::class,
     SchedulerDelete::class
 ])
-class SchedulerCrud(
+class Scheduler(
     private val cliOutput: Output,
 ): Callable<String> {
 

@@ -1,7 +1,7 @@
 package unit
 
 import MockedOutput
-import adapters.inbound.cli.scheduler.SchedulerCrud
+import adapters.inbound.cli.scheduler.Scheduler
 import buildCommandLine
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -10,13 +10,13 @@ import picocli.CommandLine
 import java.io.PrintWriter
 import java.io.StringWriter
 
-class SchedulerCrudTest {
-    private lateinit var app: SchedulerCrud
+class SchedulerTest {
+    private lateinit var app: Scheduler
     private lateinit var cmd: CommandLine
 
     @BeforeEach
     fun setUp() {
-        app = SchedulerCrud(MockedOutput())
+        app = Scheduler(MockedOutput())
         cmd = CommandLine(app)
     }
 

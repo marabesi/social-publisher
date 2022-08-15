@@ -1,7 +1,7 @@
 package adapters.inbound.cli
 
 import adapters.inbound.cli.scheduler.SchedulerCreate
-import adapters.inbound.cli.scheduler.SchedulerCrud
+import adapters.inbound.cli.scheduler.Scheduler
 import adapters.inbound.cli.scheduler.SchedulerDelete
 import adapters.inbound.cli.scheduler.SchedulerList
 import adapters.outbound.cli.CliOutput
@@ -42,8 +42,8 @@ class CliFactory(
                 return SchedulerList(scheduler, cliOutput, currentTime) as K
             }
 
-            if (cls == SchedulerCrud::class.java) {
-                return SchedulerCrud(cliOutput) as K
+            if (cls == Scheduler::class.java) {
+                return Scheduler(cliOutput) as K
             }
 
             if (cls == SchedulerDelete::class.java) {

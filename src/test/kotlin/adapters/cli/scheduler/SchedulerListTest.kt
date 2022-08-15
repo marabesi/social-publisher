@@ -56,7 +56,6 @@ class SchedulerListTest {
 
     @Test
     fun `should list post with id 1 to be scheduled`() {
-        val postsRepository = InMemoryPostRepository()
         val post = SocialPosts(text = "anything")
         postsRepository.save(arrayListOf(
             post

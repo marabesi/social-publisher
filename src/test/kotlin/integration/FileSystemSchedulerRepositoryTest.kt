@@ -1,5 +1,6 @@
 package integration
 
+import application.scheduler.filters.FutureOnly
 import adapters.outbound.csv.FileSystemSchedulerRepository
 import adapters.outbound.inmemory.InMemoryPostRepository
 import application.entities.ScheduledItem
@@ -59,6 +60,30 @@ class FileSystemSchedulerRepositoryTest {
         assertEquals(post.text, scheduledItem.post.text)
         assertEquals("1", scheduledItem.id)
         assertEquals(true, scheduledItem.published)
+    }
+
+    @Test
+    fun fetchScheduledItemsInTheFutureOnly() {
+        val post = SocialPosts("1", "another post")
+        val postsRepository = InMemoryPostRepository()
+        postsRepository.save(arrayListOf(post))
+
+        val repository = FileSystemSchedulerRepository(filePath, postsRepository)
+
+        repository.save(
+            ScheduledItem(
+                post, Instant.parse("2021-11-25T11:00:00Z"), published = true
+            )
+        )
+        repository.save(
+            ScheduledItem(
+                post, Instant.parse("2023-11-25T11:00:00Z"), published = true
+            )
+        )
+
+        val scheduledItem = repository.findAll(arrayListOf(FutureOnly(Instant.parse("2022-12-01T11:00:00Z"))))
+
+        assertEquals(1, scheduledItem.size)
     }
 
     @Test

@@ -2,7 +2,9 @@ package adapters.inbound.cli.scheduler
 
 import application.Output
 import application.persistence.SchedulerRepository
+import application.scheduler.filters.Criterion
 import application.scheduler.List
+import application.scheduler.filters.FutureOnly
 import com.google.inject.Inject
 import picocli.CommandLine
 import java.time.Instant
@@ -25,10 +27,16 @@ open class SchedulerList(
     var groupBy: String = ""
 
     override fun call(): String {
+        val filters: ArrayList<Criterion> = arrayListOf()
+
         if (groupBy.isNotEmpty() && groupBy != "post") {
             return cliOutput.write("Value for group-by is not valid")
         }
 
-        return List(scheduleRepository, cliOutput, currentTime, futureOnly, groupBy).invoke()
+        if (futureOnly) {
+            filters.add(FutureOnly(currentTime))
+        }
+
+        return List(scheduleRepository, cliOutput, filters, groupBy).invoke()
     }
 }

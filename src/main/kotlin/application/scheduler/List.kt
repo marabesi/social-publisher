@@ -1,26 +1,20 @@
 package application.scheduler
 
 import application.Output
-import application.entities.ScheduledItem
 import application.persistence.SchedulerRepository
-import java.time.Instant
+import application.scheduler.filters.Criterion
 
 class List(
     private val scheduleRepository: SchedulerRepository,
     private val cliOutput: Output,
-    private val currentTime: Instant,
-    private val futureOnly: Boolean,
+    private val filters: ArrayList<Criterion>,
     private val groupBy: String
 ) {
 
     fun invoke(): String {
         var result = ""
-        var findAll = scheduleRepository.findAll()
+        val findAll = scheduleRepository.findAll(filters)
         var index = 1;
-
-        if (futureOnly) {
-            findAll = findAll.filter { it.publishDate > currentTime } as ArrayList<ScheduledItem>
-        }
 
         for (scheduledItem in findAll) {
             val isLast: Boolean = findAll.size == index

@@ -3,6 +3,8 @@ package adapters.outbound.csv
 import application.entities.ScheduledItem
 import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
+import application.scheduler.filters.Criterion
+import application.scheduler.filters.Filter
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVPrinter
@@ -44,19 +46,34 @@ class FileSystemSchedulerRepository(
         return true
     }
 
-    override fun findAll(): ArrayList<ScheduledItem> {
+    override fun findAll(filters: ArrayList<Criterion>): ArrayList<ScheduledItem> {
         ensureFileExists(File(filePath))
 
         val reader = FileReader(filePath)
         val parser = CSVParser(reader, CSVFormat.DEFAULT)
 
-        val scheduledItems = arrayListOf<ScheduledItem>()
+        var scheduledItems = arrayListOf<ScheduledItem>()
 
         for (record in parser) {
-            scheduledItems.add(buildPostFromCsvRecord(record))
+            val element = buildPostFromCsvRecord(record)
+            scheduledItems.add(element)
         }
 
         parser.close()
+
+        val iterator = filters.iterator()
+        while (iterator.hasNext()) {
+            val parse: Filter = iterator.next().apply()
+
+            scheduledItems = scheduledItems.filter {
+                if (parse.key == "publishDate" && parse.predicate == ">=") {
+                    val date = parse.value as Instant
+                    it.publishDate >= date
+                } else {
+                    false
+                }
+            } as ArrayList<ScheduledItem>
+        }
 
         return scheduledItems
     }

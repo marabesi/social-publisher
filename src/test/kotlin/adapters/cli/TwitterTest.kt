@@ -1,4 +1,4 @@
-package unit
+package adapters.cli
 
 import adapters.outbound.social.TwitterIntegration
 import application.entities.ScheduledItem

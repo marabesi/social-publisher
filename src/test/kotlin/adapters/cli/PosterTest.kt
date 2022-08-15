@@ -1,4 +1,4 @@
-package unit
+package adapters.cli
 
 import MockedOutput
 import adapters.outbound.inmemory.InMemorySchedulerRepository

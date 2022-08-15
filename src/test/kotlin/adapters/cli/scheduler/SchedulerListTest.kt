@@ -1,4 +1,4 @@
-package unit
+package adapters.cli.scheduler
 
 import MockedOutput
 import adapters.inbound.cli.scheduler.SchedulerList

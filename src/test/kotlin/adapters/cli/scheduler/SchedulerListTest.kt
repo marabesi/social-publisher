@@ -20,6 +20,7 @@ class SchedulerListTest {
     private lateinit var cmd: CommandLine
     private val currentTime = Instant.parse("2022-08-13T11:11:00Z")
     private val scheduleRepository = InMemorySchedulerRepository()
+    private val postsRepository = InMemoryPostRepository()
 
     @BeforeEach
     fun setUp() {
@@ -76,7 +77,6 @@ class SchedulerListTest {
 
     @Test
     fun `should schedule same post twice each on different days`() {
-        val postsRepository = InMemoryPostRepository()
         val post = SocialPosts(text = "first day")
         postsRepository.save(arrayListOf(
             post,
@@ -103,7 +103,6 @@ class SchedulerListTest {
 
     @Test
     fun `should list posts to be scheduled`() {
-        val postsRepository = InMemoryPostRepository()
         val post1 = SocialPosts(text = "anything")
         val post2 = SocialPosts(text = "anything-2")
         postsRepository.save(arrayListOf(
@@ -132,7 +131,6 @@ class SchedulerListTest {
 
     @Test
     fun `should list posts in the future only`() {
-        val postsRepository = InMemoryPostRepository()
         val post1 = SocialPosts(text = "anything")
         val post2 = SocialPosts(text = "anything-2")
         postsRepository.save(arrayListOf(
@@ -160,7 +158,6 @@ class SchedulerListTest {
 
     @Test
     fun `should group list by posts with single post`() {
-        val postsRepository = InMemoryPostRepository()
         val post1 = SocialPosts(text = "anything")
         postsRepository.save(arrayListOf(
             post1,
@@ -181,7 +178,6 @@ class SchedulerListTest {
 
     @Test
     fun `should group list by posts with multiple post`() {
-        val postsRepository = InMemoryPostRepository()
         val post1 = SocialPosts(id = "1", text = "anything")
         val post2 = SocialPosts(id = "2", text = "anything-2")
         postsRepository.save(arrayListOf(
@@ -207,5 +203,12 @@ class SchedulerListTest {
             1. Post with id 1 posted 1 time(s)
             2. Post with id 2 posted 1 time(s)
         """.trimIndent(), cmd.getExecutionResult())
+    }
+
+    @Test
+    fun `should validate if entry given for group by is valid`() {
+        cmd.execute("--group-by", "whatever")
+
+        assertEquals("Value for group-by is not valid".trimIndent(), cmd.getExecutionResult())
     }
 }

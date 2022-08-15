@@ -24,6 +24,10 @@ open class SchedulerList(
     var groupBy: String = ""
 
     override fun call(): String {
+        if (groupBy.isNotEmpty() && groupBy != "post") {
+            return cliOutput.write("Value for group-by is not valid")
+        }
+
         return List(scheduleRepository, cliOutput, currentTime, futureOnly, groupBy).invoke()
     }
 }

@@ -185,6 +185,13 @@ class SchedulerListTest {
     }
 
     @Test
+    fun `should handle attempt to offer invalid date in --end-date`() {
+        cmd.execute("--end-date", "123")
+
+        assertEquals("Invalid date in --end-date", cmd.getExecutionResult())
+    }
+
+    @Test
     fun `should group list by posts with single post`() {
         val post1 = SocialPosts(text = "anything")
         postsRepository.save(arrayListOf(

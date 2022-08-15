@@ -9,6 +9,7 @@ import application.scheduler.filters.UntilDate
 import com.google.inject.Inject
 import picocli.CommandLine
 import java.time.Instant
+import java.time.format.DateTimeParseException
 import java.util.concurrent.Callable
 
 @CommandLine.Command(name = "list", mixinStandardHelpOptions = true)
@@ -42,7 +43,14 @@ open class SchedulerList(
         }
 
         if (endDate.isNotEmpty()) {
-            filters.add(UntilDate(Instant.parse(endDate)))
+            val date: Instant
+            try {
+                date = Instant.parse(endDate)
+            } catch (_: DateTimeParseException) {
+                return cliOutput.write("Invalid date in --end-date")
+            }
+
+            filters.add(UntilDate(date))
         }
 
         return List(scheduleRepository, cliOutput, filters, groupBy).invoke()

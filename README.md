@@ -28,6 +28,13 @@ kotlin -classpath "/home/marabesi/Downloads/picocli-4.6.2.jar:build/libs/social-
 - [Hex architecture - definition](https://marabesi.com/architecture/2022/04/13/hexagonal-architecture)
 - [Hex architecture - stackoverflow thread](https://stackoverflow.com/a/14659492/2258921)
 
+## Local setup
+Running cucumber without interacting with twitter:
+
+```
+CUCUMBER_FILTER_TAGS="not @interactsWithTwitter" ./gradlew cucumber
+```
+
 ## Integrations
 
 ### Twitter

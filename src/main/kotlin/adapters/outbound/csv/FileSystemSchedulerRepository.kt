@@ -4,7 +4,6 @@ import application.entities.ScheduledItem
 import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
 import application.scheduler.filters.Criterion
-import application.scheduler.filters.Filter
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVPrinter

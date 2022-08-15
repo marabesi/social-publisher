@@ -12,3 +12,5 @@ interface Criterion {
     fun getFilter(): Filter
     fun applyPredicateFor(item: ScheduledItem): Boolean
 }
+
+const val EQUALS_AND_GREATER_THAN = ">="

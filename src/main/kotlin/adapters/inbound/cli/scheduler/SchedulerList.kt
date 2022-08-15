@@ -9,6 +9,7 @@ import java.time.Instant
 import java.util.concurrent.Callable
 
 @CommandLine.Command(name = "list", mixinStandardHelpOptions = true)
+@Suppress("MaxLineLength")
 open class SchedulerList(
     @Inject
     private val scheduleRepository: SchedulerRepository,

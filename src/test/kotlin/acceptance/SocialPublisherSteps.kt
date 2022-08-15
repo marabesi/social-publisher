@@ -145,7 +145,7 @@ class SocialPublisherSteps: En {
                 twitterCredentials.accessTokenSecret
             )
 
-            client.timelineOperations().homeTimeline.forEach {
+            client.timelineOperations().userTimeline.forEach {
                 if (it.text.equals(postText)) {
                     client.timelineOperations().deleteStatus(it.id)
                 }

@@ -5,8 +5,7 @@ import application.Output
 import application.entities.ScheduledItem
 import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
-import java.time.Instant
-import java.time.format.DateTimeParseException
+import application.scheduler.filters.DateTimeValidation
 
 class Create(
     private val postsRepository: PostsRepository,
@@ -18,10 +17,9 @@ class Create(
         if (postId.isNotEmpty() && targetDate.isNotEmpty()) {
             val post = postsRepository.findById(postId) ?: return cliOutput.write("Couldn't find post with id $postId")
 
-            val date: Instant
-            try {
-                date = Instant.parse(targetDate)
-            } catch (_: DateTimeParseException) {
+            val validTargetDate = DateTimeValidation(targetDate)
+
+            if (!validTargetDate.isDateTimeValid()) {
                 return cliOutput.write("Invalid date time to schedule post")
             }
 
@@ -33,7 +31,7 @@ class Create(
 
             scheduleRepository.save(
                 ScheduledItem(
-                    post, date
+                    post, validTargetDate.value()
                 )
             )
             return cliOutput.write("Post has been scheduled")

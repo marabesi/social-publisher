@@ -18,13 +18,12 @@ import java.time.Instant
 class SchedulerListTest {
     private lateinit var app: SchedulerList
     private lateinit var cmd: CommandLine
-    private val currentTime = Instant.parse("2022-08-13T11:11:00Z")
     private val scheduleRepository = InMemorySchedulerRepository()
     private val postsRepository = InMemoryPostRepository()
 
     @BeforeEach
     fun setUp() {
-        app = SchedulerList(scheduleRepository, MockedOutput(), currentTime)
+        app = SchedulerList(scheduleRepository, MockedOutput())
         cmd = CommandLine(app)
     }
 

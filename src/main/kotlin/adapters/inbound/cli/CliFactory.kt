@@ -39,7 +39,7 @@ class CliFactory(
             }
 
             if (cls == SchedulerList::class.java) {
-                return SchedulerList(scheduler, cliOutput, currentTime) as K
+                return SchedulerList(scheduler, cliOutput) as K
             }
 
             if (cls == Scheduler::class.java) {

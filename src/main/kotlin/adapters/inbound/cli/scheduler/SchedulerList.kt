@@ -2,14 +2,13 @@ package adapters.inbound.cli.scheduler
 
 import application.Output
 import application.persistence.SchedulerRepository
-import application.scheduler.filters.Criterion
 import application.scheduler.List
+import application.scheduler.filters.Criterion
+import application.scheduler.filters.DateTimeValidation
 import application.scheduler.filters.FutureOnly
 import application.scheduler.filters.UntilDate
 import com.google.inject.Inject
 import picocli.CommandLine
-import java.time.Instant
-import java.time.format.DateTimeParseException
 import java.util.concurrent.Callable
 
 @CommandLine.Command(name = "list", mixinStandardHelpOptions = true)
@@ -17,7 +16,6 @@ open class SchedulerList(
     @Inject
     private val scheduleRepository: SchedulerRepository,
     private val cliOutput: Output,
-    private val currentTime: Instant
 ): Callable<String> {
 
     @CommandLine.Option(names = ["--start-date"], description = [
@@ -41,26 +39,21 @@ open class SchedulerList(
         }
 
         if (startDate.isNotEmpty()) {
-            val date: Instant
-            try {
-                date = Instant.parse(startDate)
-            } catch (_: DateTimeParseException) {
+            val validStartDate = DateTimeValidation(startDate)
+            if (!validStartDate.isDateTimeValid()) {
                 return cliOutput.write("Invalid start date")
             }
 
-            filters.add(FutureOnly(date))
-
+            filters.add(FutureOnly(validStartDate.value()))
         }
 
         if (endDate.isNotEmpty()) {
-            val date: Instant
-            try {
-                date = Instant.parse(endDate)
-            } catch (_: DateTimeParseException) {
+            val validEndDate = DateTimeValidation(endDate)
+            if (!validEndDate.isDateTimeValid()) {
                 return cliOutput.write("Invalid end date")
             }
 
-            filters.add(UntilDate(date))
+            filters.add(UntilDate(validEndDate.value()))
         }
 
         return List(scheduleRepository, cliOutput, filters, groupBy).invoke()

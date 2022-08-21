@@ -1,5 +1,6 @@
 package adapters.inbound.cli.scheduler
 
+import application.Messages
 import application.Output
 import application.persistence.SchedulerRepository
 import application.scheduler.List
@@ -35,13 +36,13 @@ open class SchedulerList(
         val filters: ArrayList<Criterion> = arrayListOf()
 
         if (groupBy.isNotEmpty() && groupBy != "post") {
-            return cliOutput.write("Value for group-by is not valid")
+            return cliOutput.write(Messages.INVALID_GROUP_BY_PARAMETER)
         }
 
         if (startDate.isNotEmpty()) {
             val validStartDate = DateTimeValidation(startDate)
             if (!validStartDate.isDateTimeValid()) {
-                return cliOutput.write("Invalid start date")
+                return cliOutput.write(Messages.INVALID_START_DATE)
             }
 
             filters.add(FutureOnly(validStartDate.value()))
@@ -50,7 +51,7 @@ open class SchedulerList(
         if (endDate.isNotEmpty()) {
             val validEndDate = DateTimeValidation(endDate)
             if (!validEndDate.isDateTimeValid()) {
-                return cliOutput.write("Invalid end date")
+                return cliOutput.write(Messages.INVALID_END_DATE)
             }
 
             filters.add(UntilDate(validEndDate.value()))

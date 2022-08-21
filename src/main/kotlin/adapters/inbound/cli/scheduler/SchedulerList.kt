@@ -57,7 +57,7 @@ open class SchedulerList(
             try {
                 date = Instant.parse(endDate)
             } catch (_: DateTimeParseException) {
-                return cliOutput.write("Invalid date in --end-date")
+                return cliOutput.write("Invalid end date")
             }
 
             filters.add(UntilDate(date))

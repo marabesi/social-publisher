@@ -187,10 +187,10 @@ class SchedulerListTest {
     }
 
     @Test
-    fun `should handle attempt to offer invalid date in --end-date`() {
+    fun `should handle attempt to offer Invalid end date`() {
         cmd.execute("--end-date", "123")
 
-        assertEquals("Invalid date in --end-date", cmd.getExecutionResult())
+        assertEquals("Invalid end date", cmd.getExecutionResult())
     }
 
     @Test

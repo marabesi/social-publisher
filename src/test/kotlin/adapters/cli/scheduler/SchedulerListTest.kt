@@ -133,7 +133,7 @@ class SchedulerListTest {
     }
 
     @Test
-    fun `should list posts in the future only`() {
+    fun `should list posts in the future given a start date only`() {
         val post1 = SocialPosts(text = "anything")
         val post2 = SocialPosts(text = "anything-2")
         postsRepository.save(arrayListOf(
@@ -160,7 +160,7 @@ class SchedulerListTest {
     }
 
     @Test
-    fun `should list posts until a given date`() {
+    fun `should list posts until a given date based on an end date`() {
         val post1 = SocialPosts(text = "anything")
         val post2 = SocialPosts(text = "anything-2")
         postsRepository.save(arrayListOf(
@@ -191,6 +191,13 @@ class SchedulerListTest {
         cmd.execute("--end-date", "123")
 
         assertEquals("Invalid date in --end-date", cmd.getExecutionResult())
+    }
+
+    @Test
+    fun `should handle attempt to offer invalid date in --start-date`() {
+        cmd.execute("--start-date", "123")
+
+        assertEquals("Invalid start date", cmd.getExecutionResult())
     }
 
     @Test

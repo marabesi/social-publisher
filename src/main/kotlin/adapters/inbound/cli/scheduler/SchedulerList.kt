@@ -41,7 +41,15 @@ open class SchedulerList(
         }
 
         if (startDate.isNotEmpty()) {
-            filters.add(FutureOnly(currentTime))
+            val date: Instant
+            try {
+                date = Instant.parse(startDate)
+            } catch (_: DateTimeParseException) {
+                return cliOutput.write("Invalid start date")
+            }
+
+            filters.add(FutureOnly(date))
+
         }
 
         if (endDate.isNotEmpty()) {

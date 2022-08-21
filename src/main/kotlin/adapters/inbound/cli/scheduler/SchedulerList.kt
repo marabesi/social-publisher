@@ -20,8 +20,10 @@ open class SchedulerList(
     private val currentTime: Instant
 ): Callable<String> {
 
-    @CommandLine.Option(names = ["--future-only"], description = ["list posts that are beyond the future date"])
-    var futureOnly: Boolean = false
+    @CommandLine.Option(names = ["--start-date"], description = [
+        "list posts that has they publish date starting with this value"
+    ])
+    var startDate: String = ""
 
     @CommandLine.Option(names = ["--end-date"], description = ["list posts until this date"])
     var endDate: String = ""
@@ -38,7 +40,7 @@ open class SchedulerList(
             return cliOutput.write("Value for group-by is not valid")
         }
 
-        if (futureOnly) {
+        if (startDate.isNotEmpty()) {
             filters.add(FutureOnly(currentTime))
         }
 

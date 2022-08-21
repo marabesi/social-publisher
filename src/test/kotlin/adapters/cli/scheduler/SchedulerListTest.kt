@@ -44,13 +44,15 @@ class SchedulerListTest {
 
         cmd.execute("scheduler", "list",  "--help")
         assertEquals("""
-            Usage: social scheduler list [-hV] [--future-only] [--end-date=<endDate>]
-                                         [--group-by=<groupBy>]
+            Usage: social scheduler list [-hV] [--end-date=<endDate>]
+                                         [--group-by=<groupBy>] [--start-date=<startDate>]
                   --end-date=<endDate>   list posts until this date
-                  --future-only          list posts that are beyond the future date
                   --group-by=<groupBy>   Outputs the scheduled posts grouped by a given
                                            criteria
               -h, --help                 Show this help message and exit.
+                  --start-date=<startDate>
+                                         list posts that has they publish date starting
+                                           with this value
               -V, --version              Print version information and exit.
 
         """.trimIndent(), sw.toString())
@@ -150,7 +152,7 @@ class SchedulerListTest {
             )
         )
 
-        cmd.execute("--future-only")
+        cmd.execute("--start-date", "2023-11-01T10:00:00Z")
 
         assertEquals("""
             1. Post with id 2 will be published on 2023-11-02T10:00:00Z

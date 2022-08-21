@@ -25,7 +25,7 @@ Feature: Schedule a post to be posted
     And I schedule the post with id "1" to be published at "2023-10-02T09:00:00Z"
     And I schedule the post with id "1" to be published at "2021-10-02T09:00:00Z"
     Then I clean the output
-    When I list the scheduled posts in the future
+    When I list the scheduled posts starting from "2023-10-01T09:00:00Z"
     Then Show successfully message
     """
     1. Post with id 1 will be published on 2023-10-02T09:00:00Z

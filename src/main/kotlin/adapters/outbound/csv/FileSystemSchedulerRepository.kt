@@ -13,10 +13,10 @@ import java.io.FileReader
 import java.io.FileWriter
 import java.time.Instant
 
-private const val IS_PUBLISHED_INDEX = 3
 private const val POST_ID_INDEX = 0
 private const val PUBLISH_DATE_INDEX = 1
 private const val SCHEDULE_ITEM_ID_INDEX = 2
+private const val IS_PUBLISHED_INDEX = 3
 
 class FileSystemSchedulerRepository(
     private val filePath: String,

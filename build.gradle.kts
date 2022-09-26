@@ -11,7 +11,7 @@ plugins {
     id("info.solidsoft.pitest").version("1.7.4")
 }
 
-group = "me.marabesi"
+group = "com.marabesi"
 version = "1.0-SNAPSHOT"
 
 configurations {}

@@ -1,7 +1,7 @@
 package adapters.inbound.cli
 
-import adapters.inbound.cli.scheduler.SchedulerCreate
 import adapters.inbound.cli.scheduler.Scheduler
+import adapters.inbound.cli.scheduler.SchedulerCreate
 import adapters.inbound.cli.scheduler.SchedulerDelete
 import adapters.inbound.cli.scheduler.SchedulerList
 import adapters.outbound.cli.CliOutput
@@ -18,7 +18,7 @@ import java.time.Instant
 @Suppress("UNCHECKED_CAST")
 class CliFactory(
     private val currentTime: Instant
-): CommandLine.IFactory {
+) : CommandLine.IFactory {
     override fun <K : Any?> create(cls: Class<K>?): K {
         if (cls != null) {
             val configuration = FileSystemConfigurationRepository()

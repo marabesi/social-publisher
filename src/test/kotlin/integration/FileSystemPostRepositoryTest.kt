@@ -1,12 +1,12 @@
 package integration
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import junit.framework.TestCase.assertTrue
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import adapters.outbound.csv.FileSystemPostRepository
 import application.entities.SocialPosts
+import junit.framework.TestCase.assertTrue
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.io.File
 
 class FileSystemPostRepositoryTest {

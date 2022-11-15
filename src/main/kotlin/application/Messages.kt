@@ -1,6 +1,6 @@
 package application
 
-class Messages private constructor(){
+class Messages private constructor() {
     companion object {
         const val MISSING_REQUIRED_FIELDS = "Missing required fields"
         const val INVALID_START_DATE = "Invalid start date"

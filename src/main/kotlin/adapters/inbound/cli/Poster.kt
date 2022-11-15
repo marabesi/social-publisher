@@ -17,7 +17,7 @@ class Poster(
     private val cliOutput: Output,
     private val currentDate: Instant,
     private val twitterClient: SocialThirdParty
-): Callable<String> {
+) : Callable<String> {
     @CommandLine.Option(names = ["-p"], description = ["Post Id"])
     var postId: String = ""
 

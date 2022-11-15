@@ -41,8 +41,9 @@ class SchedulerListTest {
         cmd.out = PrintWriter(sw)
         cmd.err = PrintWriter(sw)
 
-        cmd.execute("scheduler", "list",  "--help")
-        assertEquals("""
+        cmd.execute("scheduler", "list", "--help")
+        assertEquals(
+            """
             Usage: social scheduler list [-hV] [--end-date=<endDate>]
                                          [--group-by=<groupBy>] [--start-date=<startDate>]
                   --end-date=<endDate>   list posts until this date
@@ -54,15 +55,19 @@ class SchedulerListTest {
                                            with this value
               -V, --version              Print version information and exit.
 
-        """.trimIndent(), sw.toString())
+            """.trimIndent(),
+            sw.toString()
+        )
     }
 
     @Test
     fun `should list post with id 1 to be scheduled`() {
         val post = SocialPosts(text = "anything")
-        postsRepository.save(arrayListOf(
-            post
-        ))
+        postsRepository.save(
+            arrayListOf(
+                post
+            )
+        )
 
         scheduleRepository.save(
             ScheduledItem(
@@ -72,17 +77,22 @@ class SchedulerListTest {
 
         cmd.execute()
 
-        assertEquals("""
+        assertEquals(
+            """
             1. Post with id 1 will be published on 2022-10-02T09:00:00Z
-        """.trimIndent(), cmd.getExecutionResult())
+            """.trimIndent(),
+            cmd.getExecutionResult()
+        )
     }
 
     @Test
     fun `should schedule same post twice each on different days`() {
         val post = SocialPosts(text = "first day")
-        postsRepository.save(arrayListOf(
-            post,
-        ))
+        postsRepository.save(
+            arrayListOf(
+                post,
+            )
+        )
 
         scheduleRepository.save(
             ScheduledItem(
@@ -97,20 +107,25 @@ class SchedulerListTest {
 
         cmd.execute()
 
-        assertEquals("""
+        assertEquals(
+            """
             1. Post with id 1 will be published on 2022-10-02T09:00:00Z
             2. Post with id 1 will be published on 2022-10-03T09:00:00Z
-        """.trimIndent(), cmd.getExecutionResult())
+            """.trimIndent(),
+            cmd.getExecutionResult()
+        )
     }
 
     @Test
     fun `should list posts to be scheduled`() {
         val post1 = SocialPosts(text = "anything")
         val post2 = SocialPosts(text = "anything-2")
-        postsRepository.save(arrayListOf(
-            post1,
-            post2
-        ))
+        postsRepository.save(
+            arrayListOf(
+                post1,
+                post2
+            )
+        )
 
         scheduleRepository.save(
             ScheduledItem(
@@ -125,20 +140,25 @@ class SchedulerListTest {
 
         cmd.execute()
 
-        assertEquals("""
+        assertEquals(
+            """
             1. Post with id 1 will be published on 2022-10-02T09:00:00Z
             2. Post with id 2 will be published on 2022-11-02T10:00:00Z
-        """.trimIndent(), cmd.getExecutionResult())
+            """.trimIndent(),
+            cmd.getExecutionResult()
+        )
     }
 
     @Test
     fun `should list posts in the future given a start date only`() {
         val post1 = SocialPosts(text = "anything")
         val post2 = SocialPosts(text = "anything-2")
-        postsRepository.save(arrayListOf(
-            post1,
-            post2
-        ))
+        postsRepository.save(
+            arrayListOf(
+                post1,
+                post2
+            )
+        )
 
         scheduleRepository.save(
             ScheduledItem(
@@ -153,19 +173,24 @@ class SchedulerListTest {
 
         cmd.execute("--start-date", "2023-11-01T10:00:00Z")
 
-        assertEquals("""
+        assertEquals(
+            """
             1. Post with id 2 will be published on 2023-11-02T10:00:00Z
-        """.trimIndent(), cmd.getExecutionResult())
+            """.trimIndent(),
+            cmd.getExecutionResult()
+        )
     }
 
     @Test
     fun `should list posts until a given date based on an end date`() {
         val post1 = SocialPosts(text = "anything")
         val post2 = SocialPosts(text = "anything-2")
-        postsRepository.save(arrayListOf(
-            post1,
-            post2
-        ))
+        postsRepository.save(
+            arrayListOf(
+                post1,
+                post2
+            )
+        )
 
         scheduleRepository.save(
             ScheduledItem(
@@ -180,9 +205,12 @@ class SchedulerListTest {
 
         cmd.execute("--end-date", "2024-02-02T09:00:00Z")
 
-        assertEquals("""
+        assertEquals(
+            """
             1. Post with id 1 will be published on 2024-01-02T09:00:00Z
-        """.trimIndent(), cmd.getExecutionResult())
+            """.trimIndent(),
+            cmd.getExecutionResult()
+        )
     }
 
     @Test
@@ -202,9 +230,11 @@ class SchedulerListTest {
     @Test
     fun `should group list by posts with single post`() {
         val post1 = SocialPosts(text = "anything")
-        postsRepository.save(arrayListOf(
-            post1,
-        ))
+        postsRepository.save(
+            arrayListOf(
+                post1,
+            )
+        )
 
         scheduleRepository.save(
             ScheduledItem(
@@ -214,19 +244,24 @@ class SchedulerListTest {
 
         cmd.execute("--group-by", "post")
 
-        assertEquals("""
+        assertEquals(
+            """
             1. Post with id 1 posted 1 time(s)
-        """.trimIndent(), cmd.getExecutionResult())
+            """.trimIndent(),
+            cmd.getExecutionResult()
+        )
     }
 
     @Test
     fun `should group list by posts with multiple post`() {
         val post1 = SocialPosts(id = "1", text = "anything")
         val post2 = SocialPosts(id = "2", text = "anything-2")
-        postsRepository.save(arrayListOf(
-            post1,
-            post2
-        ))
+        postsRepository.save(
+            arrayListOf(
+                post1,
+                post2
+            )
+        )
 
         scheduleRepository.save(
             ScheduledItem(
@@ -242,10 +277,13 @@ class SchedulerListTest {
 
         cmd.execute("--group-by", "post")
 
-        assertEquals("""
+        assertEquals(
+            """
             1. Post with id 1 posted 1 time(s)
             2. Post with id 2 posted 1 time(s)
-        """.trimIndent(), cmd.getExecutionResult())
+            """.trimIndent(),
+            cmd.getExecutionResult()
+        )
     }
 
     @Test

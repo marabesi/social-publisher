@@ -2,14 +2,14 @@ package adapters.cli
 
 import MockedOutput
 import adapters.inbound.cli.Configuration
+import adapters.outbound.inmemory.ConfigurationInMemoryRepository
+import application.Messages
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import adapters.outbound.inmemory.ConfigurationInMemoryRepository
-import application.Messages
 import picocli.CommandLine
 import java.util.stream.Stream
 
@@ -59,7 +59,7 @@ class ConfigurationTest {
                 Arguments.of("""{"fileName":"123"}""", """{"fileName":"123","storage":"csv"}"""),
 //                Arguments.of("""{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"","consumerSecret":"","accessToken":"","accessTokenSecret":""}}""", """{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"","consumerSecret":"","accessToken":"","accessTokenSecret":""}}"""),
                 Arguments.of("""{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"1","consumerSecret":"1","accessToken":"1","accessTokenSecret":"1"}}""", """{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"1","consumerSecret":"1","accessToken":"1","accessTokenSecret":"1"}}""")
-            );
+            )
         }
     }
 }

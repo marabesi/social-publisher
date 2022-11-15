@@ -13,7 +13,7 @@ class Configuration(
     @Inject
     private val cliOutput: Output,
     private val configurationRepository: ConfigurationRepository
-): Callable<String> {
+) : Callable<String> {
 
     @CommandLine.Option(names = ["-c"], description = ["JSON with the desired configuration"])
     var jsonConfiguration: String = ""

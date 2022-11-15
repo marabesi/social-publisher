@@ -2,12 +2,12 @@ package adapters.cli
 
 import MockedOutput
 import adapters.inbound.cli.Post
+import adapters.outbound.inmemory.InMemoryPostRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import adapters.outbound.inmemory.InMemoryPostRepository
 import picocli.CommandLine
 import java.util.stream.Stream
 
@@ -32,7 +32,7 @@ class ListPostTest {
             return Stream.of(
                 Arguments.of("a", "1. a"),
                 Arguments.of("b", "1. b"),
-            );
+            )
         }
     }
 
@@ -44,10 +44,13 @@ class ListPostTest {
 
         val result = cmd.getExecutionResult<String>()
 
-        assertEquals("""
+        assertEquals(
+            """
             1. this is my first post
             2. this is my second post
-        """.trimIndent(), result)
+            """.trimIndent(),
+            result
+        )
     }
 
     @Test
@@ -57,8 +60,11 @@ class ListPostTest {
 
         val result = cmd.getExecutionResult<String>()
 
-        assertEquals("""
+        assertEquals(
+            """
             1. caracters, our online editor can help you to impro...
-        """.trimIndent(), result)
+            """.trimIndent(),
+            result
+        )
     }
 }

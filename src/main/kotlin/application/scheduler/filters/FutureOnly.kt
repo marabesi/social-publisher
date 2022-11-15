@@ -3,7 +3,7 @@ package application.scheduler.filters
 import application.entities.ScheduledItem
 import java.time.Instant
 
-class FutureOnly(private val currentTime: Instant): Criterion {
+class FutureOnly(private val currentTime: Instant) : Criterion {
     override fun getFilter(): Filter {
         return Filter("publishDate", EQUALS_AND_GREATER_THAN, currentTime)
     }

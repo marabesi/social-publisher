@@ -17,19 +17,25 @@ open class SchedulerList(
     @Inject
     private val scheduleRepository: SchedulerRepository,
     private val cliOutput: Output,
-): Callable<String> {
+) : Callable<String> {
 
-    @CommandLine.Option(names = ["--start-date"], description = [
-        "list posts that has they publish date starting with this value"
-    ])
+    @CommandLine.Option(
+        names = ["--start-date"],
+        description = [
+            "list posts that has they publish date starting with this value"
+        ]
+    )
     var startDate: String = ""
 
     @CommandLine.Option(names = ["--end-date"], description = ["list posts until this date"])
     var endDate: String = ""
 
-    @CommandLine.Option(names = ["--group-by"], description = [
-        "Outputs the scheduled posts grouped by a given criteria"
-    ])
+    @CommandLine.Option(
+        names = ["--group-by"],
+        description = [
+            "Outputs the scheduled posts grouped by a given criteria"
+        ]
+    )
     var groupBy: String = ""
 
     override fun call(): String {

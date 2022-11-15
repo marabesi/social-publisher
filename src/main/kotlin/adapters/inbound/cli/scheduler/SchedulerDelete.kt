@@ -10,7 +10,7 @@ import java.util.concurrent.Callable
 class SchedulerDelete(
     private val scheduleRepository: SchedulerRepository,
     private val cliOutput: Output,
-): Callable<String> {
+) : Callable<String> {
 
     @CommandLine.Option(names = ["-id"], description = ["Scheduled id"])
     var scheduleId: String = ""

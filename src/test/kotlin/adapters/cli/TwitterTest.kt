@@ -127,6 +127,6 @@ class TwitterTest {
 
         twitter.send(scheduledPost)
 
-        verify (exactly = 1) { socialIntegration.sendTweet(scheduledPost.post.text) }
+        verify(exactly = 1) { socialIntegration.sendTweet(scheduledPost.post.text) }
     }
 }

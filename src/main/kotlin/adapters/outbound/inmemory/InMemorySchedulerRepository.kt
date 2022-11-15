@@ -4,8 +4,8 @@ import application.entities.ScheduledItem
 import application.persistence.SchedulerRepository
 import application.scheduler.filters.Criterion
 
-class InMemorySchedulerRepository: SchedulerRepository {
-    private var storedScheduler: ArrayList<ScheduledItem> = arrayListOf();
+class InMemorySchedulerRepository : SchedulerRepository {
+    private var storedScheduler: ArrayList<ScheduledItem> = arrayListOf()
 
     override fun save(scheduledItem: ScheduledItem): Boolean {
         val id = findAll().size + 1
@@ -23,7 +23,7 @@ class InMemorySchedulerRepository: SchedulerRepository {
         var scheduledItems = storedScheduler
         while (iterator.hasNext()) {
             val criterion = iterator.next()
-            scheduledItems = scheduledItems.filter {criterion.applyPredicateFor(it)} as ArrayList<ScheduledItem>
+            scheduledItems = scheduledItems.filter { criterion.applyPredicateFor(it) } as ArrayList<ScheduledItem>
         }
         return scheduledItems
     }

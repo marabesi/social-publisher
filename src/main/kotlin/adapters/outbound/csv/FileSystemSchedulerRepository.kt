@@ -30,7 +30,7 @@ class FileSystemSchedulerRepository(
 
         val nextId = if (scheduledItem.id.isNullOrEmpty()) {
             (findAll().size + PUBLISH_DATE_INDEX).toString()
-        } else{
+        } else {
             scheduledItem.id
         }
 
@@ -64,7 +64,7 @@ class FileSystemSchedulerRepository(
 
         while (iterator.hasNext()) {
             val criterion = iterator.next()
-            scheduledItems = scheduledItems.filter {criterion.applyPredicateFor(it)} as ArrayList<ScheduledItem>
+            scheduledItems = scheduledItems.filter { criterion.applyPredicateFor(it) } as ArrayList<ScheduledItem>
         }
 
         return scheduledItems

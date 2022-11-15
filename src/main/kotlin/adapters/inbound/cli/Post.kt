@@ -13,7 +13,7 @@ class Post(
     @Inject
     private val postsRepository: PostsRepository,
     private val cliOutput: Output
-): Callable<String> {
+) : Callable<String> {
     @CommandLine.Option(names = ["-c"], description = ["Creates a post"])
     var text: String = ""
 

@@ -16,7 +16,8 @@ class MainTest {
         cmd.err = PrintWriter(sw)
 
         cmd.execute()
-        assertEquals("""
+        assertEquals(
+            """
             Missing required subcommand
             Usage: social [COMMAND]
             post to any social media
@@ -26,6 +27,8 @@ class MainTest {
               poster
               configuration
         
-        """.trimIndent(), sw.toString())
+            """.trimIndent(),
+            sw.toString()
+        )
     }
 }

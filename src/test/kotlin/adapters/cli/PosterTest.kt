@@ -1,8 +1,8 @@
 package adapters.cli
 
 import MockedOutput
-import adapters.outbound.inmemory.InMemorySchedulerRepository
 import adapters.inbound.cli.Poster
+import adapters.outbound.inmemory.InMemorySchedulerRepository
 import application.Messages
 import application.entities.ScheduledItem
 import application.entities.SocialPosts
@@ -55,7 +55,8 @@ class PosterTest {
               -s=<socialMedia>    Social media to post
               -V, --version       Print version information and exit.
         
-        """.trimIndent(), sw.toString()
+            """.trimIndent(),
+            sw.toString()
         )
     }
 
@@ -147,10 +148,13 @@ class PosterTest {
 
         val result = cmd.getExecutionResult<String>()
 
-        Assertions.assertEquals("""
+        Assertions.assertEquals(
+            """
             Post 1 sent to twitter
             Post 2 sent to twitter
-        """.trimIndent(), result)
+            """.trimIndent(),
+            result
+        )
     }
 
     @Test
@@ -159,8 +163,8 @@ class PosterTest {
         val clock: Clock = Clock.fixed(Instant.parse(instantExpected), ZoneId.of("UTC"))
 
         currentDate = Instant.now(clock)
-            schedulerRepository.save(
-                ScheduledItem(
+        schedulerRepository.save(
+            ScheduledItem(
                 SocialPosts("1", "random post text"),
                 Instant.parse("2014-12-22T10:15:32Z")
             )
@@ -203,10 +207,13 @@ class PosterTest {
 
         val result = cmd.getExecutionResult<String>()
 
-        Assertions.assertEquals("""
+        Assertions.assertEquals(
+            """
             Waiting for the date to come to publish post 1 (scheduled for 22 Dec 2014 10:15:32)
             Waiting for the date to come to publish post 2 (scheduled for 22 Dec 2014 10:15:32)
-        """.trimIndent(), result)
+            """.trimIndent(),
+            result
+        )
     }
 
     @Test

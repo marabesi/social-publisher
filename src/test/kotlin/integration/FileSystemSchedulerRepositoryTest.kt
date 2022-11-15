@@ -1,10 +1,10 @@
 package integration
 
-import application.scheduler.filters.FutureOnly
 import adapters.outbound.csv.FileSystemSchedulerRepository
 import adapters.outbound.inmemory.InMemoryPostRepository
 import application.entities.ScheduledItem
 import application.entities.SocialPosts
+import application.scheduler.filters.FutureOnly
 import application.scheduler.filters.UntilDate
 import junit.framework.TestCase.assertTrue
 import org.junit.jupiter.api.AfterEach
@@ -35,11 +35,13 @@ class FileSystemSchedulerRepositoryTest {
         val post = SocialPosts("1", "another post")
         val repository = FileSystemSchedulerRepository(filePath, InMemoryPostRepository())
 
-        assertTrue(repository.save(
-            ScheduledItem(
-                post, Instant.parse("2021-11-25T11:00:00Z")
+        assertTrue(
+            repository.save(
+                ScheduledItem(
+                    post, Instant.parse("2021-11-25T11:00:00Z")
+                )
             )
-        ))
+        )
     }
 
     @Test
@@ -128,7 +130,7 @@ class FileSystemSchedulerRepositoryTest {
 
     @Test
     fun shouldDeleteScheduledItem() {
-        val post = SocialPosts( text = "another post")
+        val post = SocialPosts(text = "another post")
         val postsRepository = InMemoryPostRepository()
         postsRepository.save(arrayListOf(post))
 

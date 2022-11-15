@@ -14,7 +14,7 @@ class List(
     fun invoke(): String {
         var result = ""
         val findAll = scheduleRepository.findAll(filters)
-        var index = 1;
+        var index = 1
 
         for (scheduledItem in findAll) {
             val isLast: Boolean = findAll.size == index

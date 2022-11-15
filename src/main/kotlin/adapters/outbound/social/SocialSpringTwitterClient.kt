@@ -7,7 +7,7 @@ import org.springframework.social.twitter.api.impl.TwitterTemplate
 
 class SocialSpringTwitterClient(
     private val configuration: SocialConfiguration,
-): TwitterClient {
+) : TwitterClient {
     override fun sendTweet(text: String): SocialPosts {
         val twitter = with(configuration.twitter!!) {
             TwitterTemplate(

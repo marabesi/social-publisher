@@ -2,7 +2,7 @@ package application.scheduler.filters
 
 import application.entities.ScheduledItem
 
-data class Filter (
+data class Filter(
     val key: String,
     val predicate: String,
     val value: Any,

@@ -36,7 +36,8 @@ class SchedulerTest {
         cmd.err = PrintWriter(sw)
 
         cmd.execute("scheduler", "--help")
-        assertEquals("""
+        assertEquals(
+            """
             Usage: social scheduler [-hV] [COMMAND]
               -h, --help      Show this help message and exit.
               -V, --version   Print version information and exit.
@@ -45,6 +46,8 @@ class SchedulerTest {
               create
               delete
 
-        """.trimIndent(), sw.toString())
+            """.trimIndent(),
+            sw.toString()
+        )
     }
 }

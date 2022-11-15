@@ -1,14 +1,14 @@
 package adapters.cli
 
 import MockedOutput
-import buildCommandLine
 import adapters.inbound.cli.Post
+import adapters.outbound.inmemory.InMemoryPostRepository
+import application.Messages
+import buildCommandLine
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import adapters.outbound.inmemory.InMemoryPostRepository
-import application.Messages
 import picocli.CommandLine
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -25,14 +25,17 @@ class PostCreatorTest {
         cmd.err = PrintWriter(sw)
 
         cmd.execute("post", "--help")
-        assertEquals("""
+        assertEquals(
+            """
             Usage: social post [-hlV] [-c=<text>]
               -c=<text>       Creates a post
               -h, --help      Show this help message and exit.
               -l              List created posts
               -V, --version   Print version information and exit.
         
-        """.trimIndent(), sw.toString())
+            """.trimIndent(),
+            sw.toString()
+        )
     }
 
     @Test
@@ -48,9 +51,12 @@ class PostCreatorTest {
         cmd.execute("-c", text)
         val result = cmd.getExecutionResult<String>()
 
-        assertEquals("""
+        assertEquals(
+            """
             Post has been created
-        """.trimIndent(), result)
+            """.trimIndent(),
+            result
+        )
     }
 
     @Test
@@ -58,8 +64,11 @@ class PostCreatorTest {
         cmd.execute("-l")
         val result = cmd.getExecutionResult<String>()
 
-        assertEquals("""
+        assertEquals(
+            """
             No post found
-        """.trimIndent(), result)
+            """.trimIndent(),
+            result
+        )
     }
 }

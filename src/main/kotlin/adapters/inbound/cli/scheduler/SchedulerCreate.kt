@@ -16,7 +16,7 @@ class SchedulerCreate(
     private val postsRepository: PostsRepository,
     private val scheduleRepository: SchedulerRepository,
     private val cliOutput: Output,
-): Callable<String> {
+) : Callable<String> {
 
     @CommandLine.Option(names = ["-p"], description = ["Post id"])
     var postId: String = ""

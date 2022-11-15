@@ -16,7 +16,7 @@ import java.io.PrintStream
 import java.time.Instant
 import kotlin.test.assertContains
 
-class SocialPublisherSteps: En {
+class SocialPublisherSteps : En {
 
     private val outputStreamCaptor: ByteArrayOutputStream = ByteArrayOutputStream()
     private val dotenv = dotenv()
@@ -126,7 +126,8 @@ class SocialPublisherSteps: En {
             assertContains(outputStreamCaptor.toString(), "Configuration has been stored")
         }
 
-        Then("I list the configuration"
+        Then(
+            "I list the configuration"
         ) {
             exitCode = cmd.execute("configuration", "-l")
             assertEquals(0, exitCode)
@@ -147,7 +148,7 @@ class SocialPublisherSteps: En {
         }
 
         Then("I remove post {string} from twitter") {
-                postText: String ->
+            postText: String ->
             val client = TwitterTemplate(
                 twitterCredentials.consumerKey,
                 twitterCredentials.consumerSecret,

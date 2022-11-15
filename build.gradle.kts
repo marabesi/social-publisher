@@ -9,6 +9,7 @@ plugins {
     id("com.github.nbaztec.coveralls-jacoco") version "1.2.14"
     id("io.gitlab.arturbosch.detekt").version("1.21.0")
     id("info.solidsoft.pitest").version("1.7.4")
+    id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
 }
 
 group = "com.marabesi"
@@ -77,7 +78,7 @@ detekt {
 }
 
 pitest {
-    targetClasses.addAll("adapters.*" , "application.*")
+    targetClasses.addAll("adapters.*", "application.*")
     targetTests.addAll("unit.*", "integration.*")
     threads.set(1)
     testPlugin.set("junit5")

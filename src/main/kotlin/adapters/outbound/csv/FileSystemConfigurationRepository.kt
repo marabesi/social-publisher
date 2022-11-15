@@ -1,17 +1,17 @@
-package adapters.outbound.csv;
+package adapters.outbound.csv
 
-import application.persistence.configuration.MissingConfiguration
+import application.entities.SocialConfiguration
 import application.persistence.configuration.ConfigurationRepository
+import application.persistence.configuration.MissingConfiguration
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import application.entities.SocialConfiguration
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 
 @Suppress("TooGenericExceptionCaught")
-class FileSystemConfigurationRepository: ConfigurationRepository {
+class FileSystemConfigurationRepository : ConfigurationRepository {
     private val configurationPath = "data"
     private val fileName = "global"
 

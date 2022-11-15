@@ -38,12 +38,13 @@ class SchedulerCreateTest {
         assertEquals("Couldn't find post with id $id", cmd.getExecutionResult())
     }
 
-
-    @CsvSource("""
+    @CsvSource(
+        """
         1,''
         1, 2020-12-23T11:11:00Z
         '', 2020-12-23T11:11:00Z
-    """)
+    """
+    )
     @ParameterizedTest
     fun `should show friendly message on empty date`(postId: String?, targetDate: String?) {
         cmd.execute("-p", postId, "-d", targetDate)
@@ -52,9 +53,11 @@ class SchedulerCreateTest {
 
     @Test
     fun `should schedule post to be published`() {
-        postsRepository.save(arrayListOf(
-            SocialPosts(text = "anything")
-        ))
+        postsRepository.save(
+            arrayListOf(
+                SocialPosts(text = "anything")
+            )
+        )
 
         cmd.execute("-p", "1", "-d", "2022-10-02T09:00:00Z")
         assertEquals("Post has been scheduled", cmd.getExecutionResult())
@@ -62,9 +65,11 @@ class SchedulerCreateTest {
 
     @Test
     fun `should not schedule post twice on the same date time to be published`() {
-        postsRepository.save(arrayListOf(
-            SocialPosts(text = "anything")
-        ))
+        postsRepository.save(
+            arrayListOf(
+                SocialPosts(text = "anything")
+            )
+        )
 
         cmd.execute("-p", "1", "-d", "2022-10-02T09:00:00Z")
         cmd.execute("-p", "1", "-d", "2022-10-02T09:00:00Z")
@@ -73,9 +78,11 @@ class SchedulerCreateTest {
 
     @Test
     fun `should warn when invalid date is given to be published`() {
-        postsRepository.save(arrayListOf(
-            SocialPosts(text = "anything")
-        ))
+        postsRepository.save(
+            arrayListOf(
+                SocialPosts(text = "anything")
+            )
+        )
 
         cmd.execute("-p", "1", "-d", "2022")
         assertEquals("Invalid date time to schedule post", cmd.getExecutionResult())

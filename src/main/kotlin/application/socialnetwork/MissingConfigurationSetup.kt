@@ -2,6 +2,6 @@ package application.socialnetwork
 
 class MissingConfigurationSetup(
     private val missingParameterName: String
-): Throwable(
+) : Throwable(
     message = "Missing required configuration: $missingParameterName"
 )

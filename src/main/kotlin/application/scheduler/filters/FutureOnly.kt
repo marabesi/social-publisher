@@ -16,6 +16,6 @@ class FutureOnly(private val currentTime: Instant): Criterion {
             return item.publishDate >= date
         }
 
-        return false
+        TODO()
     }
 }

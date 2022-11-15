@@ -11,11 +11,7 @@ class StartDate(private val currentTime: Instant) : Criterion {
     override fun applyPredicateFor(item: ScheduledItem): Boolean {
         val parse = getFilter()
 
-        if (parse.key == "publishDate" && parse.predicate == EQUALS_AND_GREATER_THAN) {
-            val date = parse.value as Instant
-            return item.publishDate >= date
-        }
-
-        TODO()
+        val date = parse.value as Instant
+        return item.publishDate >= date
     }
 }

@@ -6,7 +6,7 @@ import application.persistence.SchedulerRepository
 import application.scheduler.List
 import application.scheduler.filters.Criterion
 import application.scheduler.filters.DateTimeValidation
-import application.scheduler.filters.FutureOnly
+import application.scheduler.filters.StartDate
 import application.scheduler.filters.UntilDate
 import com.google.inject.Inject
 import picocli.CommandLine
@@ -51,7 +51,7 @@ open class SchedulerList(
                 return cliOutput.write(Messages.INVALID_START_DATE)
             }
 
-            filters.add(FutureOnly(validStartDate.value()))
+            filters.add(StartDate(validStartDate.value()))
         }
 
         if (endDate.isNotEmpty()) {

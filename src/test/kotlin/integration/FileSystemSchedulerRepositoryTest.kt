@@ -4,7 +4,7 @@ import adapters.outbound.csv.FileSystemSchedulerRepository
 import adapters.outbound.inmemory.InMemoryPostRepository
 import application.entities.ScheduledItem
 import application.entities.SocialPosts
-import application.scheduler.filters.FutureOnly
+import application.scheduler.filters.StartDate
 import application.scheduler.filters.UntilDate
 import junit.framework.TestCase.assertTrue
 import org.junit.jupiter.api.AfterEach
@@ -84,7 +84,7 @@ class FileSystemSchedulerRepositoryTest {
             )
         )
 
-        val scheduledList = repository.findAll(arrayListOf(FutureOnly(Instant.parse("2022-12-01T11:00:00Z"))))
+        val scheduledList = repository.findAll(arrayListOf(StartDate(Instant.parse("2022-12-01T11:00:00Z"))))
 
         assertEquals(1, scheduledList.size)
     }

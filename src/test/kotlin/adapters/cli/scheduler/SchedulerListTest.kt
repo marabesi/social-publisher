@@ -4,6 +4,7 @@ import MockedOutput
 import adapters.inbound.cli.scheduler.SchedulerList
 import adapters.outbound.inmemory.InMemoryPostRepository
 import adapters.outbound.inmemory.InMemorySchedulerRepository
+import application.Messages
 import application.entities.ScheduledItem
 import application.entities.SocialPosts
 import buildCommandLine
@@ -217,14 +218,14 @@ class SchedulerListTest {
     fun `should handle attempt to offer Invalid end date`() {
         cmd.execute("--end-date", "123")
 
-        assertEquals("Invalid end date", cmd.getExecutionResult())
+        assertEquals(Messages.INVALID_END_DATE, cmd.getExecutionResult())
     }
 
     @Test
     fun `should handle attempt to offer invalid date in --start-date`() {
         cmd.execute("--start-date", "123")
 
-        assertEquals("Invalid start date", cmd.getExecutionResult())
+        assertEquals(Messages.INVALID_START_DATE, cmd.getExecutionResult())
     }
 
     @Test

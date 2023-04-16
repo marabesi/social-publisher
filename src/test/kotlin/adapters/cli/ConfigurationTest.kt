@@ -43,6 +43,13 @@ class ConfigurationTest {
     }
 
     @ParameterizedTest
+    @MethodSource("invalidConfigurationProvider")
+    fun `should inform invalid key when trying to store json content as a configuration`(configuration: String, expectedOutput: String) {
+        cmd.execute("-c", configuration)
+        assertEquals(expectedOutput, cmd.getExecutionResult())
+    }
+
+    @ParameterizedTest
     @MethodSource("configurationProvider")
     fun `should show stored configuration`(configuration: String, expectedConfiguration: String) {
         cmd.execute("-c", configuration)
@@ -55,10 +62,18 @@ class ConfigurationTest {
         @JvmStatic
         fun configurationProvider(): Stream<Arguments> {
             return Stream.of(
+//                Arguments.of("""{"fileName":"aaa","timezone":""}""", """{"fileName":"aaa","timezone":"","storage":"csv"}"""),
                 Arguments.of("""{"fileName":"tmp"}""", """{"fileName":"tmp","storage":"csv"}"""),
                 Arguments.of("""{"fileName":"123"}""", """{"fileName":"123","storage":"csv"}"""),
-//                Arguments.of("""{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"","consumerSecret":"","accessToken":"","accessTokenSecret":""}}""", """{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"","consumerSecret":"","accessToken":"","accessTokenSecret":""}}"""),
                 Arguments.of("""{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"1","consumerSecret":"1","accessToken":"1","accessTokenSecret":"1"}}""", """{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"1","consumerSecret":"1","accessToken":"1","accessTokenSecret":"1"}}""")
+            )
+        }
+
+        @JvmStatic
+        fun invalidConfigurationProvider(): Stream<Arguments> {
+            return Stream.of(
+                Arguments.of("""{"random":"aaa"}""", """The give key random is not supported"""),
+                Arguments.of("""{"another":"abc"}""", """The give key another is not supported"""),
             )
         }
     }

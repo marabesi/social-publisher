@@ -30,16 +30,17 @@ dependencies {
     implementation("info.picocli:picocli:4.6.2")
     implementation("com.google.inject:guice:4.0")
     implementation(kotlin("stdlib-jdk8"))
-    testImplementation("io.cucumber:cucumber-java8:7.0.0")
-    testImplementation("io.cucumber:cucumber-junit:7.0.0")
     implementation("org.apache.commons:commons-csv:1.9.0")
     testCompileOnly("org.junit.jupiter:junit-jupiter-params:5.8.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.1")
     implementation("org.hamcrest:hamcrest:2.2")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
-    testImplementation("io.mockk:mockk:1.12.4")
     implementation("org.springframework.social:spring-social-twitter:1.1.0.RELEASE")
     implementation("io.github.cdimascio:dotenv-kotlin:6.3.1")
+
+    testImplementation("io.mockk:mockk:1.12.4")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.1")
+    testImplementation("io.cucumber:cucumber-java8:7.0.0")
+    testImplementation("io.cucumber:cucumber-junit:7.0.0")
 }
 
 tasks.test {

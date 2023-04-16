@@ -25,7 +25,7 @@ class CliFactory(
             val currentConfiguration: SocialConfiguration = try {
                 configuration.find()
             } catch (_: MissingConfiguration) {
-                SocialConfiguration("production", "csv",null, "UTC")
+                SocialConfiguration("production", "csv", null, "UTC")
             }
 
             val postsRepository = FileSystemPostRepository("data/posts-${currentConfiguration.fileName}.csv")

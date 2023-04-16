@@ -3,7 +3,6 @@ package adapters.inbound.cli
 import application.Messages
 import application.Output
 import application.persistence.SchedulerRepository
-import application.persistence.configuration.ConfigurationRepository
 import application.poster.Executor
 import application.socialnetwork.SocialThirdParty
 import com.google.inject.Inject

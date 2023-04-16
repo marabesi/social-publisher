@@ -261,7 +261,6 @@ class PosterTest {
             MockedOutput(),
             currentDate,
             socialThirdParty,
-            configurationRepository
         )
         cmd = CommandLine(app)
     }

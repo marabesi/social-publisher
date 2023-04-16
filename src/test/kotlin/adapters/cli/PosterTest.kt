@@ -2,15 +2,19 @@ package adapters.cli
 
 import MockedOutput
 import adapters.inbound.cli.Poster
+import adapters.outbound.inmemory.ConfigurationInMemoryRepository
 import adapters.outbound.inmemory.InMemorySchedulerRepository
 import application.Messages
 import application.entities.ScheduledItem
 import application.entities.SocialPosts
 import application.persistence.SchedulerRepository
+import application.persistence.configuration.ConfigurationRepository
 import application.socialnetwork.SocialThirdParty
 import buildCommandLine
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -24,17 +28,25 @@ import java.time.Instant
 import java.time.ZoneId
 
 class PosterTest {
-
     private lateinit var app: Poster
     private lateinit var cmd: CommandLine
-    private val schedulerRepository: SchedulerRepository = InMemorySchedulerRepository()
-    private val socialThirdParty: SocialThirdParty = mockk()
+    private lateinit var schedulerRepository: SchedulerRepository
+    private lateinit var configurationRepository: ConfigurationRepository
     private var currentDate: Instant = Instant.now()
+    private val socialThirdParty: SocialThirdParty = mockk()
 
     @BeforeEach
     fun setUp() {
-        app = Poster(schedulerRepository, MockedOutput(), currentDate, socialThirdParty)
-        cmd = CommandLine(app)
+        cleanUpCreatedMocks()
+        schedulerRepository = InMemorySchedulerRepository()
+        configurationRepository = ConfigurationInMemoryRepository()
+
+        buildApplication(currentDate)
+    }
+
+    @AfterEach
+    fun tearDown() {
+        cleanUpCreatedMocks()
     }
 
     @Test
@@ -159,10 +171,6 @@ class PosterTest {
 
     @Test
     fun `should not post when publish date has not arrived yet`() {
-        val instantExpected = "2014-12-22T10:15:31Z"
-        val clock: Clock = Clock.fixed(Instant.parse(instantExpected), ZoneId.of("UTC"))
-
-        currentDate = Instant.now(clock)
         schedulerRepository.save(
             ScheduledItem(
                 SocialPosts("1", "random post text"),
@@ -170,8 +178,12 @@ class PosterTest {
             )
         )
 
-        app = Poster(schedulerRepository, MockedOutput(), currentDate, socialThirdParty)
-        cmd = CommandLine(app)
+        val instantExpected = "2014-12-22T10:15:31Z"
+        val clock: Clock = Clock.fixed(Instant.parse(instantExpected), ZoneId.of("UTC"))
+
+        currentDate = Instant.now(clock)
+
+        buildApplication(currentDate)
 
         cmd.execute("-r")
 
@@ -200,8 +212,7 @@ class PosterTest {
             )
         )
 
-        app = Poster(schedulerRepository, MockedOutput(), currentDate, socialThirdParty)
-        cmd = CommandLine(app)
+        buildApplication(currentDate)
 
         cmd.execute("-r")
 
@@ -234,7 +245,6 @@ class PosterTest {
         )
         every { socialThirdParty.send(any()) } returns mockk()
 
-        app = Poster(schedulerRepository, MockedOutput(), currentDate, socialThirdParty)
         cmd = CommandLine(app)
 
         cmd.execute("-r")
@@ -243,5 +253,20 @@ class PosterTest {
         val result = cmd.getExecutionResult<String>()
 
         Assertions.assertEquals("There are no posts to be posted", result)
+    }
+
+    private fun buildApplication(currentDate: Instant) {
+        app = Poster(
+            schedulerRepository,
+            MockedOutput(),
+            this.currentDate,
+            socialThirdParty,
+            configurationRepository
+        )
+        cmd = CommandLine(app)
+    }
+
+    private fun cleanUpCreatedMocks() {
+        clearMocks(socialThirdParty)
     }
 }

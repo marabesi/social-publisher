@@ -62,7 +62,8 @@ class CliFactory(
                     TwitterIntegration(
                         currentConfiguration,
                         SocialSpringTwitterClient(currentConfiguration)
-                    )
+                    ),
+                    configuration
                 ) as K
             }
 

@@ -4,7 +4,8 @@ package application.entities
 data class SocialConfiguration(
     val fileName: String = "",
     var storage: String = "",
-    var twitter: TwitterCredentials? = null
+    var twitter: TwitterCredentials? = null,
+    var timezone: String = "",
 )
 
 @kotlinx.serialization.Serializable

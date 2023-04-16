@@ -3,6 +3,7 @@ package adapters.inbound.cli
 import application.Messages
 import application.Output
 import application.persistence.SchedulerRepository
+import application.persistence.configuration.ConfigurationRepository
 import application.poster.Executor
 import application.socialnetwork.SocialThirdParty
 import com.google.inject.Inject
@@ -16,7 +17,8 @@ class Poster(
     private val schedulerRepository: SchedulerRepository,
     private val cliOutput: Output,
     private val currentDate: Instant,
-    private val twitterClient: SocialThirdParty
+    private val twitterClient: SocialThirdParty,
+    private val configurationRepository: ConfigurationRepository
 ) : Callable<String> {
     @CommandLine.Option(names = ["-p"], description = ["Post Id"])
     var postId: String = ""

@@ -18,10 +18,15 @@ class SchedulerCreateTest {
     private lateinit var app: SchedulerCreate
     private lateinit var cmd: CommandLine
     private val postsRepository = InMemoryPostRepository()
+    private val scheduleRepository = InMemorySchedulerRepository()
 
     @BeforeEach
     fun setUp() {
-        app = SchedulerCreate(postsRepository, InMemorySchedulerRepository(), MockedOutput())
+        app = SchedulerCreate(
+            postsRepository,
+            scheduleRepository,
+            MockedOutput()
+        )
         cmd = CommandLine(app)
     }
 

@@ -36,9 +36,10 @@ class ConfigurationTest {
         assertEquals("There is no configuration stored", cmd.getExecutionResult())
     }
 
-    @Test
-    fun `should store json content as a configuration`() {
-        cmd.execute("-c", "{}")
+    @ParameterizedTest
+    @MethodSource("storeConfigurationSuccessfully")
+    fun `should store json content as a configuration`(configuration: String, expectedConfiguration: String) {
+        cmd.execute("-c", configuration)
         assertEquals("Configuration has been stored", cmd.getExecutionResult())
     }
 
@@ -60,9 +61,16 @@ class ConfigurationTest {
 
     companion object {
         @JvmStatic
+        fun storeConfigurationSuccessfully(): Stream<Arguments> {
+            return Stream.of(
+                Arguments.of("{}", "{}"),
+                Arguments.of("""{"fileName":"aaa","timezone":""}""", """{"fileName":"aaa","timezone":"","storage":"csv"}"""),
+            )
+        }
+
+        @JvmStatic
         fun configurationProvider(): Stream<Arguments> {
             return Stream.of(
-//                Arguments.of("""{"fileName":"aaa","timezone":""}""", """{"fileName":"aaa","timezone":"","storage":"csv"}"""),
                 Arguments.of("""{"fileName":"tmp"}""", """{"fileName":"tmp","storage":"csv"}"""),
                 Arguments.of("""{"fileName":"123"}""", """{"fileName":"123","storage":"csv"}"""),
                 Arguments.of("""{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"1","consumerSecret":"1","accessToken":"1","accessTokenSecret":"1"}}""", """{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"1","consumerSecret":"1","accessToken":"1","accessTokenSecret":"1"}}""")

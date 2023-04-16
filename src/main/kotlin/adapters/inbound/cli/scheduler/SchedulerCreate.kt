@@ -4,6 +4,7 @@ import application.Messages
 import application.Output
 import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
+import application.persistence.configuration.ConfigurationRepository
 import application.scheduler.Create
 import application.scheduler.SocialMedia
 import com.google.inject.Inject

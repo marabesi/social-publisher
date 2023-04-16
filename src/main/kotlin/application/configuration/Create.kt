@@ -39,7 +39,7 @@ class Create(
     private fun validateConfigurationJson(configuration: String) {
         val keys = json.parseToJsonElement(configuration)
         val given = keys.jsonObject.keys
-        val available = listOf("fileName", "storage", "twitter")
+        val available = listOf("fileName", "storage", "twitter", "timezone")
 
         given.forEach {
             if (!available.contains(it)) {

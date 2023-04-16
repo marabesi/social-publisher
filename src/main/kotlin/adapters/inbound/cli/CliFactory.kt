@@ -25,7 +25,7 @@ class CliFactory(
             val currentConfiguration: SocialConfiguration = try {
                 configuration.find()
             } catch (_: MissingConfiguration) {
-                SocialConfiguration("production", "csv")
+                SocialConfiguration("production", "csv",null, "UTC")
             }
 
             val postsRepository = FileSystemPostRepository("data/posts-${currentConfiguration.fileName}.csv")
@@ -51,7 +51,7 @@ class CliFactory(
             }
 
             if (cls == SchedulerCreate::class.java) {
-                return SchedulerCreate(postsRepository, scheduler, cliOutput) as K
+                return SchedulerCreate(postsRepository, scheduler, configuration, cliOutput) as K
             }
 
             if (cls == Poster::class.java) {

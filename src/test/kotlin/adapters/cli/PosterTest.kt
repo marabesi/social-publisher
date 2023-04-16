@@ -259,7 +259,7 @@ class PosterTest {
         app = Poster(
             schedulerRepository,
             MockedOutput(),
-            this.currentDate,
+            currentDate,
             socialThirdParty,
             configurationRepository
         )

@@ -38,14 +38,17 @@ class ConfigurationTest {
 
     @ParameterizedTest
     @MethodSource("storeConfigurationSuccessfully")
-    fun `should store json content as a configuration`(configuration: String, expectedConfiguration: String) {
+    fun `should store json content as a configuration`(configuration: String) {
         cmd.execute("-c", configuration)
         assertEquals("Configuration has been stored", cmd.getExecutionResult())
     }
 
     @ParameterizedTest
     @MethodSource("invalidConfigurationProvider")
-    fun `should inform invalid key when trying to store json content as a configuration`(configuration: String, expectedOutput: String) {
+    fun `should inform invalid key when trying to store json content as a configuration`(
+        configuration: String,
+        expectedOutput: String
+    ) {
         cmd.execute("-c", configuration)
         assertEquals(expectedOutput, cmd.getExecutionResult())
     }
@@ -63,17 +66,17 @@ class ConfigurationTest {
         @JvmStatic
         fun storeConfigurationSuccessfully(): Stream<Arguments> {
             return Stream.of(
-                Arguments.of("{}", "{}"),
-                Arguments.of("""{"fileName":"aaa","timezone":""}""", """{"fileName":"aaa","timezone":"","storage":"csv"}"""),
+                Arguments.of("{}"),
+                Arguments.of("""{"fileName":"aaa","timezone":""}"""),
             )
         }
 
         @JvmStatic
         fun configurationProvider(): Stream<Arguments> {
             return Stream.of(
-                Arguments.of("""{"fileName":"tmp"}""", """{"fileName":"tmp","storage":"csv"}"""),
-                Arguments.of("""{"fileName":"123"}""", """{"fileName":"123","storage":"csv"}"""),
-                Arguments.of("""{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"1","consumerSecret":"1","accessToken":"1","accessTokenSecret":"1"}}""", """{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"1","consumerSecret":"1","accessToken":"1","accessTokenSecret":"1"}}""")
+                Arguments.of("""{"fileName":"tmp"}""", """{"fileName":"tmp","storage":"csv","timezone":"UTC"}"""),
+                Arguments.of("""{"fileName":"123"}""", """{"fileName":"123","storage":"csv","timezone":"UTC"}"""),
+                Arguments.of("""{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"1","consumerSecret":"1","accessToken":"1","accessTokenSecret":"1"}}""", """{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"1","consumerSecret":"1","accessToken":"1","accessTokenSecret":"1"},"timezone":"UTC"}""")
             )
         }
 

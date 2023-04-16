@@ -40,10 +40,11 @@ class FileSystemConfigurationRepositoryTest {
     @Test
     fun listConfiguration() {
         val repository = FileSystemConfigurationRepository()
-        repository.save(SocialConfiguration("data"))
+        repository.save(SocialConfiguration("data", timezone = "UTC"))
 
         val config = repository.find()
         Assertions.assertEquals(config.fileName, "data")
+        Assertions.assertEquals(config.timezone, "UTC")
     }
 
     @Test

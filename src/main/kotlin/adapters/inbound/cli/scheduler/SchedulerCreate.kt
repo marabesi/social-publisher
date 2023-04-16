@@ -16,6 +16,7 @@ class SchedulerCreate(
     @Inject
     private val postsRepository: PostsRepository,
     private val scheduleRepository: SchedulerRepository,
+    private val configurationRepository: ConfigurationRepository,
     private val cliOutput: Output,
 ) : Callable<String> {
 
@@ -33,6 +34,11 @@ class SchedulerCreate(
             return cliOutput.write(Messages.MISSING_REQUIRED_FIELDS)
         }
 
-        return Create(postsRepository, scheduleRepository, cliOutput).invoke(postId, targetDate)
+        return Create(
+            postsRepository,
+            scheduleRepository,
+            configurationRepository,
+            cliOutput
+        ).invoke(postId, targetDate)
     }
 }

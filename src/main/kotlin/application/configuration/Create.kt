@@ -26,6 +26,10 @@ class Create(
                 data.storage = "csv"
             }
 
+            if (data.timezone.isEmpty()) {
+                data.timezone = "UTC"
+            }
+
             configurationRepository.save(data)
         } catch (error: ConfigurationGivenHasInvalidProperty) {
             return cliOutput.write(error.message.toString())

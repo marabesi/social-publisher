@@ -3,6 +3,7 @@ Feature: Schedule a post to be posted
     Given A new cli with date set to "2022-10-02T09:01:00Z"
 
   Scenario: Show no posts found if none matches the criteria
+    When I create a configuration of type csv and store files under the name "e2e-file"
     When I create a post with the text "Post with future date 1"
     Then I clean the output
     Then I list the posts
@@ -17,6 +18,7 @@ Feature: Schedule a post to be posted
     Then Show successfully message "No posts scheduled"
 
   Scenario: Show no posts found if none matches the criteria
+    When I create a configuration of type csv and store files under the name "e2e-file"
     When I create a post with the text "Post with future date 1"
     Then I clean the output
     Then I list the posts

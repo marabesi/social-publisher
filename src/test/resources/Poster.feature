@@ -8,7 +8,7 @@ Feature:  Post scheduled posts to twitter
     When I create a post with the text "Post to schedule"
     Then I clean the output
     And I schedule the post with id "1" to be published at "2022-10-02T09:00:00Z"
-    Then Show successfully message "Post has been scheduled"
+    Then Show successfully message "Post has been scheduled using UTC timezone"
     Then I clean the output
     And I set the post "1" to "twitter"
     Then I clean the output

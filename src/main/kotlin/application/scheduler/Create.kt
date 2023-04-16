@@ -5,11 +5,13 @@ import application.Output
 import application.entities.ScheduledItem
 import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
+import application.persistence.configuration.ConfigurationRepository
 import application.scheduler.filters.DateTimeValidation
 
 class Create(
     private val postsRepository: PostsRepository,
     private val scheduleRepository: SchedulerRepository,
+    private val configurationRepository: ConfigurationRepository,
     private val cliOutput: Output
 ) {
 
@@ -34,7 +36,8 @@ class Create(
                     post, validTargetDate.value()
                 )
             )
-            return cliOutput.write("Post has been scheduled")
+            val configuration = configurationRepository.find()
+            return cliOutput.write("Post has been scheduled using ${configuration.timezone} timezone")
         }
 
         return cliOutput.write(Messages.MISSING_REQUIRED_FIELDS)

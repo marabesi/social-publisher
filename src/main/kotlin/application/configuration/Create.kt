@@ -8,6 +8,10 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 
+private const val DEFAULT_STORAGE_FORMAT = "csv"
+private const val DEFAULT_TIMEZONE = "UTC"
+private val AVAILABLE_CONFIGURATION = listOf("fileName", "storage", "twitter", "timezone")
+
 class Create(
     private val cliOutput: Output,
     private val configurationRepository: ConfigurationRepository
@@ -23,11 +27,11 @@ class Create(
             val data = Json.decodeFromString<SocialConfiguration>(configuration)
 
             if (data.storage.isEmpty()) {
-                data.storage = "csv"
+                data.storage = DEFAULT_STORAGE_FORMAT
             }
 
             if (data.timezone.isEmpty()) {
-                data.timezone = "UTC"
+                data.timezone = DEFAULT_TIMEZONE
             }
 
             configurationRepository.save(data)
@@ -38,15 +42,13 @@ class Create(
         return cliOutput.write("Configuration has been stored")
     }
 
-    private val json = Json { ignoreUnknownKeys = true }
-
     private fun validateConfigurationJson(configuration: String) {
+        val json = Json { ignoreUnknownKeys = true }
         val keys = json.parseToJsonElement(configuration)
         val given = keys.jsonObject.keys
-        val available = listOf("fileName", "storage", "twitter", "timezone")
 
         given.forEach {
-            if (!available.contains(it)) {
+            if (!AVAILABLE_CONFIGURATION.contains(it)) {
                 throw ConfigurationGivenHasInvalidProperty(it)
             }
         }

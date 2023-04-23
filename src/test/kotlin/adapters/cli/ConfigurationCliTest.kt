@@ -22,8 +22,20 @@ class ConfigurationCliTest {
 
     @Test
     fun `should show friendly message when required fields are not provided`() {
-        cmd.execute()
+        val code = cmd.execute()
+
+        assertEquals(0, code)
         assertEquals(Messages.MISSING_REQUIRED_FIELDS, cmd.getExecutionResult())
+    }
+
+    @Test
+    fun `should store configuration`() {
+        val configuration = """{}"""
+
+        val code = cmd.execute("-c", configuration)
+
+        assertEquals(0, code)
+        assertEquals("Configuration has been stored", cmd.getExecutionResult())
     }
 
     @Test
@@ -32,8 +44,9 @@ class ConfigurationCliTest {
         val expectedConfiguration = """{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"1","consumerSecret":"1","accessToken":"1","accessTokenSecret":"1"},"timezone":"UTC"}"""
 
         cmd.execute("-c", configuration)
-        cmd.execute("-l")
+        val code = cmd.execute("-l")
 
+        assertEquals(0, code)
         assertEquals(expectedConfiguration, cmd.getExecutionResult())
     }
 }

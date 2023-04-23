@@ -19,10 +19,10 @@ class Configuration(
     var jsonConfiguration: String = ""
 
     @CommandLine.Option(names = ["-l"], description = ["List the stored configuration"])
-    var list: Boolean = false
+    var list: Boolean? = false
 
     override fun call(): String {
-        if (list) {
+        if (list == true) {
             return List(cliOutput, configurationRepository).invoke()
         }
 

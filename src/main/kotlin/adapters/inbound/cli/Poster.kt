@@ -25,10 +25,10 @@ class Poster(
     var socialMedia: String = ""
 
     @CommandLine.Option(names = ["-r"], description = ["Executes routine that goes over and post posts"])
-    var run: Boolean = false
+    var run: Boolean? = false
 
     override fun call(): String {
-        if (run) {
+        if (run == true) {
             return Executor(
                 schedulerRepository,
                 cliOutput,

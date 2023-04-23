@@ -18,10 +18,10 @@ class Post(
     var text: String = ""
 
     @CommandLine.Option(names = ["-l"], description = ["List created posts"])
-    var list: Boolean = false
+    var list: Boolean? = false
 
     override fun call(): String {
-        if (list) {
+        if (list == true) {
             return List(postsRepository, cliOutput).invoke()
         }
 

@@ -3,6 +3,8 @@ import adapters.inbound.cli.Configuration
 import adapters.inbound.cli.Post
 import adapters.inbound.cli.Poster
 import adapters.inbound.cli.scheduler.Scheduler
+import adapters.outbound.cli.CliOutput
+import application.Output
 import picocli.CommandLine
 import java.time.Instant
 
@@ -18,8 +20,11 @@ import java.time.Instant
 )
 class Main
 
-fun buildCommandLine(currentTime: Instant = Instant.now()): CommandLine {
-    return CommandLine(Main::class.java, CliFactory(currentTime))
+fun buildCommandLine(
+    currentTime: Instant = Instant.now(),
+    output: Output = CliOutput()
+): CommandLine {
+    return CommandLine(Main::class.java, CliFactory(currentTime, output))
 }
 
 @Suppress("SpreadOperator")

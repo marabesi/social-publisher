@@ -4,12 +4,12 @@ import adapters.inbound.cli.scheduler.Scheduler
 import adapters.inbound.cli.scheduler.SchedulerCreate
 import adapters.inbound.cli.scheduler.SchedulerDelete
 import adapters.inbound.cli.scheduler.SchedulerList
-import adapters.outbound.cli.CliOutput
 import adapters.outbound.csv.FileSystemConfigurationRepository
 import adapters.outbound.csv.FileSystemPostRepository
 import adapters.outbound.csv.FileSystemSchedulerRepository
 import adapters.outbound.social.SocialSpringTwitterClient
 import adapters.outbound.social.TwitterIntegration
+import application.Output
 import application.entities.SocialConfiguration
 import application.persistence.configuration.MissingConfiguration
 import picocli.CommandLine
@@ -17,7 +17,8 @@ import java.time.Instant
 
 @Suppress("UNCHECKED_CAST")
 class CliFactory(
-    private val currentTime: Instant
+    private val currentTime: Instant,
+    private val output: Output
 ) : CommandLine.IFactory {
     override fun <K : Any?> create(cls: Class<K>?): K {
         if (cls != null) {
@@ -32,32 +33,31 @@ class CliFactory(
 
             val filePath = "data/scheduler-${currentConfiguration.fileName}.csv"
             val scheduler = FileSystemSchedulerRepository(filePath, postsRepository)
-            val cliOutput = CliOutput()
 
             if (cls == Post::class.java) {
-                return Post(postsRepository, cliOutput) as K
+                return Post(postsRepository, output) as K
             }
 
             if (cls == SchedulerList::class.java) {
-                return SchedulerList(scheduler, cliOutput) as K
+                return SchedulerList(scheduler, output) as K
             }
 
             if (cls == Scheduler::class.java) {
-                return Scheduler(cliOutput) as K
+                return Scheduler(output) as K
             }
 
             if (cls == SchedulerDelete::class.java) {
-                return SchedulerDelete(scheduler, cliOutput) as K
+                return SchedulerDelete(scheduler, output) as K
             }
 
             if (cls == SchedulerCreate::class.java) {
-                return SchedulerCreate(postsRepository, scheduler, configuration, cliOutput) as K
+                return SchedulerCreate(postsRepository, scheduler, configuration, output) as K
             }
 
             if (cls == Poster::class.java) {
                 return Poster(
                     scheduler,
-                    cliOutput,
+                    output,
                     currentTime,
                     TwitterIntegration(
                         currentConfiguration,
@@ -67,7 +67,7 @@ class CliFactory(
             }
 
             if (cls == Configuration::class.java) {
-                return Configuration(cliOutput, FileSystemConfigurationRepository()) as K
+                return Configuration(output, FileSystemConfigurationRepository()) as K
             }
         }
         return CommandLine.defaultFactory().create(cls)

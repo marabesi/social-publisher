@@ -52,3 +52,7 @@ CUCUMBER_FILTER_TAGS="not @interactsWithTwitter" ./gradlew cucumber
 ### Junit + kotlin
 
 - https://www.baeldung.com/kotlin/assertfailswith
+
+### Publishing to central
+
+- [Publish to Maven Central using Gradle](https://h4pehl.medium.com/publish-your-gradle-artifacts-to-maven-central-f74a0af085b1)

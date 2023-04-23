@@ -10,6 +10,11 @@ plugins {
     id("io.gitlab.arturbosch.detekt").version("1.21.0")
     id("info.solidsoft.pitest").version("1.7.4")
     id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
+
+    `maven-publish`
+    signing
+    id("org.jetbrains.dokka") version "1.4.20"
+    id("io.github.gradle-nexus.publish-plugin") version "1.0.0"
 }
 
 group = "com.marabesi"
@@ -121,10 +126,99 @@ application {
 }
 
 java {
+    withSourcesJar()
+    withJavadocJar()
     manifest {
         attributes()
     }
 }
+
+signing {
+    val signingKey = providers
+        .environmentVariable("GPG_SIGNING_KEY")
+        .forUseAtConfigurationTime()
+    val signingPassphrase = providers
+        .environmentVariable("GPG_SIGNING_PASSPHRASE")
+        .forUseAtConfigurationTime()
+    if (signingKey.isPresent && signingPassphrase.isPresent) {
+        useInMemoryPgpKeys(signingKey.get(), signingPassphrase.get())
+        val extension = extensions
+            .getByName("publishing") as PublishingExtension
+        sign(extension.publications)
+    }
+}
+object Meta {
+    const val desc = "Social publisher allows you to schedule and publish posts into social media."
+    const val license = "Apache-2.0"
+    const val githubRepo = "marabesi/social-publisher"
+    const val release = "https://s01.oss.sonatype.org/service/local/"
+    const val snapshot = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+    const val developerId = "marabesi"
+    const val developerName = "Matheus Marabesi"
+}
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = project.group.toString()
+            artifactId = project.name
+            version = project.version.toString()
+            from(components["kotlin"])
+            artifact(tasks["sourcesJar"])
+            artifact(tasks["javadocJar"])
+            pom {
+                name.set(project.name)
+                description.set(Meta.desc)
+                url.set("https://github.com/${Meta.githubRepo}")
+                licenses {
+                    license {
+                        name.set(Meta.license)
+                        url.set("https://opensource.org/licenses/Apache-2.0")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set(Meta.developerId)
+                        name.set(Meta.developerName)
+                    }
+                }
+                scm {
+                    url.set(
+                        "https://github.com/${Meta.githubRepo}.git"
+                    )
+                    connection.set(
+                        "scm:git:git://github.com/${Meta.githubRepo}.git"
+                    )
+                    developerConnection.set(
+                        "scm:git:git://github.com/${Meta.githubRepo}.git"
+                    )
+                }
+                issueManagement {
+                    url.set("https://github.com/${Meta.githubRepo}/issues")
+                }
+            }
+        }
+    }
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            nexusUrl.set(uri(Meta.release))
+            snapshotRepositoryUrl.set(uri(Meta.snapshot))
+            val ossrhUsername = providers
+                .environmentVariable("OSSRH_USERNAME")
+                .forUseAtConfigurationTime()
+            val ossrhPassword = providers
+                .environmentVariable("OSSRH_PASSWORD")
+                .forUseAtConfigurationTime()
+            if (ossrhUsername.isPresent && ossrhPassword.isPresent) {
+                username.set(ossrhUsername.get())
+                password.set(ossrhPassword.get())
+            }
+        }
+    }
+}
+
 val compileKotlin: KotlinCompile by tasks
 compileKotlin.kotlinOptions {
     jvmTarget = "1.8"

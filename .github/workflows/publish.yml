@@ -19,5 +19,8 @@ jobs:
 
       - name: Deploy
         uses: gradle/gradle-build-action@4137be6a8bf7d7133955359dbd952c0ca73b1021
+        env:
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
         with:
           arguments: publish

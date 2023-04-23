@@ -1,4 +1,4 @@
-package integration
+package adapters.cli
 
 import buildCommandLine
 import org.junit.jupiter.api.Assertions.assertEquals

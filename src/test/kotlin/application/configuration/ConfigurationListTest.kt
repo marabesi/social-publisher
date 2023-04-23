@@ -1,8 +1,7 @@
-package application
+package application.configuration
 
 import MockedOutput
 import adapters.outbound.inmemory.ConfigurationInMemoryRepository
-import application.configuration.List
 import application.entities.SocialConfiguration
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

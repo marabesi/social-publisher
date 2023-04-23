@@ -1,8 +1,7 @@
-package application
+package application.configuration
 
 import MockedOutput
 import adapters.outbound.inmemory.ConfigurationInMemoryRepository
-import application.configuration.Create
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.params.ParameterizedTest

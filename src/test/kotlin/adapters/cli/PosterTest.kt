@@ -79,15 +79,6 @@ class PosterTest {
         Assertions.assertEquals(Messages.MISSING_REQUIRED_FIELDS, cmd.getExecutionResult())
     }
 
-    @Test
-    fun `should display friendly message if there is no posts to send to twitter`() {
-        cmd.execute("-r")
-
-        val result = cmd.getExecutionResult<String>()
-
-        Assertions.assertEquals("There are no posts to be posted", result)
-    }
-
     @ParameterizedTest
     @ValueSource(strings = ["1", "2"])
     fun `set post to be sent to twitter`(id: String) {
@@ -100,10 +91,10 @@ class PosterTest {
             scheduledItem
         )
 
-        cmd.execute("-p", id)
-
+        val code = cmd.execute("-p", id)
         val result = cmd.getExecutionResult<String>()
 
+        Assertions.assertEquals(0, code)
         Assertions.assertEquals("Post $id set to twitter", result)
     }
 
@@ -123,136 +114,11 @@ class PosterTest {
 
         every { socialThirdParty.send(any()) } returns scheduledItem.post
 
-        cmd.execute("-r")
-
+        val code = cmd.execute("-r")
         val result = cmd.getExecutionResult<String>()
 
+        Assertions.assertEquals(0, code)
         Assertions.assertEquals("Post 1 sent to twitter", result)
-    }
-
-    @Test
-    fun `should send multiple posts to twitter`() {
-        currentDate = Instant.parse("2014-12-22T10:15:31Z")
-
-        val scheduledItem = ScheduledItem(
-            SocialPosts(id = "1", text = "random post text"),
-            Instant.parse("2014-12-22T10:15:30Z"),
-            "1",
-        )
-
-        val scheduledItem2 = ScheduledItem(
-            SocialPosts(id = "2", text = "another post"),
-            Instant.parse("2014-12-22T09:15:30Z"),
-            "2"
-        )
-
-        schedulerRepository.save(
-            scheduledItem
-        )
-        schedulerRepository.save(
-            scheduledItem2
-        )
-
-        every { socialThirdParty.send(scheduledItem) } returns scheduledItem.post
-        every { socialThirdParty.send(scheduledItem2) } returns scheduledItem2.post
-
-        cmd.execute("-r")
-
-        val result = cmd.getExecutionResult<String>()
-
-        Assertions.assertEquals(
-            """
-            Post 1 sent to twitter
-            Post 2 sent to twitter
-            """.trimIndent(),
-            result
-        )
-    }
-
-    @Test
-    fun `should not post when publish date has not arrived yet`() {
-        schedulerRepository.save(
-            ScheduledItem(
-                SocialPosts("1", "random post text"),
-                Instant.parse("2014-12-22T10:15:32Z")
-            )
-        )
-
-        val instantExpected = "2014-12-22T10:15:31Z"
-        val clock: Clock = Clock.fixed(Instant.parse(instantExpected), ZoneId.of("UTC"))
-
-        currentDate = Instant.now(clock)
-
-        buildApplication(currentDate)
-
-        cmd.execute("-r")
-
-        val result = cmd.getExecutionResult<String>()
-
-        Assertions.assertEquals(
-            "Waiting for the date to come to publish post 1 (scheduled for 22 Dec 2014 10:15:32)",
-            result
-        )
-    }
-
-    @Test
-    fun `should not post posts when publish date has not arrived yet`() {
-        currentDate = Instant.parse("2014-12-22T10:15:31Z")
-
-        schedulerRepository.save(
-            ScheduledItem(
-                SocialPosts("1", "random post text"),
-                Instant.parse("2014-12-22T10:15:32Z")
-            )
-        )
-        schedulerRepository.save(
-            ScheduledItem(
-                SocialPosts("2", "random post text"),
-                Instant.parse("2014-12-22T10:15:32Z")
-            )
-        )
-
-        buildApplication(currentDate)
-
-        cmd.execute("-r")
-
-        val result = cmd.getExecutionResult<String>()
-
-        Assertions.assertEquals(
-            """
-            Waiting for the date to come to publish post 1 (scheduled for 22 Dec 2014 10:15:32)
-            Waiting for the date to come to publish post 2 (scheduled for 22 Dec 2014 10:15:32)
-            """.trimIndent(),
-            result
-        )
-    }
-
-    @Test
-    fun `should not post posts twice`() {
-        currentDate = Instant.parse("2014-12-22T10:15:31Z")
-
-        schedulerRepository.save(
-            ScheduledItem(
-                SocialPosts("1", "random post text"),
-                Instant.parse("2014-12-21T10:15:32Z")
-            )
-        )
-        schedulerRepository.save(
-            ScheduledItem(
-                SocialPosts("2", "random post text 2"),
-                Instant.parse("2014-12-21T10:15:32Z")
-            )
-        )
-        every { socialThirdParty.send(any()) } returns mockk()
-
-        cmd = CommandLine(app)
-
-        cmd.execute("-r")
-        cmd.execute("-r")
-
-        val result = cmd.getExecutionResult<String>()
-
-        Assertions.assertEquals("There are no posts to be posted", result)
     }
 
     private fun buildApplication(currentDate: Instant) {

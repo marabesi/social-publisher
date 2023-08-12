@@ -49,10 +49,11 @@ CUCUMBER_FILTER_TAGS="not @interactsWithTwitter" ./gradlew cucumber
 - https://docs.spring.io/spring-social-twitter/docs/1.1.0.RELEASE/reference/htmlsingle
 - https://github.com/spring-attic/spring-social-twitter
 
-### Junit + kotlin
-
-- https://www.baeldung.com/kotlin/assertfailswith
-
 ### Publishing to central
 
 - [Publish to Maven Central using Gradle](https://h4pehl.medium.com/publish-your-gradle-artifacts-to-maven-central-f74a0af085b1)
+
+## Junit + kotlin
+
+- https://www.baeldung.com/kotlin/assertfailswith
+

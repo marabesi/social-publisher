@@ -1,7 +1,7 @@
 package thirdpartyintegration
 
 import adapters.outbound.social.Twitter
-import adapters.outbound.social.TwitterIntegration
+import adapters.outbound.social.TwitterCredentialsValidator
 import application.entities.ScheduledItem
 import application.entities.SocialConfiguration
 import application.entities.SocialPosts
@@ -41,7 +41,7 @@ class TwitterClient {
             twitter = credentials
         )
 
-        val twitter = TwitterIntegration(
+        val twitter = TwitterCredentialsValidator(
             config,
             Twitter(config)
         )

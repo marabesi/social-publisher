@@ -7,7 +7,7 @@ import application.socialnetwork.MissingConfigurationSetup
 import application.socialnetwork.SocialThirdParty
 import application.socialnetwork.CreateTweet
 
-class TwitterIntegration(
+class TwitterCredentialsValidator(
     private val configuration: SocialConfiguration,
     private val createTweet: CreateTweet
 ) : SocialThirdParty {

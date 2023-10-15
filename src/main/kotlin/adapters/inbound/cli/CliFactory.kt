@@ -8,7 +8,7 @@ import adapters.outbound.csv.FileSystemConfigurationRepository
 import adapters.outbound.csv.FileSystemPostRepository
 import adapters.outbound.csv.FileSystemSchedulerRepository
 import adapters.outbound.social.Twitter
-import adapters.outbound.social.TwitterIntegration
+import adapters.outbound.social.TwitterCredentialsValidator
 import application.Output
 import application.entities.SocialConfiguration
 import application.persistence.configuration.MissingConfiguration
@@ -59,7 +59,7 @@ class CliFactory(
                     scheduler,
                     output,
                     currentTime,
-                    TwitterIntegration(
+                    TwitterCredentialsValidator(
                         currentConfiguration,
                         Twitter(currentConfiguration)
                     ),

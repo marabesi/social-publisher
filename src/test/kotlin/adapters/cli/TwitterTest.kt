@@ -1,6 +1,6 @@
 package adapters.cli
 
-import adapters.outbound.social.TwitterIntegration
+import adapters.outbound.social.TwitterCredentialsValidator
 import application.entities.ScheduledItem
 import application.entities.SocialConfiguration
 import application.entities.SocialPosts
@@ -24,8 +24,8 @@ class TwitterTest {
 
     private val socialIntegration: CreateTweet = mockk()
 
-    private fun buildTwitter(configuration: SocialConfiguration, createTweet: CreateTweet): TwitterIntegration {
-        return TwitterIntegration(configuration, createTweet)
+    private fun buildTwitter(configuration: SocialConfiguration, createTweet: CreateTweet): TwitterCredentialsValidator {
+        return TwitterCredentialsValidator(configuration, createTweet)
     }
 
     @Test

@@ -1,5 +1,6 @@
 package acceptance
 
+import adapters.outbound.social.DeleteTweet
 import application.entities.SocialConfiguration
 import application.entities.TwitterCredentials
 import buildCommandLine
@@ -8,7 +9,6 @@ import io.github.cdimascio.dotenv.dotenv
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.springframework.social.twitter.api.impl.TwitterTemplate
 import picocli.CommandLine
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -20,12 +20,17 @@ class SocialPublisherSteps : En {
 
     private val outputStreamCaptor: ByteArrayOutputStream = ByteArrayOutputStream()
     private val dotenv = dotenv()
-    private val twitterCredentials = TwitterCredentials(
-        dotenv["TWITTER_CONSUMER_KEY"],
-        dotenv["TWITTER_CONSUMER_SECRET"],
-        dotenv["TWITTER_TOKEN"],
-        dotenv["TWITTER_TOKEN_SECRET"],
+    private val socialConfiguration = SocialConfiguration(
+        "twitter",
+        "csv",
+        twitter = TwitterCredentials(
+            dotenv["TWITTER_CONSUMER_KEY"],
+            dotenv["TWITTER_CONSUMER_SECRET"],
+            dotenv["TWITTER_TOKEN"],
+            dotenv["TWITTER_TOKEN_SECRET"],
+        )
     )
+    private val deleteTweet = DeleteTweet(socialConfiguration)
 
     private fun cleanUp() {
         System.setOut(PrintStream(outputStreamCaptor))
@@ -148,27 +153,10 @@ class SocialPublisherSteps : En {
         }
 
         Then("I remove post {string} from twitter") {
-            postText: String ->
-            val client = TwitterTemplate(
-                twitterCredentials.consumerKey,
-                twitterCredentials.consumerSecret,
-                twitterCredentials.accessToken,
-                twitterCredentials.accessTokenSecret
-            )
-
-            client.timelineOperations().userTimeline.forEach {
-                if (it.text.equals(postText)) {
-                    client.timelineOperations().deleteStatus(it.id)
-                }
-            }
+            postText: String -> deleteTweet.deleteTweet(postText)
         }
 
         Given("the twitter credentials in place") {
-            val socialConfiguration = SocialConfiguration(
-                "twitter",
-                "csv",
-                twitterCredentials
-            )
             val configuration = Json.encodeToString(socialConfiguration)
 
             exitCode = cmd.execute("configuration", "-c", configuration)

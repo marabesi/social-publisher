@@ -5,11 +5,11 @@ import application.entities.SocialConfiguration
 import application.entities.SocialPosts
 import application.socialnetwork.MissingConfigurationSetup
 import application.socialnetwork.SocialThirdParty
-import application.socialnetwork.TwitterClient
+import application.socialnetwork.CreateTweet
 
 class TwitterIntegration(
     private val configuration: SocialConfiguration,
-    private val twitterClient: TwitterClient
+    private val createTweet: CreateTweet
 ) : SocialThirdParty {
     override fun send(scheduledItem: ScheduledItem): SocialPosts {
         if (configuration.twitter == null) {
@@ -32,6 +32,6 @@ class TwitterIntegration(
             throw MissingConfigurationSetup("token secret")
         }
 
-        return twitterClient.sendTweet(scheduledItem.post.text)
+        return createTweet.sendTweet(scheduledItem.post.text)
     }
 }

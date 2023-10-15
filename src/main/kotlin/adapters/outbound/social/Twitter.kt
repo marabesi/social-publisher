@@ -2,7 +2,7 @@ package adapters.outbound.social
 
 import application.entities.SocialConfiguration
 import application.entities.SocialPosts
-import application.socialnetwork.TwitterClient
+import application.socialnetwork.CreateTweet
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonObject
@@ -19,7 +19,7 @@ data class TweetCreatedResponse(val data: Tweet)
 
 class Twitter(
     val configuration: SocialConfiguration
-) : TwitterClient {
+) : CreateTweet {
     private val createTweetEndpoint = "https://api.twitter.com/2/tweets"
 
     override fun sendTweet(text: String): SocialPosts {

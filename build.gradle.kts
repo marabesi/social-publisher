@@ -42,6 +42,9 @@ dependencies {
     implementation("org.springframework.social:spring-social-twitter:1.1.0.RELEASE")
     implementation("io.github.cdimascio:dotenv-kotlin:6.3.1")
 
+    implementation("oauth.signpost:signpost-core:2.0.0")
+    implementation("oauth.signpost:signpost-commonshttp4:2.0.0")
+
     testImplementation("io.mockk:mockk:1.12.4")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.1")
     testImplementation("io.cucumber:cucumber-java8:7.0.0")

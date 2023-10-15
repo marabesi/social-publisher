@@ -7,7 +7,7 @@ import adapters.inbound.cli.scheduler.SchedulerList
 import adapters.outbound.csv.FileSystemConfigurationRepository
 import adapters.outbound.csv.FileSystemPostRepository
 import adapters.outbound.csv.FileSystemSchedulerRepository
-import adapters.outbound.social.SocialSpringTwitterClient
+import adapters.outbound.social.Twitter
 import adapters.outbound.social.TwitterIntegration
 import application.Output
 import application.entities.SocialConfiguration
@@ -61,7 +61,7 @@ class CliFactory(
                     currentTime,
                     TwitterIntegration(
                         currentConfiguration,
-                        SocialSpringTwitterClient(currentConfiguration)
+                        Twitter(currentConfiguration)
                     ),
                 ) as K
             }

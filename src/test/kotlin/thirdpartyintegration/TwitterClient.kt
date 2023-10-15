@@ -1,6 +1,6 @@
 package thirdpartyintegration
 
-import adapters.outbound.social.SocialSpringTwitterClient
+import adapters.outbound.social.Twitter
 import adapters.outbound.social.TwitterIntegration
 import application.entities.ScheduledItem
 import application.entities.SocialConfiguration
@@ -43,7 +43,7 @@ class TwitterClient {
 
         val twitter = TwitterIntegration(
             config,
-            SocialSpringTwitterClient(config)
+            Twitter(config)
         )
 
         val tweet = twitter.send(scheduledPost)

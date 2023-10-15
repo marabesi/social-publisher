@@ -1,5 +1,6 @@
 package thirdpartyintegration
 
+import adapters.outbound.social.DeleteTweet
 import adapters.outbound.social.Twitter
 import adapters.outbound.social.TwitterCredentialsValidator
 import application.entities.ScheduledItem
@@ -9,7 +10,6 @@ import application.entities.TwitterCredentials
 import io.github.cdimascio.dotenv.Dotenv
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.social.twitter.api.impl.TwitterTemplate
 import java.time.Instant
 import kotlin.test.assertNotNull
 
@@ -50,13 +50,7 @@ class TwitterClient {
 
         assertNotNull(tweet.socialMediaId)
 
-        val client = TwitterTemplate(
-            credentials.consumerKey,
-            credentials.consumerSecret,
-            credentials.accessToken,
-            credentials.accessTokenSecret
-        )
-
-        client.timelineOperations().deleteStatus(tweet.socialMediaId!!.toLong())
+        val deleteTweet = DeleteTweet(SocialConfiguration(twitter = credentials))
+        deleteTweet.deleteTweetByTweetId(tweet.socialMediaId.toString())
     }
 }

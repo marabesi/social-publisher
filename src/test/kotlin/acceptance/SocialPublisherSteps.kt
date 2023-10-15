@@ -153,7 +153,7 @@ class SocialPublisherSteps : En {
         }
 
         Then("I remove post {string} from twitter") {
-            postText: String -> deleteTweet.deleteTweet(postText)
+            postText: String -> deleteTweet.deleteTweetByTweetText(postText)
         }
 
         Given("the twitter credentials in place") {

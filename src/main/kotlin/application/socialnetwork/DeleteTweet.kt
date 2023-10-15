@@ -2,5 +2,6 @@ package application.socialnetwork
 
 interface DeleteTweet {
 
-    fun deleteTweet(text: String): Boolean
+    fun deleteTweetByTweetText(text: String): Boolean
+    fun deleteTweetByTweetId(id: String): Boolean
 }

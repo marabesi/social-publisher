@@ -2,6 +2,7 @@ package adapters.inbound.cli.scheduler
 
 import application.Messages
 import application.Output
+import com.google.inject.Inject
 import picocli.CommandLine
 import java.util.concurrent.Callable
 
@@ -13,7 +14,7 @@ import java.util.concurrent.Callable
         SchedulerDelete::class
     ]
 )
-class Scheduler(
+class Scheduler @Inject constructor(
     private val cliOutput: Output,
 ) : Callable<String> {
 

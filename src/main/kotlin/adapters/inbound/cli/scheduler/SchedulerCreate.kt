@@ -12,8 +12,7 @@ import picocli.CommandLine
 import java.util.concurrent.Callable
 
 @CommandLine.Command(name = "create", mixinStandardHelpOptions = true)
-class SchedulerCreate(
-    @Inject
+class SchedulerCreate @Inject constructor(
     private val postsRepository: PostsRepository,
     private val scheduleRepository: SchedulerRepository,
     private val configurationRepository: ConfigurationRepository,

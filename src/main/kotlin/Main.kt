@@ -22,12 +22,16 @@ class Main
 
 fun buildCommandLine(
     currentTime: Instant = Instant.now(),
-    output: Output = CliOutput()
+    output: Output = CliOutput(),
+    isInTestMode: Boolean = false,
 ): CommandLine {
-    return CommandLine(Main::class.java, CliFactory(currentTime, output))
+    return CommandLine(
+        Main::class.java,
+        CliFactory(currentTime, output, isInTestMode)
+    )
 }
 
 @Suppress("SpreadOperator")
 fun main(args: Array<String>) {
-    buildCommandLine().execute(*args)
+    buildCommandLine(isInTestMode = false).execute(*args)
 }

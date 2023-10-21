@@ -11,8 +11,7 @@ import java.time.Instant
 import java.util.concurrent.Callable
 
 @CommandLine.Command(name = "poster", mixinStandardHelpOptions = true)
-class Poster(
-    @Inject
+class Poster @Inject constructor(
     private val schedulerRepository: SchedulerRepository,
     private val cliOutput: Output,
     private val currentDate: Instant,

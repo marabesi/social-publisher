@@ -1,10 +1,11 @@
 package adapters.outbound.social
 
+import application.persistence.configuration.ConfigurationRepository
 import application.socialnetwork.DeleteTweet
-import application.entities.SocialConfiguration
 import org.springframework.social.twitter.api.impl.TwitterTemplate
 
-class DeleteTweet(val configuration: SocialConfiguration): DeleteTweet {
+class DeleteTweet(val configurationRepository: ConfigurationRepository) : DeleteTweet {
+    private val configuration = configurationRepository.find()
     private val client = TwitterTemplate(
         configuration.twitter!!.consumerKey,
         configuration.twitter!!.consumerSecret,

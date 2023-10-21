@@ -1,6 +1,5 @@
 package acceptance
 
-import adapters.outbound.social.DeleteTweet
 import application.entities.SocialConfiguration
 import application.entities.TwitterCredentials
 import buildCommandLine
@@ -17,7 +16,6 @@ import java.time.Instant
 import kotlin.test.assertContains
 
 class SocialPublisherSteps : En {
-
     private val outputStreamCaptor: ByteArrayOutputStream = ByteArrayOutputStream()
     private val dotenv = dotenv()
     private val socialConfiguration = SocialConfiguration(
@@ -30,7 +28,6 @@ class SocialPublisherSteps : En {
             dotenv["TWITTER_TOKEN_SECRET"],
         )
     )
-    private val deleteTweet = DeleteTweet(socialConfiguration)
 
     private fun cleanUp() {
         System.setOut(PrintStream(outputStreamCaptor))
@@ -45,12 +42,12 @@ class SocialPublisherSteps : En {
         var exitCode: Int? = null
 
         Given("A new cli") { ->
-            cmd = buildCommandLine()
+            cmd = buildCommandLine(isInTestMode = true)
             cleanUp()
         }
 
         Given("A new cli with date set to {string}") { dateTime: String ->
-            cmd = buildCommandLine(Instant.parse(dateTime))
+            cmd = buildCommandLine(currentTime = Instant.parse(dateTime), isInTestMode = true)
             cleanUp()
         }
 
@@ -153,13 +150,15 @@ class SocialPublisherSteps : En {
         }
 
         Then("I remove post {string} from twitter") {
-            postText: String -> deleteTweet.deleteTweetByTweetText(postText)
+            postText: String ->
+//            deleteTweet.deleteTweetByTweetText(postText)
         }
 
         Given("the twitter credentials in place") {
             val configuration = Json.encodeToString(socialConfiguration)
 
             exitCode = cmd.execute("configuration", "-c", configuration)
+
             assertContains(outputStreamCaptor.toString(), "Configuration has been stored")
         }
 

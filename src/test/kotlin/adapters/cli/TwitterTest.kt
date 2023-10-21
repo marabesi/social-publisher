@@ -5,8 +5,9 @@ import application.entities.ScheduledItem
 import application.entities.SocialConfiguration
 import application.entities.SocialPosts
 import application.entities.TwitterCredentials
-import application.socialnetwork.MissingConfigurationSetup
+import application.persistence.configuration.ConfigurationRepository
 import application.socialnetwork.CreateTweet
+import application.socialnetwork.MissingConfigurationSetup
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -23,9 +24,15 @@ class TwitterTest {
     )
 
     private val socialIntegration: CreateTweet = mockk()
+    private val configurationRepository: ConfigurationRepository = mockk()
 
-    private fun buildTwitter(configuration: SocialConfiguration, createTweet: CreateTweet): TwitterCredentialsValidator {
-        return TwitterCredentialsValidator(configuration, createTweet)
+    private fun buildTwitter(
+        configuration: SocialConfiguration,
+        createTweet: CreateTweet
+    ): TwitterCredentialsValidator {
+        every { configurationRepository.find() } returns configuration
+
+        return TwitterCredentialsValidator(configurationRepository, createTweet)
     }
 
     @Test

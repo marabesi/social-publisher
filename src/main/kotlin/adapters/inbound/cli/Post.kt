@@ -9,8 +9,7 @@ import picocli.CommandLine
 import java.util.concurrent.Callable
 
 @CommandLine.Command(name = "post", mixinStandardHelpOptions = true)
-class Post(
-    @Inject
+class Post @Inject constructor(
     private val postsRepository: PostsRepository,
     private val cliOutput: Output
 ) : Callable<String> {

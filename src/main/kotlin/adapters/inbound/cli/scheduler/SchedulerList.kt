@@ -13,8 +13,7 @@ import picocli.CommandLine
 import java.util.concurrent.Callable
 
 @CommandLine.Command(name = "list", mixinStandardHelpOptions = true)
-open class SchedulerList(
-    @Inject
+open class SchedulerList @Inject constructor(
     private val scheduleRepository: SchedulerRepository,
     private val cliOutput: Output,
 ) : Callable<String> {

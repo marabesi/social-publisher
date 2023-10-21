@@ -1,17 +1,21 @@
 package adapters.outbound.social
 
 import application.entities.ScheduledItem
-import application.entities.SocialConfiguration
 import application.entities.SocialPosts
+import application.persistence.configuration.ConfigurationRepository
+import application.socialnetwork.CreateTweet
 import application.socialnetwork.MissingConfigurationSetup
 import application.socialnetwork.SocialThirdParty
-import application.socialnetwork.CreateTweet
+import com.google.inject.Inject
 
-class TwitterCredentialsValidator(
-    private val configuration: SocialConfiguration,
+open class TwitterCredentialsValidator @Inject constructor(
+    private val configurationRepository: ConfigurationRepository,
     private val createTweet: CreateTweet
 ) : SocialThirdParty {
+    @TweetCreated
     override fun send(scheduledItem: ScheduledItem): SocialPosts {
+        val configuration = configurationRepository.find()
+
         if (configuration.twitter == null) {
             throw MissingConfigurationSetup("twitter")
         }

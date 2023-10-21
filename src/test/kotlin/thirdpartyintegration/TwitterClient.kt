@@ -7,7 +7,10 @@ import application.entities.ScheduledItem
 import application.entities.SocialConfiguration
 import application.entities.SocialPosts
 import application.entities.TwitterCredentials
+import application.persistence.configuration.ConfigurationRepository
 import io.github.cdimascio.dotenv.Dotenv
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Instant
@@ -19,6 +22,7 @@ class TwitterClient {
         .systemProperties()
         .load()
     private lateinit var credentials: TwitterCredentials
+    private val configurationRepository: ConfigurationRepository = mockk()
 
     private val scheduledPost = ScheduledItem(
         SocialPosts("1", "Random tweet 123"),
@@ -41,16 +45,18 @@ class TwitterClient {
             twitter = credentials
         )
 
+        every { configurationRepository.find() } returns config
+
         val twitter = TwitterCredentialsValidator(
-            config,
-            Twitter(config)
+            configurationRepository,
+            Twitter(configurationRepository)
         )
 
         val tweet = twitter.send(scheduledPost)
 
         assertNotNull(tweet.socialMediaId)
 
-        val deleteTweet = DeleteTweet(SocialConfiguration(twitter = credentials))
+        val deleteTweet = DeleteTweet(configurationRepository)
         deleteTweet.deleteTweetByTweetId(tweet.socialMediaId.toString())
     }
 }

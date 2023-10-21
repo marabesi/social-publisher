@@ -49,6 +49,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.1")
     testImplementation("io.cucumber:cucumber-java8:7.0.0")
     testImplementation("io.cucumber:cucumber-junit:7.0.0")
+    implementation(kotlin("reflect"))
 }
 
 tasks.test {

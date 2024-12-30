@@ -13,7 +13,7 @@ plugins {
 
     `maven-publish`
     signing
-    id("org.jetbrains.dokka") version "1.4.20"
+    id("org.jetbrains.dokka") version "1.9.20"
     id("io.github.gradle-nexus.publish-plugin") version "1.0.0"
 }
 

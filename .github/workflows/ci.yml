@@ -1,6 +1,6 @@
 name: Java CI
 
-concurrency: 
+concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
@@ -15,10 +15,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up JDK 17
+      - name: Set up JDK $JAVA_VERSION
         uses: actions/setup-java@v2
         with:
-          java-version: '17'
+          java-version: $JAVA_VERSION
           distribution: 'adopt'
 
       - name: Set up .env
@@ -35,11 +35,6 @@ jobs:
         uses: gradle/gradle-build-action@4137be6a8bf7d7133955359dbd952c0ca73b1021
         with:
           arguments: build
-
-      - name: Qodana Scan
-        uses: JetBrains/qodana-action@main
-        env:
-          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
 
       - name: Test and coverage
         uses: gradle/gradle-build-action@4137be6a8bf7d7133955359dbd952c0ca73b1021

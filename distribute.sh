@@ -5,4 +5,5 @@ rm -rf build/distributions
 cd build/distributions && \
     unzip ./social-1.0.0.zip && \
     rm -rf ./social-1.0.0.zip ./social-1.0.0.tar && \
+    rm -rf ../../social && \
     mv ./social-1.0.0 ../../social

@@ -17,9 +17,23 @@ media. At the moment, the current medias are supported:
 - https://picocli.info
 - https://cucumber.io/docs/gherkin/reference
 
-# Running standalone
+## Running
 
+### Docker
+
+```sh
+./distribute.sh
+
+docker build --platform=linux/amd64 . -t social
+
+docker run --platform=linux/amd64 --rm social
+```
+
+### Running standalone
+
+```sh
 kotlin -classpath "/home/marabesi/Downloads/picocli-4.6.2.jar:build/libs/social-1.0-SNAPSHOT.jar" MainKt post -l
+````
 
 # Documentation
 
@@ -57,3 +71,6 @@ CUCUMBER_FILTER_TAGS="not @interactsWithTwitter" ./gradlew cucumber
 
 - https://www.baeldung.com/kotlin/assertfailswith
 
+## Docker
+
+- https://www.baeldung.com/java-dockerize-app

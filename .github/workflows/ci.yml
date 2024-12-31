@@ -15,10 +15,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up JDK $JAVA_VERSION
+      - name: Set up JDK ${{ vars.JAVA_VERSION }}
         uses: actions/setup-java@v2
         with:
-          java-version: $JAVA_VERSION
+          java-version: ${{ vars.JAVA_VERSION }}
           distribution: 'adopt'
 
       - name: Set up .env

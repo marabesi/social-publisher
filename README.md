@@ -29,6 +29,12 @@ docker build --platform=linux/amd64 . -t social
 docker run --platform=linux/amd64 --rm social
 ```
 
+For persistent configuration run:
+
+```sh
+docker run --platform=linux/amd64 -v $(pwd)/data:/data --rm social 
+```
+
 ### Running standalone
 
 ```sh

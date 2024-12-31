@@ -18,16 +18,6 @@ import kotlin.test.assertContains
 class SocialPublisherSteps : En {
     private val outputStreamCaptor: ByteArrayOutputStream = ByteArrayOutputStream()
     private val dotenv = dotenv()
-    private val socialConfiguration = SocialConfiguration(
-        "twitter",
-        "csv",
-        twitter = TwitterCredentials(
-            dotenv["TWITTER_CONSUMER_KEY"],
-            dotenv["TWITTER_CONSUMER_SECRET"],
-            dotenv["TWITTER_TOKEN"],
-            dotenv["TWITTER_TOKEN_SECRET"],
-        )
-    )
 
     private fun cleanUp() {
         System.setOut(PrintStream(outputStreamCaptor))
@@ -155,6 +145,16 @@ class SocialPublisherSteps : En {
         }
 
         Given("the twitter credentials in place") {
+            val socialConfiguration = SocialConfiguration(
+                "twitter",
+                "csv",
+                twitter = TwitterCredentials(
+                    dotenv["TWITTER_CONSUMER_KEY"],
+                    dotenv["TWITTER_CONSUMER_SECRET"],
+                    dotenv["TWITTER_TOKEN"],
+                    dotenv["TWITTER_TOKEN_SECRET"],
+                )
+            )
             val configuration = Json.encodeToString(socialConfiguration)
 
             exitCode = cmd.execute("configuration", "-c", configuration)

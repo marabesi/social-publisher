@@ -32,8 +32,8 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
-    implementation("info.picocli:picocli:4.6.2")
-    implementation("com.google.inject:guice:4.0")
+    implementation("info.picocli:picocli:4.7.6")
+    implementation("com.google.inject:guice:5.0.1")
     implementation(kotlin("stdlib-jdk8"))
     implementation("org.apache.commons:commons-csv:1.9.0")
     testCompileOnly("org.junit.jupiter:junit-jupiter-params:5.8.1")

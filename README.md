@@ -41,21 +41,59 @@ docker run --platform=linux/amd64 -v $(pwd)/data:/data --rm social
 kotlin -classpath "/home/marabesi/Downloads/picocli-4.6.2.jar:build/libs/social-1.0-SNAPSHOT.jar" MainKt post -l
 ````
 
-# Documentation
+## Usage documentation
 
-## Architectural decisions
+### Twitter credentials
+
+- it is a must to have x.com credentials
+
+### Creating configuration
+
+```sh
+social configuration -l
+social configuration -c '{"fileName":"prod-config","storage":"csv","timezone":"UTC","twitter": { "consumerKey": "", "consumerSecret": "", "accessToken": "", "accessTokenSecret": "" }}'
+```
+
+### Creating posts
+
+```sh
+social post -l
+social post -c "this is my text"
+```
+
+### Scheduling a post
+
+```sh
+social scheduler list 
+social scheduler list --start-date "2026-10-02T09:00:00Z"
+social scheduler list --end-date "2026-10-02T09:00:00Z"
+social scheduler list --start-date "2026-10-02T09:00:00Z" --end-date "2026-10-02T09:00:00Z"
+
+social scheduler create -p "1" -d "2026-10-02T09:00:00Z" -s "TWITTER"
+social scheduler delete -id "1"
+```
+
+### Send the posts
+
+```sh
+social poster -r
+```
+
+## Contributing to the development
+
+### Architectural decisions
 
 - [Hex architecture - definition](https://marabesi.com/architecture/2022/04/13/hexagonal-architecture)
 - [Hex architecture - stackoverflow thread](https://stackoverflow.com/a/14659492/2258921)
 
-## Local setup
+### Local setup
 Running cucumber without interacting with twitter:
 
 ```
 CUCUMBER_FILTER_TAGS="not @interactsWithTwitter" ./gradlew cucumber
 ```
 
-## Integrations
+### Integrations
 
 ### Twitter
 
@@ -73,10 +111,10 @@ CUCUMBER_FILTER_TAGS="not @interactsWithTwitter" ./gradlew cucumber
 
 - [Publish to Maven Central using Gradle](https://h4pehl.medium.com/publish-your-gradle-artifacts-to-maven-central-f74a0af085b1)
 
-## Junit + kotlin
+### Junit + kotlin
 
 - https://www.baeldung.com/kotlin/assertfailswith
 
-## Docker
+### Docker
 
 - https://www.baeldung.com/java-dockerize-app

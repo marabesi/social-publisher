@@ -45,3 +45,18 @@ jobs:
         uses: gradle/gradle-build-action@4137be6a8bf7d7133955359dbd952c0ca73b1021
         with:
           arguments: integrationTest
+  tests:
+    name: "Run e2e"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: "Install bashunit"
+        run: |
+          curl -s https://bashunit.typeddevs.com/install.sh > install.sh
+          chmod +x install.sh
+          ./install.sh
+
+      - name: "Test"
+        run: "./lib/bashunit e2e"

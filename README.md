@@ -64,12 +64,13 @@ social post -c "this is my text"
 ### Scheduling a post
 
 ```sh
+social scheduler create -p "1" -d "2026-10-02T09:00:00Z" -s "TWITTER"
+
 social scheduler list 
 social scheduler list --start-date "2026-10-02T09:00:00Z"
 social scheduler list --end-date "2026-10-02T09:00:00Z"
 social scheduler list --start-date "2026-10-02T09:00:00Z" --end-date "2026-10-02T09:00:00Z"
 
-social scheduler create -p "1" -d "2026-10-02T09:00:00Z" -s "TWITTER"
 social scheduler delete -id "1"
 ```
 

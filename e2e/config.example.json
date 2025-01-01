@@ -1,0 +1,11 @@
+{
+  "fileName": "my-config",
+  "storage": "csv",
+  "timezone": "UTC",
+  "twitter": {
+    "consumerKey": "",
+    "consumerSecret": "",
+    "accessToken": "",
+    "accessTokenSecret": ""
+  }
+}

@@ -61,6 +61,10 @@ social post -l
 social post -c "this is my text"
 ```
 
+### Deleting posts
+
+Not yet supported
+
 ### Scheduling a post
 
 ```sh

@@ -1,12 +1,17 @@
 #!/bin/bash
 
+function cleanup() {
+  rm -rf ./data
+  mkdir ./data
+}
+
 function set_up_before_script() {
+  cleanup
   ./distribute.sh
 }
 
 function tear_down_after_script() {
-  rm -rf ./data
-  mkdir ./data
+  cleanup
 }
 
 ###############################################
@@ -44,7 +49,7 @@ function test_list_created_posts() {
 ###############################################
 ## scheduling
 ###############################################
-function test_schedule_a_post() {
+function test_schedule_a_post_for_twitter() {
     output=$(sh ./social/bin/social scheduler create -p "1" -d "2090-10-02T09:00:00Z" -s "TWITTER")
     local expected="Post has been scheduled using UTC timezone"
     assert_contains "${expected}" "${output}"
@@ -54,4 +59,17 @@ function test_list_scheduled_post() {
     output=$(sh ./social/bin/social scheduler list)
     local expected="1. Post with id 1 will be published on 2090-10-02T09:00:00Z"
     assert_contains "${expected}" "${output}"
+}
+
+function test_list_scheduled_post_with_start_and_end_data() {
+    output=$(sh ./social/bin/social scheduler list  --start-date "2026-10-02T09:00:00Z" --end-date "2091-10-02T09:00:00Z")
+    local expected="1. Post with id 1 will be published on 2090-10-02T09:00:00Z"
+    assert_contains "${expected}" "${output}"
+}
+
+function test_delete_scheduled_post_by_its_id() {
+    output=$(sh ./social/bin/social scheduler delete -id "1")
+    local expected="Schedule 1 has been removed from post 1"
+    assert_contains "${expected}" "${output}"
+
 }

@@ -65,6 +65,10 @@ social post -c "this is my text"
 
 Not yet supported
 
+### Updating posts
+
+Not yet supported
+
 ### Scheduling a post
 
 ```sh

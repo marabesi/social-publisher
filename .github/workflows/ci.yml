@@ -46,6 +46,7 @@ jobs:
         with:
           arguments: integrationTest
   tests:
+    needs: [build]
     name: "Run e2e"
     runs-on: ubuntu-latest
     steps:

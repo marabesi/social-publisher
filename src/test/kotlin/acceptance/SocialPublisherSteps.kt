@@ -140,7 +140,7 @@ class SocialPublisherSteps : En {
         }
 
         Then("I remove post {string} from twitter") {
-                postText: String ->
+                _: String ->
 //            deleteTweet.deleteTweetByTweetText(postText)
         }
 

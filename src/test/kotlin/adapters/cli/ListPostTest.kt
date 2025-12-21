@@ -70,9 +70,8 @@ class ListPostTest {
         val result = cmd.getExecutionResult<String>()
 
         assertEquals(
-            """
-            1. caracters, our online editor can help you to impro...
-            """.trimIndent(),
+            """1. 
+                caracters, our online editor can ...""".trimIndent(),
             result,
         )
     }

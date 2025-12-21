@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.MethodSource
 import picocli.CommandLine
 import java.util.stream.Stream
 
-@Suppress("MaxLineLength")
+@Suppress("ktlint:standard:max-line-length", "ktlint:standard:string-template-indent")
 class ListPostTest {
     private val cmd = CommandLine(Post(InMemoryPostRepository(), MockedOutput()))
 
@@ -71,7 +71,8 @@ class ListPostTest {
 
         assertEquals(
             """1. 
-                caracters, our online editor can ...""".trimIndent(),
+                caracters, our online editor can ...
+            """.trimIndent(),
             result,
         )
     }

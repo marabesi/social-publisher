@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import picocli.CommandLine
 
-@Suppress("MaxLineLength")
+@Suppress("ktlint:standard:max-line-length")
 class ConfigurationCliTest {
     private lateinit var app: Configuration
     private lateinit var cmd: CommandLine
@@ -40,10 +40,10 @@ class ConfigurationCliTest {
 
     @Test
     fun `should show stored configuration`() {
-        /* ktlint-disable max_line_length */
-        val configuration = """{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"1","consumerSecret":"1","accessToken":"1","accessTokenSecret":"1"}}"""
-        /* ktlint-disable max_line_length */
-        val expectedConfiguration = """{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"1","consumerSecret":"1","accessToken":"1","accessTokenSecret":"1"},"timezone":"UTC"}"""
+        val configuration =
+            """{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"1","consumerSecret":"1","accessToken":"1","accessTokenSecret":"1"}}"""
+        val expectedConfiguration =
+            """{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"1","consumerSecret":"1","accessToken":"1","accessTokenSecret":"1"},"timezone":"UTC"}"""
 
         cmd.execute("-c", configuration)
         val code = cmd.execute("-l")

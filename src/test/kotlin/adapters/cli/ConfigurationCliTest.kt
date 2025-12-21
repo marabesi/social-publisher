@@ -40,8 +40,16 @@ class ConfigurationCliTest {
 
     @Test
     fun `should show stored configuration`() {
-        val configuration = """{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"1","consumerSecret":"1","accessToken":"1","accessTokenSecret":"1"}}"""
-        val expectedConfiguration = """{"fileName":"e2e-file","storage":"csv","twitter":{"consumerKey":"1","consumerSecret":"1","accessToken":"1","accessTokenSecret":"1"},"timezone":"UTC"}"""
+        val configuration =
+            """
+            {"fileName":"e2e-file","storage":"csv","twitter":
+            {"consumerKey":"1","consumerSecret":"1","accessToken":"1","accessTokenSecret":"1"}}
+            """.trimIndent()
+        val expectedConfiguration =
+            """
+            {"fileName":"e2e-file","storage":"csv","twitter":
+            {"consumerKey":"1","consumerSecret":"1","accessToken":"1","accessTokenSecret":"1"},"timezone":"UTC"}
+            """.trimIndent()
 
         cmd.execute("-c", configuration)
         val code = cmd.execute("-l")

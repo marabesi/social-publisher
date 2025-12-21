@@ -7,7 +7,6 @@ import java.io.PrintWriter
 import java.io.StringWriter
 
 class MainTest {
-
     @Test
     fun `should list available commands`() {
         val cmd = buildCommandLine()
@@ -26,9 +25,9 @@ class MainTest {
               scheduler
               poster
               configuration
-        
+            
             """.trimIndent(),
-            sw.toString()
+            sw.toString(),
         )
     }
 }

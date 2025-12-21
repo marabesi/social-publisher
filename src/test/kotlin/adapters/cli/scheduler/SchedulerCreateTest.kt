@@ -26,7 +26,7 @@ class SchedulerCreateTest {
     @BeforeEach
     fun setUp() {
         buildApplication(
-            SocialConfiguration(timezone = "UTC")
+            SocialConfiguration(timezone = "UTC"),
         )
     }
 
@@ -48,10 +48,13 @@ class SchedulerCreateTest {
         1,''
         1, 2020-12-23T11:11:00Z
         '', 2020-12-23T11:11:00Z
-    """
+    """,
     )
     @ParameterizedTest
-    fun `should show friendly message on empty date`(postId: String?, targetDate: String?) {
+    fun `should show friendly message on empty date`(
+        postId: String?,
+        targetDate: String?,
+    ) {
         cmd.execute("-p", postId, "-d", targetDate)
         assertEquals(Messages.MISSING_REQUIRED_FIELDS, cmd.getExecutionResult())
     }
@@ -60,8 +63,8 @@ class SchedulerCreateTest {
     fun `should schedule post to be published`() {
         postsRepository.save(
             arrayListOf(
-                SocialPosts(text = "anything")
-            )
+                SocialPosts(text = "anything"),
+            ),
         )
 
         cmd.execute("-p", "1", "-d", "2022-10-02T09:00:00Z")
@@ -73,8 +76,8 @@ class SchedulerCreateTest {
         buildApplication(SocialConfiguration(timezone = "Europe/Madrid"))
         postsRepository.save(
             arrayListOf(
-                SocialPosts(text = "anything")
-            )
+                SocialPosts(text = "anything"),
+            ),
         )
 
         cmd.execute("-p", "1", "-d", "2022-10-02T09:00:00Z")
@@ -85,8 +88,8 @@ class SchedulerCreateTest {
     fun `should not schedule post twice on the same date time to be published`() {
         postsRepository.save(
             arrayListOf(
-                SocialPosts(text = "anything")
-            )
+                SocialPosts(text = "anything"),
+            ),
         )
 
         cmd.execute("-p", "1", "-d", "2022-10-02T09:00:00Z")
@@ -98,8 +101,8 @@ class SchedulerCreateTest {
     fun `should warn when invalid date is given to be published`() {
         postsRepository.save(
             arrayListOf(
-                SocialPosts(text = "anything")
-            )
+                SocialPosts(text = "anything"),
+            ),
         )
 
         cmd.execute("-p", "1", "-d", "2022")
@@ -112,12 +115,13 @@ class SchedulerCreateTest {
         configurationRepository = ConfigurationInMemoryRepository()
         configurationRepository.save(configuration)
 
-        app = SchedulerCreate(
-            postsRepository,
-            scheduleRepository,
-            configurationRepository,
-            MockedOutput()
-        )
+        app =
+            SchedulerCreate(
+                postsRepository,
+                scheduleRepository,
+                configurationRepository,
+                MockedOutput(),
+            )
         cmd = CommandLine(app)
     }
 }

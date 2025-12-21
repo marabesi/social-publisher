@@ -10,6 +10,7 @@ data class Filter(
 
 interface Criterion {
     fun getFilter(): Filter
+
     fun applyPredicateFor(item: ScheduledItem): Boolean
 }
 

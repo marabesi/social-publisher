@@ -14,7 +14,7 @@ private val AVAILABLE_CONFIGURATION = listOf("fileName", "storage", "twitter", "
 
 class Create(
     private val cliOutput: Output,
-    private val configurationRepository: ConfigurationRepository
+    private val configurationRepository: ConfigurationRepository,
 ) {
     fun invoke(configuration: String): String {
         if (configuration.isEmpty()) {

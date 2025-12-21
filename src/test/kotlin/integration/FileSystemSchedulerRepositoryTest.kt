@@ -38,9 +38,10 @@ class FileSystemSchedulerRepositoryTest {
         assertTrue(
             repository.save(
                 ScheduledItem(
-                    post, Instant.parse("2021-11-25T11:00:00Z")
-                )
-            )
+                    post,
+                    Instant.parse("2021-11-25T11:00:00Z"),
+                ),
+            ),
         )
     }
 
@@ -54,8 +55,10 @@ class FileSystemSchedulerRepositoryTest {
 
         repository.save(
             ScheduledItem(
-                post, Instant.parse("2021-11-25T11:00:00Z"), published = true
-            )
+                post,
+                Instant.parse("2021-11-25T11:00:00Z"),
+                published = true,
+            ),
         )
 
         val scheduledItem: ScheduledItem = repository.findAll()[0]
@@ -75,13 +78,17 @@ class FileSystemSchedulerRepositoryTest {
 
         repository.save(
             ScheduledItem(
-                post, Instant.parse("2021-11-25T11:00:00Z"), published = true
-            )
+                post,
+                Instant.parse("2021-11-25T11:00:00Z"),
+                published = true,
+            ),
         )
         repository.save(
             ScheduledItem(
-                post, Instant.parse("2023-11-25T11:00:00Z"), published = true
-            )
+                post,
+                Instant.parse("2023-11-25T11:00:00Z"),
+                published = true,
+            ),
         )
 
         val scheduledList = repository.findAll(arrayListOf(StartDate(Instant.parse("2022-12-01T11:00:00Z"))))
@@ -100,20 +107,25 @@ class FileSystemSchedulerRepositoryTest {
 
         repository.save(
             ScheduledItem(
-                post, Instant.parse("2021-11-25T11:00:00Z"), published = true
-            )
+                post,
+                Instant.parse("2021-11-25T11:00:00Z"),
+                published = true,
+            ),
         )
         repository.save(
             ScheduledItem(
-                post2, Instant.parse("2023-11-25T11:00:00Z"), published = true
-            )
+                post2,
+                Instant.parse("2023-11-25T11:00:00Z"),
+                published = true,
+            ),
         )
 
-        val scheduledList = repository.findAll(
-            arrayListOf(
-                UntilDate(Instant.parse("2022-12-01T11:00:00Z"))
+        val scheduledList =
+            repository.findAll(
+                arrayListOf(
+                    UntilDate(Instant.parse("2022-12-01T11:00:00Z")),
+                ),
             )
-        )
 
         assertEquals(1, scheduledList.size)
         assertEquals("1", scheduledList[0].post.id)
@@ -138,18 +150,21 @@ class FileSystemSchedulerRepositoryTest {
 
         fileSystemRepository.save(
             ScheduledItem(
-                post, Instant.parse("2021-11-25T11:00:00Z")
-            )
+                post,
+                Instant.parse("2021-11-25T11:00:00Z"),
+            ),
         )
         fileSystemRepository.save(
             ScheduledItem(
-                post, Instant.parse("2021-11-26T11:00:00Z")
-            )
+                post,
+                Instant.parse("2021-11-26T11:00:00Z"),
+            ),
         )
         fileSystemRepository.save(
             ScheduledItem(
-                post, Instant.parse("2021-11-26T11:00:00Z")
-            )
+                post,
+                Instant.parse("2021-11-26T11:00:00Z"),
+            ),
         )
 
         fileSystemRepository.deleteById("2")

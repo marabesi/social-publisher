@@ -6,12 +6,13 @@ import org.springframework.social.twitter.api.impl.TwitterTemplate
 
 class DeleteTweet(val configurationRepository: ConfigurationRepository) : DeleteTweet {
     private val configuration = configurationRepository.find()
-    private val client = TwitterTemplate(
-        configuration.twitter!!.consumerKey,
-        configuration.twitter!!.consumerSecret,
-        configuration.twitter!!.accessToken,
-        configuration.twitter!!.accessTokenSecret
-    )
+    private val client =
+        TwitterTemplate(
+            configuration.twitter!!.consumerKey,
+            configuration.twitter!!.consumerSecret,
+            configuration.twitter!!.accessToken,
+            configuration.twitter!!.accessTokenSecret,
+        )
 
     override fun deleteTweetByTweetText(text: String): Boolean {
         client.timelineOperations().userTimeline.forEach {

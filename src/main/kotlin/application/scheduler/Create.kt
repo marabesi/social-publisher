@@ -12,10 +12,12 @@ class Create(
     private val postsRepository: PostsRepository,
     private val scheduleRepository: SchedulerRepository,
     private val configurationRepository: ConfigurationRepository,
-    private val cliOutput: Output
+    private val cliOutput: Output,
 ) {
-
-    fun invoke(postId: String, targetDate: String): String {
+    fun invoke(
+        postId: String,
+        targetDate: String,
+    ): String {
         if (postId.isNotEmpty() && targetDate.isNotEmpty()) {
             val post = postsRepository.findById(postId) ?: return cliOutput.write("Couldn't find post with id $postId")
 
@@ -33,8 +35,9 @@ class Create(
 
             scheduleRepository.save(
                 ScheduledItem(
-                    post, validTargetDate.value()
-                )
+                    post,
+                    validTargetDate.value(),
+                ),
             )
             val configuration = configurationRepository.find()
             return cliOutput.write("Post has been scheduled using ${configuration.timezone} timezone")

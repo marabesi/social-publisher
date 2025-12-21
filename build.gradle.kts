@@ -67,15 +67,16 @@ sourceSets {
     }
 }
 
-val integrationTest = task<Test>("integrationTest") {
-    description = "Runs integration tests."
-    group = "verification"
+val integrationTest =
+    task<Test>("integrationTest") {
+        description = "Runs integration tests."
+        group = "verification"
 
-    useJUnitPlatform()
-    filter {
-        includeTestsMatching("thirdpartyintegration.*")
+        useJUnitPlatform()
+        filter {
+            includeTestsMatching("thirdpartyintegration.*")
+        }
     }
-}
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "21"
@@ -111,9 +112,10 @@ task("cucumber") {
             // And where the feature files are.
             args = listOf("--plugin", "pretty", "--glue", "acceptance", "src/test/resources")
             // Configure jacoco agent for the test coverage.
-            val jacocoAgent = zipTree(configurations.jacocoAgent.get().singleFile)
-                .filter { it.name == "jacocoagent.jar" }
-                .singleFile
+            val jacocoAgent =
+                zipTree(configurations.jacocoAgent.get().singleFile)
+                    .filter { it.name == "jacocoagent.jar" }
+                    .singleFile
             jvmArgs = listOf("-javaagent:$jacocoAgent=destfile=$buildDir/results/jacoco/cucumber.exec,append=false")
         }
     }
@@ -143,19 +145,23 @@ java {
 }
 
 signing {
-    val signingKey = providers
-        .environmentVariable("GPG_SIGNING_KEY")
-        .forUseAtConfigurationTime()
-    val signingPassphrase = providers
-        .environmentVariable("GPG_SIGNING_PASSPHRASE")
-        .forUseAtConfigurationTime()
+    val signingKey =
+        providers
+            .environmentVariable("GPG_SIGNING_KEY")
+            .forUseAtConfigurationTime()
+    val signingPassphrase =
+        providers
+            .environmentVariable("GPG_SIGNING_PASSPHRASE")
+            .forUseAtConfigurationTime()
     if (signingKey.isPresent && signingPassphrase.isPresent) {
         useInMemoryPgpKeys(signingKey.get(), signingPassphrase.get())
-        val extension = extensions
-            .getByName("publishing") as PublishingExtension
+        val extension =
+            extensions
+                .getByName("publishing") as PublishingExtension
         sign(extension.publications)
     }
 }
+
 object Meta {
     const val desc = "Social publisher allows you to schedule and publish posts into social media."
     const val license = "Apache-2.0"
@@ -192,13 +198,13 @@ publishing {
                 }
                 scm {
                     url.set(
-                        "https://github.com/${Meta.githubRepo}.git"
+                        "https://github.com/${Meta.githubRepo}.git",
                     )
                     connection.set(
-                        "scm:git:git://github.com/${Meta.githubRepo}.git"
+                        "scm:git:git://github.com/${Meta.githubRepo}.git",
                     )
                     developerConnection.set(
-                        "scm:git:git://github.com/${Meta.githubRepo}.git"
+                        "scm:git:git://github.com/${Meta.githubRepo}.git",
                     )
                 }
                 issueManagement {
@@ -214,12 +220,14 @@ nexusPublishing {
         sonatype {
             nexusUrl.set(uri(Meta.release))
             snapshotRepositoryUrl.set(uri(Meta.snapshot))
-            val ossrhUsername = providers
-                .environmentVariable("OSSRH_USERNAME")
-                .forUseAtConfigurationTime()
-            val ossrhPassword = providers
-                .environmentVariable("OSSRH_PASSWORD")
-                .forUseAtConfigurationTime()
+            val ossrhUsername =
+                providers
+                    .environmentVariable("OSSRH_USERNAME")
+                    .forUseAtConfigurationTime()
+            val ossrhPassword =
+                providers
+                    .environmentVariable("OSSRH_PASSWORD")
+                    .forUseAtConfigurationTime()
             if (ossrhUsername.isPresent && ossrhPassword.isPresent) {
                 username.set(ossrhUsername.get())
                 password.set(ossrhPassword.get())

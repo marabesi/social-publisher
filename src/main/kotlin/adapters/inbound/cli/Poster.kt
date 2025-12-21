@@ -11,35 +11,37 @@ import java.time.Instant
 import java.util.concurrent.Callable
 
 @CommandLine.Command(name = "poster", mixinStandardHelpOptions = true)
-class Poster @Inject constructor(
-    private val schedulerRepository: SchedulerRepository,
-    private val cliOutput: Output,
-    private val currentDate: Instant,
-    private val twitterClient: SocialThirdParty,
-) : Callable<String> {
-    @CommandLine.Option(names = ["-p"], description = ["Post Id"])
-    var postId: String = ""
+class Poster
+    @Inject
+    constructor(
+        private val schedulerRepository: SchedulerRepository,
+        private val cliOutput: Output,
+        private val currentDate: Instant,
+        private val twitterClient: SocialThirdParty,
+    ) : Callable<String> {
+        @CommandLine.Option(names = ["-p"], description = ["Post Id"])
+        var postId: String = ""
 
-    @CommandLine.Option(names = ["-s"], description = ["Social media to post"])
-    var socialMedia: String = ""
+        @CommandLine.Option(names = ["-s"], description = ["Social media to post"])
+        var socialMedia: String = ""
 
-    @CommandLine.Option(names = ["-r"], description = ["Executes routine that goes over and post posts"])
-    var run: Boolean? = false
+        @CommandLine.Option(names = ["-r"], description = ["Executes routine that goes over and post posts"])
+        var run: Boolean? = false
 
-    override fun call(): String {
-        if (run == true) {
-            return Executor(
-                schedulerRepository,
-                cliOutput,
-                currentDate,
-                twitterClient
-            ).invoke()
+        override fun call(): String {
+            if (run == true) {
+                return Executor(
+                    schedulerRepository,
+                    cliOutput,
+                    currentDate,
+                    twitterClient,
+                ).invoke()
+            }
+
+            if (postId.isEmpty()) {
+                return cliOutput.write(Messages.MISSING_REQUIRED_FIELDS)
+            }
+
+            return cliOutput.write("Post $postId set to twitter")
         }
-
-        if (postId.isEmpty()) {
-            return cliOutput.write(Messages.MISSING_REQUIRED_FIELDS)
-        }
-
-        return cliOutput.write("Post $postId set to twitter")
     }
-}

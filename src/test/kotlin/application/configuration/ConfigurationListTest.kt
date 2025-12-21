@@ -26,7 +26,7 @@ class ConfigurationListTest {
     @Test
     fun `should list back whatever the configuration was set with`() {
         configurationInMemoryRepository.save(
-            SocialConfiguration("my file")
+            SocialConfiguration("my file"),
         )
 
         val result = listConfiguration.invoke()

@@ -32,9 +32,9 @@ class PostCreatorTest {
               -h, --help      Show this help message and exit.
               -l              List created posts
               -V, --version   Print version information and exit.
-        
+            
             """.trimIndent(),
-            sw.toString()
+            sw.toString(),
         )
     }
 
@@ -55,7 +55,7 @@ class PostCreatorTest {
             """
             Post has been created
             """.trimIndent(),
-            result
+            result,
         )
     }
 
@@ -68,7 +68,7 @@ class PostCreatorTest {
             """
             No post found
             """.trimIndent(),
-            result
+            result,
         )
     }
 }

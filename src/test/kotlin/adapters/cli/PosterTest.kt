@@ -66,9 +66,9 @@ class PosterTest {
               -r                  Executes routine that goes over and post posts
               -s=<socialMedia>    Social media to post
               -V, --version       Print version information and exit.
-        
+            
             """.trimIndent(),
-            sw.toString()
+            sw.toString(),
         )
     }
 
@@ -82,13 +82,14 @@ class PosterTest {
     @ParameterizedTest
     @ValueSource(strings = ["1", "2"])
     fun `set post to be sent to twitter`(id: String) {
-        val scheduledItem = ScheduledItem(
-            SocialPosts(id, "random post text"),
-            Instant.parse("2014-12-22T10:15:30Z")
-        )
+        val scheduledItem =
+            ScheduledItem(
+                SocialPosts(id, "random post text"),
+                Instant.parse("2014-12-22T10:15:30Z"),
+            )
 
         schedulerRepository.save(
-            scheduledItem
+            scheduledItem,
         )
 
         val code = cmd.execute("-p", id)
@@ -102,14 +103,15 @@ class PosterTest {
     fun `should send post to twitter`() {
         val instantExpected = "2014-12-22T10:15:31Z"
         val clock: Clock = Clock.fixed(Instant.parse(instantExpected), ZoneId.of("UTC"))
-        val scheduledItem = ScheduledItem(
-            SocialPosts("1", "random post text"),
-            Instant.parse("2014-12-22T10:15:30Z")
-        )
+        val scheduledItem =
+            ScheduledItem(
+                SocialPosts("1", "random post text"),
+                Instant.parse("2014-12-22T10:15:30Z"),
+            )
 
         currentDate = Instant.now(clock)
         schedulerRepository.save(
-            scheduledItem
+            scheduledItem,
         )
 
         every { socialThirdParty.send(any()) } returns scheduledItem.post
@@ -122,12 +124,13 @@ class PosterTest {
     }
 
     private fun buildApplication(currentDate: Instant) {
-        app = Poster(
-            schedulerRepository,
-            MockedOutput(),
-            currentDate,
-            socialThirdParty,
-        )
+        app =
+            Poster(
+                schedulerRepository,
+                MockedOutput(),
+                currentDate,
+                socialThirdParty,
+            )
         cmd = CommandLine(app)
     }
 

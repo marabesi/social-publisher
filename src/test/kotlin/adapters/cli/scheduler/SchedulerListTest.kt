@@ -57,7 +57,7 @@ class SchedulerListTest {
               -V, --version              Print version information and exit.
 
             """.trimIndent(),
-            sw.toString()
+            sw.toString(),
         )
     }
 
@@ -66,14 +66,15 @@ class SchedulerListTest {
         val post = SocialPosts(text = "anything")
         postsRepository.save(
             arrayListOf(
-                post
-            )
+                post,
+            ),
         )
 
         scheduleRepository.save(
             ScheduledItem(
-                post, Instant.parse("2022-10-02T09:00:00Z")
-            )
+                post,
+                Instant.parse("2022-10-02T09:00:00Z"),
+            ),
         )
 
         cmd.execute()
@@ -82,7 +83,7 @@ class SchedulerListTest {
             """
             1. Post with id 1 will be published on 2022-10-02T09:00:00Z
             """.trimIndent(),
-            cmd.getExecutionResult()
+            cmd.getExecutionResult(),
         )
     }
 
@@ -92,18 +93,20 @@ class SchedulerListTest {
         postsRepository.save(
             arrayListOf(
                 post,
-            )
+            ),
         )
 
         scheduleRepository.save(
             ScheduledItem(
-                post, Instant.parse("2022-10-02T09:00:00Z")
-            )
+                post,
+                Instant.parse("2022-10-02T09:00:00Z"),
+            ),
         )
         scheduleRepository.save(
             ScheduledItem(
-                post, Instant.parse("2022-10-03T09:00:00Z")
-            )
+                post,
+                Instant.parse("2022-10-03T09:00:00Z"),
+            ),
         )
 
         cmd.execute()
@@ -113,7 +116,7 @@ class SchedulerListTest {
             1. Post with id 1 will be published on 2022-10-02T09:00:00Z
             2. Post with id 1 will be published on 2022-10-03T09:00:00Z
             """.trimIndent(),
-            cmd.getExecutionResult()
+            cmd.getExecutionResult(),
         )
     }
 
@@ -124,19 +127,21 @@ class SchedulerListTest {
         postsRepository.save(
             arrayListOf(
                 post1,
-                post2
-            )
+                post2,
+            ),
         )
 
         scheduleRepository.save(
             ScheduledItem(
-                post1, Instant.parse("2022-10-02T09:00:00Z")
-            )
+                post1,
+                Instant.parse("2022-10-02T09:00:00Z"),
+            ),
         )
         scheduleRepository.save(
             ScheduledItem(
-                post2, Instant.parse("2022-11-02T10:00:00Z")
-            )
+                post2,
+                Instant.parse("2022-11-02T10:00:00Z"),
+            ),
         )
 
         cmd.execute()
@@ -146,7 +151,7 @@ class SchedulerListTest {
             1. Post with id 1 will be published on 2022-10-02T09:00:00Z
             2. Post with id 2 will be published on 2022-11-02T10:00:00Z
             """.trimIndent(),
-            cmd.getExecutionResult()
+            cmd.getExecutionResult(),
         )
     }
 
@@ -157,19 +162,21 @@ class SchedulerListTest {
         postsRepository.save(
             arrayListOf(
                 post1,
-                post2
-            )
+                post2,
+            ),
         )
 
         scheduleRepository.save(
             ScheduledItem(
-                post1, Instant.parse("2021-10-02T09:00:00Z")
-            )
+                post1,
+                Instant.parse("2021-10-02T09:00:00Z"),
+            ),
         )
         scheduleRepository.save(
             ScheduledItem(
-                post2, Instant.parse("2023-11-02T10:00:00Z")
-            )
+                post2,
+                Instant.parse("2023-11-02T10:00:00Z"),
+            ),
         )
 
         cmd.execute("--start-date", "2023-11-01T10:00:00Z")
@@ -178,7 +185,7 @@ class SchedulerListTest {
             """
             1. Post with id 2 will be published on 2023-11-02T10:00:00Z
             """.trimIndent(),
-            cmd.getExecutionResult()
+            cmd.getExecutionResult(),
         )
     }
 
@@ -189,19 +196,21 @@ class SchedulerListTest {
         postsRepository.save(
             arrayListOf(
                 post1,
-                post2
-            )
+                post2,
+            ),
         )
 
         scheduleRepository.save(
             ScheduledItem(
-                post1, Instant.parse("2024-01-02T09:00:00Z")
-            )
+                post1,
+                Instant.parse("2024-01-02T09:00:00Z"),
+            ),
         )
         scheduleRepository.save(
             ScheduledItem(
-                post2, Instant.parse("2024-11-02T10:00:00Z")
-            )
+                post2,
+                Instant.parse("2024-11-02T10:00:00Z"),
+            ),
         )
 
         cmd.execute("--end-date", "2024-02-02T09:00:00Z")
@@ -210,7 +219,7 @@ class SchedulerListTest {
             """
             1. Post with id 1 will be published on 2024-01-02T09:00:00Z
             """.trimIndent(),
-            cmd.getExecutionResult()
+            cmd.getExecutionResult(),
         )
     }
 
@@ -234,13 +243,14 @@ class SchedulerListTest {
         postsRepository.save(
             arrayListOf(
                 post1,
-            )
+            ),
         )
 
         scheduleRepository.save(
             ScheduledItem(
-                post1, Instant.parse("2021-10-02T09:00:00Z")
-            )
+                post1,
+                Instant.parse("2021-10-02T09:00:00Z"),
+            ),
         )
 
         cmd.execute("--group-by", "post")
@@ -249,7 +259,7 @@ class SchedulerListTest {
             """
             1. Post with id 1 posted 1 time(s)
             """.trimIndent(),
-            cmd.getExecutionResult()
+            cmd.getExecutionResult(),
         )
     }
 
@@ -260,20 +270,22 @@ class SchedulerListTest {
         postsRepository.save(
             arrayListOf(
                 post1,
-                post2
-            )
+                post2,
+            ),
         )
 
         scheduleRepository.save(
             ScheduledItem(
-                post1, Instant.parse("2021-10-02T09:00:00Z")
-            )
+                post1,
+                Instant.parse("2021-10-02T09:00:00Z"),
+            ),
         )
 
         scheduleRepository.save(
             ScheduledItem(
-                post2, Instant.parse("2022-11-02T09:00:00Z")
-            )
+                post2,
+                Instant.parse("2022-11-02T09:00:00Z"),
+            ),
         )
 
         cmd.execute("--group-by", "post")
@@ -283,7 +295,7 @@ class SchedulerListTest {
             1. Post with id 1 posted 1 time(s)
             2. Post with id 2 posted 1 time(s)
             """.trimIndent(),
-            cmd.getExecutionResult()
+            cmd.getExecutionResult(),
         )
     }
 

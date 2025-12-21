@@ -20,7 +20,7 @@ private const val IS_PUBLISHED_INDEX = 3
 
 class FileSystemSchedulerRepository(
     private val filePath: String,
-    private val postsRepository: PostsRepository
+    private val postsRepository: PostsRepository,
 ) : SchedulerRepository {
     override fun save(scheduledItem: ScheduledItem): Boolean {
         val file = File(filePath)
@@ -28,17 +28,18 @@ class FileSystemSchedulerRepository(
         val writer = FileWriter(file, true)
         val printer = CSVPrinter(writer, CSVFormat.DEFAULT)
 
-        val nextId = if (scheduledItem.id.isNullOrEmpty()) {
-            (findAll().size + PUBLISH_DATE_INDEX).toString()
-        } else {
-            scheduledItem.id
-        }
+        val nextId =
+            if (scheduledItem.id.isNullOrEmpty()) {
+                (findAll().size + PUBLISH_DATE_INDEX).toString()
+            } else {
+                scheduledItem.id
+            }
 
         printer.printRecord(
             scheduledItem.post.id,
             scheduledItem.publishDate,
             nextId,
-            scheduledItem.published.toString()
+            scheduledItem.published.toString(),
         )
         printer.close()
 
@@ -72,9 +73,10 @@ class FileSystemSchedulerRepository(
 
     override fun deleteById(id: String): ScheduledItem? {
         val toBeDeleted = findAll().find { it.id == id }
-        val filterOutScheduledItem = findAll().filter {
-            it.id != id
-        }
+        val filterOutScheduledItem =
+            findAll().filter {
+                it.id != id
+            }
 
         val file = File(filePath)
         file.delete()

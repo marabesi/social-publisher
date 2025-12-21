@@ -51,23 +51,25 @@ class ExecutorTest {
     fun `should send multiple posts to twitter`() {
         currentDate = Instant.parse("2014-12-22T10:15:31Z")
 
-        val scheduledItem = ScheduledItem(
-            SocialPosts(id = "1", text = "random post text"),
-            Instant.parse("2014-12-22T10:15:30Z"),
-            "1",
-        )
+        val scheduledItem =
+            ScheduledItem(
+                SocialPosts(id = "1", text = "random post text"),
+                Instant.parse("2014-12-22T10:15:30Z"),
+                "1",
+            )
 
-        val scheduledItem2 = ScheduledItem(
-            SocialPosts(id = "2", text = "another post"),
-            Instant.parse("2014-12-22T09:15:30Z"),
-            "2"
-        )
+        val scheduledItem2 =
+            ScheduledItem(
+                SocialPosts(id = "2", text = "another post"),
+                Instant.parse("2014-12-22T09:15:30Z"),
+                "2",
+            )
 
         schedulerRepository.save(
-            scheduledItem
+            scheduledItem,
         )
         schedulerRepository.save(
-            scheduledItem2
+            scheduledItem2,
         )
 
         every { socialThirdParty.send(scheduledItem) } returns scheduledItem.post
@@ -80,7 +82,7 @@ class ExecutorTest {
             Post 1 sent to twitter
             Post 2 sent to twitter
             """.trimIndent(),
-            result
+            result,
         )
     }
 
@@ -89,8 +91,8 @@ class ExecutorTest {
         schedulerRepository.save(
             ScheduledItem(
                 SocialPosts("1", "random post text"),
-                Instant.parse("2014-12-22T10:15:32Z")
-            )
+                Instant.parse("2014-12-22T10:15:32Z"),
+            ),
         )
 
         val instantExpected = "2014-12-22T10:15:31Z"
@@ -104,7 +106,7 @@ class ExecutorTest {
 
         Assertions.assertEquals(
             "Waiting for the date to come to publish post 1 (scheduled for 22 Dec 2014 10:15:32)",
-            result
+            result,
         )
     }
 
@@ -115,14 +117,14 @@ class ExecutorTest {
         schedulerRepository.save(
             ScheduledItem(
                 SocialPosts("1", "random post text"),
-                Instant.parse("2014-12-22T10:15:32Z")
-            )
+                Instant.parse("2014-12-22T10:15:32Z"),
+            ),
         )
         schedulerRepository.save(
             ScheduledItem(
                 SocialPosts("2", "random post text"),
-                Instant.parse("2014-12-22T10:15:32Z")
-            )
+                Instant.parse("2014-12-22T10:15:32Z"),
+            ),
         )
 
         buildApplication(currentDate)
@@ -134,7 +136,7 @@ class ExecutorTest {
             Waiting for the date to come to publish post 1 (scheduled for 22 Dec 2014 10:15:32)
             Waiting for the date to come to publish post 2 (scheduled for 22 Dec 2014 10:15:32)
             """.trimIndent(),
-            result
+            result,
         )
     }
 
@@ -145,14 +147,14 @@ class ExecutorTest {
         schedulerRepository.save(
             ScheduledItem(
                 SocialPosts("1", "random post text"),
-                Instant.parse("2014-12-21T10:15:32Z")
-            )
+                Instant.parse("2014-12-21T10:15:32Z"),
+            ),
         )
         schedulerRepository.save(
             ScheduledItem(
                 SocialPosts("2", "random post text 2"),
-                Instant.parse("2014-12-21T10:15:32Z")
-            )
+                Instant.parse("2014-12-21T10:15:32Z"),
+            ),
         )
         every { socialThirdParty.send(any()) } returns mockk()
 
@@ -165,12 +167,13 @@ class ExecutorTest {
     }
 
     private fun buildApplication(currentDate: Instant) {
-        executor = Executor(
-            schedulerRepository,
-            MockedOutput(),
-            currentDate,
-            socialThirdParty,
-        )
+        executor =
+            Executor(
+                schedulerRepository,
+                MockedOutput(),
+                currentDate,
+                socialThirdParty,
+            )
     }
 
     private fun cleanUpCreatedMocks() {

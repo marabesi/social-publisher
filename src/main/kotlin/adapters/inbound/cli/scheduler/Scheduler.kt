@@ -7,18 +7,20 @@ import picocli.CommandLine
 import java.util.concurrent.Callable
 
 @CommandLine.Command(
-    name = "scheduler", mixinStandardHelpOptions = true,
+    name = "scheduler",
+    mixinStandardHelpOptions = true,
     subcommands = [
         SchedulerList::class,
         SchedulerCreate::class,
-        SchedulerDelete::class
-    ]
+        SchedulerDelete::class,
+    ],
 )
-class Scheduler @Inject constructor(
-    private val cliOutput: Output,
-) : Callable<String> {
-
-    override fun call(): String {
-        return cliOutput.write(Messages.MISSING_REQUIRED_FIELDS)
+class Scheduler
+    @Inject
+    constructor(
+        private val cliOutput: Output,
+    ) : Callable<String> {
+        override fun call(): String {
+            return cliOutput.write(Messages.MISSING_REQUIRED_FIELDS)
+        }
     }
-}

@@ -47,7 +47,7 @@ class SchedulerTest {
               delete
 
             """.trimIndent(),
-            sw.toString()
+            sw.toString(),
         )
     }
 }

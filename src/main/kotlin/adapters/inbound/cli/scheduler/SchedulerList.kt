@@ -13,55 +13,56 @@ import picocli.CommandLine
 import java.util.concurrent.Callable
 
 @CommandLine.Command(name = "list", mixinStandardHelpOptions = true)
-open class SchedulerList @Inject constructor(
-    private val scheduleRepository: SchedulerRepository,
-    private val cliOutput: Output,
-) : Callable<String> {
+open class SchedulerList
+    @Inject
+    constructor(
+        private val scheduleRepository: SchedulerRepository,
+        private val cliOutput: Output,
+    ) : Callable<String> {
+        @CommandLine.Option(
+            names = ["--start-date"],
+            description = [
+                "list posts that has they publish date starting with this value",
+            ],
+        )
+        var startDate: String = ""
 
-    @CommandLine.Option(
-        names = ["--start-date"],
-        description = [
-            "list posts that has they publish date starting with this value"
-        ]
-    )
-    var startDate: String = ""
+        @CommandLine.Option(names = ["--end-date"], description = ["list posts until this date"])
+        var endDate: String = ""
 
-    @CommandLine.Option(names = ["--end-date"], description = ["list posts until this date"])
-    var endDate: String = ""
+        @CommandLine.Option(
+            names = ["--group-by"],
+            description = [
+                "Outputs the scheduled posts grouped by a given criteria",
+            ],
+        )
+        var groupBy: String = ""
 
-    @CommandLine.Option(
-        names = ["--group-by"],
-        description = [
-            "Outputs the scheduled posts grouped by a given criteria"
-        ]
-    )
-    var groupBy: String = ""
+        override fun call(): String {
+            val filters: ArrayList<Criterion> = arrayListOf()
 
-    override fun call(): String {
-        val filters: ArrayList<Criterion> = arrayListOf()
-
-        if (groupBy.isNotEmpty() && groupBy != "post") {
-            return cliOutput.write(Messages.INVALID_GROUP_BY_PARAMETER)
-        }
-
-        if (startDate.isNotEmpty()) {
-            val validStartDate = DateTimeValidation(startDate)
-            if (!validStartDate.isDateTimeValid()) {
-                return cliOutput.write(Messages.INVALID_START_DATE)
+            if (groupBy.isNotEmpty() && groupBy != "post") {
+                return cliOutput.write(Messages.INVALID_GROUP_BY_PARAMETER)
             }
 
-            filters.add(StartDate(validStartDate.value()))
-        }
+            if (startDate.isNotEmpty()) {
+                val validStartDate = DateTimeValidation(startDate)
+                if (!validStartDate.isDateTimeValid()) {
+                    return cliOutput.write(Messages.INVALID_START_DATE)
+                }
 
-        if (endDate.isNotEmpty()) {
-            val validEndDate = DateTimeValidation(endDate)
-            if (!validEndDate.isDateTimeValid()) {
-                return cliOutput.write(Messages.INVALID_END_DATE)
+                filters.add(StartDate(validStartDate.value()))
             }
 
-            filters.add(UntilDate(validEndDate.value()))
-        }
+            if (endDate.isNotEmpty()) {
+                val validEndDate = DateTimeValidation(endDate)
+                if (!validEndDate.isDateTimeValid()) {
+                    return cliOutput.write(Messages.INVALID_END_DATE)
+                }
 
-        return List(scheduleRepository, cliOutput, filters, groupBy).invoke()
+                filters.add(UntilDate(validEndDate.value()))
+            }
+
+            return List(scheduleRepository, cliOutput, filters, groupBy).invoke()
+        }
     }
-}

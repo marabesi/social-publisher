@@ -8,9 +8,8 @@ class List(
     private val scheduleRepository: SchedulerRepository,
     private val cliOutput: Output,
     private val filters: ArrayList<Criterion>,
-    private val groupBy: String
+    private val groupBy: String,
 ) {
-
     fun invoke(): String {
         var result = ""
         val findAll = scheduleRepository.findAll(filters)
@@ -18,11 +17,12 @@ class List(
 
         for (scheduledItem in findAll) {
             val isLast: Boolean = findAll.size == index
-            result += if (isLast) {
-                "$index. Post with id ${scheduledItem.post.id} will be published on ${scheduledItem.publishDate}"
-            } else {
-                "$index. Post with id ${scheduledItem.post.id} will be published on ${scheduledItem.publishDate}\n"
-            }
+            result +=
+                if (isLast) {
+                    "$index. Post with id ${scheduledItem.post.id} will be published on ${scheduledItem.publishDate}"
+                } else {
+                    "$index. Post with id ${scheduledItem.post.id} will be published on ${scheduledItem.publishDate}\n"
+                }
             index++
         }
 
@@ -33,11 +33,12 @@ class List(
 
             grouped.forEach { t, u ->
                 val isLast: Boolean = grouped.size == index
-                result += if (isLast) {
-                    "$index. Post with id $t posted ${u.size} time(s)"
-                } else {
-                    "$index. Post with id $t posted ${u.size} time(s)\n"
-                }
+                result +=
+                    if (isLast) {
+                        "$index. Post with id $t posted ${u.size} time(s)"
+                    } else {
+                        "$index. Post with id $t posted ${u.size} time(s)\n"
+                    }
                 index++
             }
         }

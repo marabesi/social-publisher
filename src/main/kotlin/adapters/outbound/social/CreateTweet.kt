@@ -23,7 +23,7 @@ annotation class TweetCreated
 
 class TweetCreatedInterceptor(
     private val currentConfiguration: ConfigurationRepository,
-    private val isInTestMode: Boolean
+    private val isInTestMode: Boolean,
 ) : MethodInterceptor {
     override fun invoke(invocation: MethodInvocation?): SocialPosts {
         val result = invocation!!.proceed() as SocialPosts
@@ -40,48 +40,50 @@ data class Tweet(val id: String)
 
 data class TweetCreatedResponse(val data: Tweet)
 
-class Twitter @Inject constructor(
-    val configurationRepository: ConfigurationRepository
-) : CreateTweet {
-    private val createTweetEndpoint = "https://api.twitter.com/2/tweets"
+class Twitter
+    @Inject
+    constructor(
+        val configurationRepository: ConfigurationRepository,
+    ) : CreateTweet {
+        private val createTweetEndpoint = "https://api.twitter.com/2/tweets"
 
-    override fun sendTweet(text: String): SocialPosts {
-        val configuration = configurationRepository.find()
-        val consumerKey = configuration.twitter!!.consumerKey
-        val consumerSecret = configuration.twitter!!.consumerSecret
-        val token = configuration.twitter!!.accessToken
-        val tokenSecret = configuration.twitter!!.accessTokenSecret
+        override fun sendTweet(text: String): SocialPosts {
+            val configuration = configurationRepository.find()
+            val consumerKey = configuration.twitter!!.consumerKey
+            val consumerSecret = configuration.twitter!!.consumerSecret
+            val token = configuration.twitter!!.accessToken
+            val tokenSecret = configuration.twitter!!.accessTokenSecret
 
-        val consumer: OAuthConsumer = CommonsHttpOAuthConsumer(consumerKey, consumerSecret)
-        consumer.setTokenWithSecret(token, tokenSecret)
+            val consumer: OAuthConsumer = CommonsHttpOAuthConsumer(consumerKey, consumerSecret)
+            consumer.setTokenWithSecret(token, tokenSecret)
 
-        val postRequest = HttpPost(createTweetEndpoint)
-        postRequest.addHeader("Content-Type", "application/json")
+            val postRequest = HttpPost(createTweetEndpoint)
+            postRequest.addHeader("Content-Type", "application/json")
 
-        consumer.sign(postRequest)
+            consumer.sign(postRequest)
 
-        val requestBody = buildJsonObject { put("text", text) }
+            val requestBody = buildJsonObject { put("text", text) }
 
-        postRequest.entity = StringEntity(requestBody.toString())
+            postRequest.entity = StringEntity(requestBody.toString())
 
-        val httpClient = DefaultHttpClient()
-        val response = httpClient.execute(postRequest)
+            val httpClient = DefaultHttpClient()
+            val response = httpClient.execute(postRequest)
 
-        val responseBody = response.entity.content.bufferedReader().use { it.readText() }
+            val responseBody = response.entity.content.bufferedReader().use { it.readText() }
 
-        if (response.statusLine.statusCode != HttpStatus.SC_CREATED) {
-            throw CouldNotCreateTweetException(responseBody + " " + response.allHeaders.contentDeepToString())
+            if (response.statusLine.statusCode != HttpStatus.SC_CREATED) {
+                throw CouldNotCreateTweetException(responseBody + " " + response.allHeaders.contentDeepToString())
+            }
+
+            val jsonData = Json.parseToJsonElement(responseBody)
+
+            val rawData = jsonData.jsonObject["data"]
+            val tweet = TweetCreatedResponse(Tweet(id = rawData!!.jsonObject["id"].toString().replace("\"", "")))
+
+            return SocialPosts(
+                id = null,
+                text = text,
+                socialMediaId = tweet.data.id,
+            )
         }
-
-        val jsonData = Json.parseToJsonElement(responseBody)
-
-        val rawData = jsonData.jsonObject["data"]
-        val tweet = TweetCreatedResponse(Tweet(id = rawData!!.jsonObject["id"].toString().replace("\"", "")))
-
-        return SocialPosts(
-            id = null,
-            text = text,
-            socialMediaId = tweet.data.id
-        )
     }
-}

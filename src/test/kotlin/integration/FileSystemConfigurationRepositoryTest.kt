@@ -11,7 +11,6 @@ import java.io.File
 import kotlin.test.assertFailsWith
 
 class FileSystemConfigurationRepositoryTest {
-
     @AfterEach
     fun afterEach() {
         File("data/global.json").delete()
@@ -55,7 +54,7 @@ class FileSystemConfigurationRepositoryTest {
             message = "There is no configuration stored",
             block = {
                 repository.find()
-            }
+            },
         )
     }
 }

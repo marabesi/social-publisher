@@ -17,7 +17,10 @@ class ListPostTest {
 
     @MethodSource("postProvider")
     @ParameterizedTest
-    fun `should list post created`(text: String, expected: String) {
+    fun `should list post created`(
+        text: String,
+        expected: String,
+    ) {
         cmd.execute("-c", text)
         cmd.execute("-l")
 
@@ -49,13 +52,16 @@ class ListPostTest {
             1. this is my first post
             2. this is my second post
             """.trimIndent(),
-            result
+            result,
         )
     }
 
     @Test
     fun `should list post with three dots if it is greater than 50 chars`() {
-        cmd.execute("-c", "caracters, our online editor can help you to improve word choice and writing style, and, optionally, help you to detect grammar mistakes and plagiarism. To check word count, simply 1")
+        cmd.execute(
+            "-c",
+            "caracters, our online editor can help you to improve word choice and writing style, and, optionally, help you to detect grammar mistakes and plagiarism. To check word count, simply 1",
+        )
         cmd.execute("-l")
 
         val result = cmd.getExecutionResult<String>()
@@ -64,7 +70,7 @@ class ListPostTest {
             """
             1. caracters, our online editor can help you to impro...
             """.trimIndent(),
-            result
+            result,
         )
     }
 }

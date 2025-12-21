@@ -36,17 +36,22 @@ class SchedulerDeleteTest {
 
     @ParameterizedTest
     @MethodSource("scheduleProvider")
-    fun `should remove schedule from posts by schedule id`(scheduleId: String, postId: String) {
+    fun `should remove schedule from posts by schedule id`(
+        scheduleId: String,
+        postId: String,
+    ) {
         val post1 = SocialPosts(id = postId, text = "anything")
 
         scheduleRepository.save(
             ScheduledItem(
-                post1, Instant.parse("2022-10-02T09:00:00Z")
+                post1,
+                Instant.parse("2022-10-02T09:00:00Z"),
             ),
         )
         scheduleRepository.save(
             ScheduledItem(
-                post1, Instant.parse("2022-10-02T09:00:00Z")
+                post1,
+                Instant.parse("2022-10-02T09:00:00Z"),
             ),
         )
 

@@ -6,7 +6,6 @@ import java.time.format.DateTimeParseException
 class DateTimeValidation(
     private val datetime: String,
 ) {
-
     private lateinit var parsedDateTime: Instant
 
     fun isDateTimeValid(): Boolean {

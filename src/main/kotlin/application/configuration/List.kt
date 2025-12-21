@@ -9,9 +9,8 @@ import kotlinx.serialization.json.Json
 
 class List(
     private val cliOutput: Output,
-    private val configurationRepository: ConfigurationRepository
+    private val configurationRepository: ConfigurationRepository,
 ) {
-
     fun invoke(): String {
         return try {
             val data: SocialConfiguration = configurationRepository.find()

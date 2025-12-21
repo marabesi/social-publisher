@@ -7,9 +7,8 @@ const val ALLOWED_CHARACTERS_TO_SHOW = 50
 
 class List(
     private val postsRepository: PostsRepository,
-    private val cliOutput: Output
+    private val cliOutput: Output,
 ) {
-
     fun invoke(): String {
         val findAll = postsRepository.findAll()
         if (findAll.isEmpty()) {
@@ -21,14 +20,15 @@ class List(
         for (post in findAll) {
             val isLast: Boolean = index == findAll.size
 
-            result += when {
-                post.text.length > ALLOWED_CHARACTERS_TO_SHOW -> {
-                    post.id.toString() + ". " + post.text.substring(0, ALLOWED_CHARACTERS_TO_SHOW) + "..."
+            result +=
+                when {
+                    post.text.length > ALLOWED_CHARACTERS_TO_SHOW -> {
+                        post.id.toString() + ". " + post.text.substring(0, ALLOWED_CHARACTERS_TO_SHOW) + "..."
+                    }
+                    else -> {
+                        post.id.toString() + ". " + post.text
+                    }
                 }
-                else -> {
-                    post.id.toString() + ". " + post.text
-                }
-            }
             if (!isLast) {
                 result += "\n"
             }

@@ -16,7 +16,7 @@ import java.time.Instant
         Scheduler::class,
         Poster::class,
         Configuration::class,
-    ]
+    ],
 )
 class Main
 
@@ -27,7 +27,7 @@ fun buildCommandLine(
 ): CommandLine {
     return CommandLine(
         Main::class.java,
-        CliFactory(currentTime, output, isInTestMode)
+        CliFactory(currentTime, output, isInTestMode),
     )
 }
 

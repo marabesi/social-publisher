@@ -23,7 +23,7 @@ class SchedulerCreateTest {
     @BeforeEach
     fun setUp() {
         buildApplication(
-            SocialConfiguration(timezone = "UTC")
+            SocialConfiguration(timezone = "UTC"),
         )
     }
 
@@ -39,10 +39,13 @@ class SchedulerCreateTest {
         1,''
         1, 2020-12-23T11:11:00Z
         '', 2020-12-23T11:11:00Z
-    """
+    """,
     )
     @ParameterizedTest
-    fun `should show friendly message on empty date`(postId: String, targetDate: String) {
+    fun `should show friendly message on empty date`(
+        postId: String,
+        targetDate: String,
+    ) {
         val result = app.invoke(postId, targetDate)
         assertEquals(Messages.MISSING_REQUIRED_FIELDS, result)
     }
@@ -51,8 +54,8 @@ class SchedulerCreateTest {
     fun `should schedule post to be published`() {
         postsRepository.save(
             arrayListOf(
-                SocialPosts(text = "anything")
-            )
+                SocialPosts(text = "anything"),
+            ),
         )
 
         val result = app.invoke("1", "2022-10-02T09:00:00Z")
@@ -64,8 +67,8 @@ class SchedulerCreateTest {
         buildApplication(SocialConfiguration(timezone = "Europe/Madrid"))
         postsRepository.save(
             arrayListOf(
-                SocialPosts(text = "anything")
-            )
+                SocialPosts(text = "anything"),
+            ),
         )
 
         val result = app.invoke("1", "2022-10-02T09:00:00Z")
@@ -77,8 +80,8 @@ class SchedulerCreateTest {
     fun `should not schedule post twice on the same date time to be published`() {
         postsRepository.save(
             arrayListOf(
-                SocialPosts(text = "anything")
-            )
+                SocialPosts(text = "anything"),
+            ),
         )
 
         app.invoke("1", "2022-10-02T09:00:00Z")
@@ -91,8 +94,8 @@ class SchedulerCreateTest {
     fun `should warn when invalid date is given to be published`() {
         postsRepository.save(
             arrayListOf(
-                SocialPosts(text = "anything")
-            )
+                SocialPosts(text = "anything"),
+            ),
         )
 
         val result = app.invoke("1", "2022")
@@ -106,11 +109,12 @@ class SchedulerCreateTest {
         configurationRepository = ConfigurationInMemoryRepository()
         configurationRepository.save(configuration)
 
-        app = Create(
-            postsRepository,
-            scheduleRepository,
-            configurationRepository,
-            MockedOutput()
-        )
+        app =
+            Create(
+                postsRepository,
+                scheduleRepository,
+                configurationRepository,
+                MockedOutput(),
+            )
     }
 }

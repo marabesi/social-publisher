@@ -4,7 +4,6 @@ import application.entities.SocialPosts
 import application.persistence.PostsRepository
 
 class InMemoryPostRepository : PostsRepository {
-
     private var storedPosts: ArrayList<SocialPosts> = arrayListOf()
 
     override fun save(posts: ArrayList<SocialPosts>): Boolean {

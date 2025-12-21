@@ -54,7 +54,7 @@ class FileSystemPostRepositoryTest {
         val repository = FileSystemPostRepository(filePath)
 
         repository.save(
-            arrayListOf(post)
+            arrayListOf(post),
         )
 
         val storedPost: SocialPosts = repository.findAll().first()
@@ -69,12 +69,12 @@ class FileSystemPostRepositoryTest {
         repository.save(
             arrayListOf(
                 SocialPosts(text = "fetch from csv"),
-            )
+            ),
         )
         repository.save(
             arrayListOf(
                 SocialPosts(text = "fetch from csv"),
-            )
+            ),
         )
 
         assertEquals("1", repository.findAll()[0].id)

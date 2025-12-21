@@ -10,7 +10,6 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
 class ConfigurationCreateTest {
-
     private lateinit var createConfiguration: Create
 
     @BeforeEach
@@ -29,7 +28,7 @@ class ConfigurationCreateTest {
     @MethodSource("invalidConfigurationProvider")
     fun `should inform invalid key when trying to store json content as a configuration`(
         configuration: String,
-        expectedOutput: String
+        expectedOutput: String,
     ) {
         val result = createConfiguration.invoke(configuration)
         Assertions.assertEquals(expectedOutput, result)

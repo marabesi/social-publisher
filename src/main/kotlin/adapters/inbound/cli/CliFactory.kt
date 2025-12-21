@@ -55,11 +55,12 @@ class TweetCreatedModule(
 class CliFactory(
     currentTime: Instant,
     output: Output,
-    isInTestMode: Boolean
+    isInTestMode: Boolean,
 ) : CommandLine.IFactory {
-    private val injector = Guice.createInjector(
-        TweetCreatedModule(isInTestMode, currentTime, output)
-    )
+    private val injector =
+        Guice.createInjector(
+            TweetCreatedModule(isInTestMode, currentTime, output),
+        )
 
     override fun <K : Any?> create(cls: Class<K>?): K {
         return try {

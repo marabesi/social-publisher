@@ -42,20 +42,20 @@ class SocialPublisherSteps : En {
         }
 
         When(
-            "I create a post with the text {string}"
+            "I create a post with the text {string}",
         ) { text: String? ->
             exitCode = cmd.execute("post", "-c", text)
         }
 
         Then(
-            "Show successfully message {string}"
+            "Show successfully message {string}",
         ) { successMessage: String? ->
             assertEquals(0, exitCode)
             assertEquals(successMessage + "\n", outputStreamCaptor.toString())
         }
 
         Then(
-            "Show successfully message"
+            "Show successfully message",
         ) { docString: String ->
             assertEquals(0, exitCode)
             assertEquals(docString + "\n", outputStreamCaptor.toString())
@@ -66,7 +66,7 @@ class SocialPublisherSteps : En {
         }
 
         Then(
-            "Show the created post {string}"
+            "Show the created post {string}",
         ) { text: String ->
             exitCode = cmd.execute("post", "-l")
             assertEquals(0, exitCode)
@@ -78,24 +78,24 @@ class SocialPublisherSteps : En {
         }
 
         When("I list the scheduled posts starting from {string}") {
-            startDate: String ->
+                startDate: String ->
             exitCode = cmd.execute("scheduler", "list", "--start-date", startDate)
         }
 
         When("I list the scheduled posts with the end date for {string}") {
-            endDate: String ->
+                endDate: String ->
             exitCode = cmd.execute("scheduler", "list", "--end-date", endDate)
         }
 
         When(
-            "I schedule the post with id {string} to be published at {string}"
+            "I schedule the post with id {string} to be published at {string}",
         ) { postId: String, dateToBePublished: String ->
             exitCode = cmd.execute("scheduler", "create", "-p", postId, "-d", dateToBePublished)
             assertEquals(0, exitCode)
         }
 
         Then(
-            "Show the scheduled post {string}"
+            "Show the scheduled post {string}",
         ) { text: String ->
             exitCode = cmd.execute("scheduler", "list")
             assertEquals(0, exitCode)
@@ -103,7 +103,7 @@ class SocialPublisherSteps : En {
         }
 
         Then(
-            "I set the post {string} to {string}"
+            "I set the post {string} to {string}",
         ) { postId: String, socialMedia: String ->
             exitCode = cmd.execute("poster", "-p", postId, "-s", socialMedia)
             assertEquals(0, exitCode)
@@ -111,7 +111,7 @@ class SocialPublisherSteps : En {
         }
 
         When(
-            "I create a configuration of type csv and store files under the name {string}"
+            "I create a configuration of type csv and store files under the name {string}",
         ) { fileName: String ->
             exitCode = cmd.execute("configuration", "-c", """{"storage":"csv","fileName":"$fileName"}""")
             assertEquals(0, exitCode)
@@ -119,14 +119,14 @@ class SocialPublisherSteps : En {
         }
 
         Then(
-            "I list the configuration"
+            "I list the configuration",
         ) {
             exitCode = cmd.execute("configuration", "-l")
             assertEquals(0, exitCode)
         }
 
         Then(
-            "I see the configuration {string}"
+            "I see the configuration {string}",
         ) { configuration: String ->
             assertEquals(outputStreamCaptor.toString(), configuration + "\n")
         }
@@ -140,21 +140,23 @@ class SocialPublisherSteps : En {
         }
 
         Then("I remove post {string} from twitter") {
-            postText: String ->
+                postText: String ->
 //            deleteTweet.deleteTweetByTweetText(postText)
         }
 
         Given("the twitter credentials in place") {
-            val socialConfiguration = SocialConfiguration(
-                "twitter",
-                "csv",
-                twitter = TwitterCredentials(
-                    dotenv["TWITTER_CONSUMER_KEY"],
-                    dotenv["TWITTER_CONSUMER_SECRET"],
-                    dotenv["TWITTER_TOKEN"],
-                    dotenv["TWITTER_TOKEN_SECRET"],
+            val socialConfiguration =
+                SocialConfiguration(
+                    "twitter",
+                    "csv",
+                    twitter =
+                        TwitterCredentials(
+                            dotenv["TWITTER_CONSUMER_KEY"],
+                            dotenv["TWITTER_CONSUMER_SECRET"],
+                            dotenv["TWITTER_TOKEN"],
+                            dotenv["TWITTER_TOKEN_SECRET"],
+                        ),
                 )
-            )
             val configuration = Json.encodeToString(socialConfiguration)
 
             exitCode = cmd.execute("configuration", "-c", configuration)
@@ -163,28 +165,28 @@ class SocialPublisherSteps : En {
         }
 
         Then(
-            "Poster should show {string}"
+            "Poster should show {string}",
         ) { output: String ->
             exitCode = cmd.execute("poster", "-r")
             assertContains(outputStreamCaptor.toString(), output)
         }
 
         When(
-            "I create a configuration with {string}"
+            "I create a configuration with {string}",
         ) { jsonConfiguration: String ->
             exitCode = cmd.execute("configuration", "-c", jsonConfiguration)
             assertContains(outputStreamCaptor.toString(), "Configuration has been stored")
         }
 
         Then(
-            "I remove schedule from post with id {string}"
+            "I remove schedule from post with id {string}",
         ) { scheduleId: String ->
             exitCode = cmd.execute("scheduler", "delete", "-id", scheduleId)
             assertContains(outputStreamCaptor.toString(), "Schedule 1 has been removed from post 1")
         }
 
         Then(
-            "I list scheduled posts with {string}"
+            "I list scheduled posts with {string}",
         ) { params: String ->
             exitCode = cmd.execute("scheduler", params)
             assertEquals(0, exitCode)

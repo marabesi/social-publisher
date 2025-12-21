@@ -17,40 +17,45 @@ import java.time.Instant
 import kotlin.test.assertNotNull
 
 class TwitterClient {
-    private val dotenv = Dotenv
-        .configure()
-        .systemProperties()
-        .load()
+    private val dotenv =
+        Dotenv
+            .configure()
+            .systemProperties()
+            .load()
     private lateinit var credentials: TwitterCredentials
     private val configurationRepository: ConfigurationRepository = mockk()
 
-    private val scheduledPost = ScheduledItem(
-        SocialPosts("1", "Random tweet 123"),
-        Instant.parse("2014-12-22T10:15:30Z")
-    )
+    private val scheduledPost =
+        ScheduledItem(
+            SocialPosts("1", "Random tweet 123"),
+            Instant.parse("2014-12-22T10:15:30Z"),
+        )
 
     @BeforeEach
     fun setUp() {
-        credentials = TwitterCredentials(
-            dotenv["TWITTER_CONSUMER_KEY"],
-            dotenv["TWITTER_CONSUMER_SECRET"],
-            dotenv["TWITTER_TOKEN"],
-            dotenv["TWITTER_TOKEN_SECRET"],
-        )
+        credentials =
+            TwitterCredentials(
+                dotenv["TWITTER_CONSUMER_KEY"],
+                dotenv["TWITTER_CONSUMER_SECRET"],
+                dotenv["TWITTER_TOKEN"],
+                dotenv["TWITTER_TOKEN_SECRET"],
+            )
     }
 
     @Test
     fun `should send a tweet to twitter through social spring integration`() {
-        val config = SocialConfiguration(
-            twitter = credentials
-        )
+        val config =
+            SocialConfiguration(
+                twitter = credentials,
+            )
 
         every { configurationRepository.find() } returns config
 
-        val twitter = TwitterCredentialsValidator(
-            configurationRepository,
-            Twitter(configurationRepository)
-        )
+        val twitter =
+            TwitterCredentialsValidator(
+                configurationRepository,
+                Twitter(configurationRepository),
+            )
 
         val tweet = twitter.send(scheduledPost)
 

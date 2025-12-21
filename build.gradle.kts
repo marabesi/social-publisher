@@ -163,13 +163,13 @@ signing {
 }
 
 object Meta {
-    const val desc = "Social publisher allows you to schedule and publish posts into social media."
-    const val license = "Apache-2.0"
-    const val githubRepo = "marabesi/social-publisher"
-    const val release = "https://s01.oss.sonatype.org/service/local/"
-    const val snapshot = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-    const val developerId = "marabesi"
-    const val developerName = "Matheus Marabesi"
+    const val DESC = "Social publisher allows you to schedule and publish posts into social media."
+    const val LICENSE = "Apache-2.0"
+    const val GITHUB_REPO = "marabesi/social-publisher"
+    const val RELEASE = "https://s01.oss.sonatype.org/service/local/"
+    const val SNAPSHOT = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+    const val DEVELOPER_ID = "marabesi"
+    const val DEVELOPER_NAME = "Matheus Marabesi"
 }
 publishing {
     publications {
@@ -182,33 +182,33 @@ publishing {
             artifact(tasks["javadocJar"])
             pom {
                 name.set(project.name)
-                description.set(Meta.desc)
-                url.set("https://github.com/${Meta.githubRepo}")
+                description.set(Meta.DESC)
+                url.set("https://github.com/${Meta.GITHUB_REPO}")
                 licenses {
                     license {
-                        name.set(Meta.license)
+                        name.set(Meta.LICENSE)
                         url.set("https://opensource.org/licenses/Apache-2.0")
                     }
                 }
                 developers {
                     developer {
-                        id.set(Meta.developerId)
-                        name.set(Meta.developerName)
+                        id.set(Meta.DEVELOPER_ID)
+                        name.set(Meta.DEVELOPER_NAME)
                     }
                 }
                 scm {
                     url.set(
-                        "https://github.com/${Meta.githubRepo}.git",
+                        "https://github.com/${Meta.GITHUB_REPO}.git",
                     )
                     connection.set(
-                        "scm:git:git://github.com/${Meta.githubRepo}.git",
+                        "scm:git:git://github.com/${Meta.GITHUB_REPO}.git",
                     )
                     developerConnection.set(
-                        "scm:git:git://github.com/${Meta.githubRepo}.git",
+                        "scm:git:git://github.com/${Meta.GITHUB_REPO}.git",
                     )
                 }
                 issueManagement {
-                    url.set("https://github.com/${Meta.githubRepo}/issues")
+                    url.set("https://github.com/${Meta.GITHUB_REPO}/issues")
                 }
             }
         }
@@ -218,8 +218,8 @@ publishing {
 nexusPublishing {
     repositories {
         sonatype {
-            nexusUrl.set(uri(Meta.release))
-            snapshotRepositoryUrl.set(uri(Meta.snapshot))
+            nexusUrl.set(uri(Meta.RELEASE))
+            snapshotRepositoryUrl.set(uri(Meta.SNAPSHOT))
             val ossrhUsername =
                 providers
                     .environmentVariable("OSSRH_USERNAME")

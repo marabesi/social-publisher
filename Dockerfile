@@ -1,3 +1,3 @@
-FROM openjdk:17-jdk-alpine3.14
+FROM eclipse-temurin:21-jdk-alpine
 COPY ./social /app
 ENTRYPOINT ["/app/bin/social"]

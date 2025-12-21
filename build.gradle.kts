@@ -1,15 +1,15 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.6.21"
-    kotlin("plugin.serialization") version "1.6.21"
+    kotlin("jvm") version "1.9.22"
+    kotlin("plugin.serialization") version "1.9.22"
     application
     java
     jacoco
     id("com.github.nbaztec.coveralls-jacoco") version "1.2.14"
-    id("io.gitlab.arturbosch.detekt").version("1.21.0")
+    id("io.gitlab.arturbosch.detekt").version("1.23.4")
     id("info.solidsoft.pitest").version("1.7.4")
-    id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
+    id("org.jlleitschuh.gradle.ktlint") version "12.0.3"
 
     `maven-publish`
     signing
@@ -45,7 +45,7 @@ dependencies {
     implementation("oauth.signpost:signpost-core:2.0.0")
     implementation("oauth.signpost:signpost-commonshttp4:2.0.0")
 
-    testImplementation("io.mockk:mockk:1.12.4")
+    testImplementation("io.mockk:mockk:1.13.9")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.1")
     testImplementation("io.cucumber:cucumber-java8:7.0.0")
     testImplementation("io.cucumber:cucumber-junit:7.0.0")
@@ -78,7 +78,7 @@ val integrationTest = task<Test>("integrationTest") {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "17"
+    kotlinOptions.jvmTarget = "21"
 }
 
 detekt {
@@ -130,6 +130,9 @@ application {
 }
 
 java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
     withSourcesJar()
     withJavadocJar()
     manifest {
@@ -225,9 +228,9 @@ nexusPublishing {
 
 val compileKotlin: KotlinCompile by tasks
 compileKotlin.kotlinOptions {
-    jvmTarget = "1.8"
+    jvmTarget = "21"
 }
 val compileTestKotlin: KotlinCompile by tasks
 compileTestKotlin.kotlinOptions {
-    jvmTarget = "1.8"
+    jvmTarget = "21"
 }

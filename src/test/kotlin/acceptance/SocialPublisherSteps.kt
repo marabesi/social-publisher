@@ -4,11 +4,12 @@ import application.entities.SocialConfiguration
 import application.entities.TwitterCredentials
 import buildCommandLine
 import io.cucumber.java8.En
-import io.github.cdimascio.dotenv.dotenv
+import io.cucumber.java8.HookNoArgsBody
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions.assertEquals
 import picocli.CommandLine
+import thirdpartyintegration.WireMockTwitter
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.PrintStream
@@ -17,7 +18,6 @@ import kotlin.test.assertContains
 
 class SocialPublisherSteps : En {
     private val outputStreamCaptor: ByteArrayOutputStream = ByteArrayOutputStream()
-    private val dotenv = dotenv()
 
     private fun cleanUp() {
         System.setOut(PrintStream(outputStreamCaptor))
@@ -30,6 +30,9 @@ class SocialPublisherSteps : En {
     init {
         lateinit var cmd: CommandLine
         var exitCode: Int? = null
+
+        Before(HookNoArgsBody { WireMockTwitter.start() })
+        After(HookNoArgsBody { WireMockTwitter.stop() })
 
         Given("A new cli") { ->
             cmd = buildCommandLine(isInTestMode = true)
@@ -151,10 +154,10 @@ class SocialPublisherSteps : En {
                     "csv",
                     twitter =
                         TwitterCredentials(
-                            dotenv["TWITTER_CONSUMER_KEY"],
-                            dotenv["TWITTER_CONSUMER_SECRET"],
-                            dotenv["TWITTER_TOKEN"],
-                            dotenv["TWITTER_TOKEN_SECRET"],
+                            "test-consumer-key",
+                            "test-consumer-secret",
+                            "test-access-token",
+                            "test-access-token-secret",
                         ),
                 )
             val configuration = Json.encodeToString(socialConfiguration)

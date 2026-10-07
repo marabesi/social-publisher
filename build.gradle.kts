@@ -1,3 +1,4 @@
+import org.gradle.jvm.toolchain.JavaToolchainService
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -21,6 +22,8 @@ group = "com.marabesi"
 version = "1.0.0"
 
 configurations {}
+
+val javaToolchains = extensions.getByType<JavaToolchainService>()
 
 val cucumberRuntime by configurations.creating {
     extendsFrom(configurations["testImplementation"])
@@ -46,6 +49,7 @@ dependencies {
     implementation("oauth.signpost:signpost-commonshttp4:2.0.0")
 
     testImplementation("io.mockk:mockk:1.13.9")
+    testImplementation("org.wiremock:wiremock:3.13.1")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.1")
     testImplementation("io.cucumber:cucumber-java8:7.0.0")
     testImplementation("io.cucumber:cucumber-junit:7.0.0")
@@ -108,6 +112,14 @@ task("cucumber") {
         javaexec {
             mainClass.set("io.cucumber.core.cli.Main")
             classpath = cucumberRuntime + sourceSets.main.get().output + sourceSets.test.get().output
+            // Run with the project's Java toolchain so the launcher matches the compiled classes.
+            executable =
+                javaToolchains
+                    .launcherFor(java.toolchain)
+                    .get()
+                    .executablePath
+                    .asFile
+                    .absolutePath
             // Change glue for your project package where the step definitions are.
             // And where the feature files are.
             args = listOf("--plugin", "pretty", "--glue", "acceptance", "src/test/resources")

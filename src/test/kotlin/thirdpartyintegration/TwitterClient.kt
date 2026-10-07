@@ -8,20 +8,15 @@ import application.entities.SocialConfiguration
 import application.entities.SocialPosts
 import application.entities.TwitterCredentials
 import application.persistence.configuration.ConfigurationRepository
-import io.github.cdimascio.dotenv.Dotenv
 import io.mockk.every
 import io.mockk.mockk
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Instant
 import kotlin.test.assertNotNull
 
 class TwitterClient {
-    private val dotenv =
-        Dotenv
-            .configure()
-            .systemProperties()
-            .load()
     private lateinit var credentials: TwitterCredentials
     private val configurationRepository: ConfigurationRepository = mockk()
 
@@ -33,17 +28,23 @@ class TwitterClient {
 
     @BeforeEach
     fun setUp() {
+        WireMockTwitter.start()
         credentials =
             TwitterCredentials(
-                dotenv["TWITTER_CONSUMER_KEY"],
-                dotenv["TWITTER_CONSUMER_SECRET"],
-                dotenv["TWITTER_TOKEN"],
-                dotenv["TWITTER_TOKEN_SECRET"],
+                "test-consumer-key",
+                "test-consumer-secret",
+                "test-access-token",
+                "test-access-token-secret",
             )
     }
 
+    @AfterEach
+    fun tearDown() {
+        WireMockTwitter.stop()
+    }
+
     @Test
-    fun `should send a tweet to twitter through social spring integration`() {
+    fun `should send and delete a tweet through the twitter api`() {
         val config =
             SocialConfiguration(
                 twitter = credentials,

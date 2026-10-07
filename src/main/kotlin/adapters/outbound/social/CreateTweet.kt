@@ -45,8 +45,6 @@ class Twitter
     constructor(
         val configurationRepository: ConfigurationRepository,
     ) : CreateTweet {
-        private val createTweetEndpoint = "https://api.twitter.com/2/tweets"
-
         override fun sendTweet(text: String): SocialPosts {
             val configuration = configurationRepository.find()
             val consumerKey = configuration.twitter!!.consumerKey
@@ -57,7 +55,7 @@ class Twitter
             val consumer: OAuthConsumer = CommonsHttpOAuthConsumer(consumerKey, consumerSecret)
             consumer.setTokenWithSecret(token, tokenSecret)
 
-            val postRequest = HttpPost(createTweetEndpoint)
+            val postRequest = HttpPost("${TwitterApi.baseUrl()}/2/tweets")
             postRequest.addHeader("Content-Type", "application/json")
 
             consumer.sign(postRequest)

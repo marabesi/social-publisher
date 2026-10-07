@@ -31,8 +31,11 @@ and keep changes inside it.
   Guice, one public type per file named after the file.
 - Tests mirror the package layout under `src/test/kotlin`: `application/*`
   for use cases, `adapters/cli/*` for commands, `integration/*` for
-  filesystem adapters, `thirdpartyintegration/*` for live APIs, and
+  filesystem adapters, `thirdpartyintegration/*` for third-party APIs, and
   `acceptance/*` for Cucumber steps (`src/test/resources/*.feature`).
+- Twitter HTTP calls in tests are stubbed with **WireMock**
+  (`thirdpartyintegration/WireMockTwitter.kt`); tests must never hit the live
+  API. The base URL is overridden via the `twitter.api.baseUrl` system property.
 - End-to-end CLI tests live in `e2e/*_test.sh` and run on **bashunit**.
 - No comments unless asked. Keep changes minimal and focused.
 

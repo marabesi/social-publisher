@@ -15,6 +15,11 @@ permission:
     "./acceptance.sh": allow
     "sh ./social/bin/social *": allow
     "docker *": allow
+    "ls *": allow
+    "cat *": allow
+    "find *": allow
+    "javap *": allow
+    "unzip *": allow
 ---
 
 Follow the instructions in the repository root `AGENTS.md` for all work in this

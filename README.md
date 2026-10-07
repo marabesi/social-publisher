@@ -11,6 +11,19 @@ media. At the moment, the current medias are supported:
 
 - Linkedin
 
+# Documentation
+
+The user guide is built with [VitePress](https://vitepress.dev/) and lives under
+[`docs/`](docs). To run it locally:
+
+```sh
+cd docs
+npm install
+npm run docs:dev
+```
+
+Other available scripts are `npm run docs:build` and `npm run docs:preview`.
+
 # Refs
 
 - https://kotlinlang.org/docs/command-line.html#compile-a-library

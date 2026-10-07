@@ -79,3 +79,49 @@ jobs:
 
       - name: "Test"
         run: "./lib/bashunit e2e"
+  docs:
+    needs: [build]
+    name: "Build and deploy docs"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: docs/package-lock.json
+
+      - name: Install docs dependencies
+        working-directory: docs
+        run: npm ci
+
+      - name: Build docs
+        working-directory: docs
+        run: npm run docs:build
+        env:
+          DOCS_BASE: /${{ github.event.repository.name }}/
+
+      - name: Setup Pages
+        if: github.ref_name == github.event.repository.default_branch
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        if: github.ref_name == github.event.repository.default_branch
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/.vitepress/dist
+
+      - name: Deploy to GitHub Pages
+        if: github.ref_name == github.event.repository.default_branch
+        id: deployment
+        uses: actions/deploy-pages@v4

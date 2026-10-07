@@ -21,3 +21,11 @@ lib/bashunit
 package.json
 package-lock.json
 bun.lock
+
+# Keep the VitePress documentation project manifest and lockfile tracked.
+!docs/package.json
+!docs/package-lock.json
+
+# VitePress build output and cache
+docs/.vitepress/dist
+docs/.vitepress/cache

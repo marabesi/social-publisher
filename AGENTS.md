@@ -61,7 +61,7 @@ and keep changes inside it.
 
 - Runner: bashunit, invoked as `./lib/bashunit e2e`. It is **not committed**
   (gitignored); install with:
-  `curl -s https://bashunit.typeddevs.com/install.sh | bash` (CI runs it via
+  `curl -sL https://bashunit.typeddevs.com/install.sh | bash` (CI runs it via
   `.github/workflows/ci.yml`).
 - Specs: `e2e/*_test.sh`. Use bashunit conventions — `test_*` functions,
   `set_up_before_script` / `tear_down_after_script`, and assertions like

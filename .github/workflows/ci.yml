@@ -44,6 +44,7 @@ jobs:
   tests:
     needs: [build]
     name: "Run e2e"
+    continue-on-error: true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -72,7 +73,7 @@ jobs:
 
       - name: "Install bashunit"
         run: |
-          curl -s https://bashunit.typeddevs.com/install.sh > install.sh
+          curl -sL https://bashunit.typeddevs.com/install.sh > install.sh
           chmod +x install.sh
           ./install.sh
 

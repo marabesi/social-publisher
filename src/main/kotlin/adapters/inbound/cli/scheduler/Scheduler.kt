@@ -20,7 +20,5 @@ class Scheduler
     constructor(
         private val cliOutput: Output,
     ) : Callable<String> {
-        override fun call(): String {
-            return cliOutput.write(Messages.MISSING_REQUIRED_FIELDS)
-        }
+        override fun call(): String = cliOutput.write(Messages.MISSING_REQUIRED_FIELDS)
     }

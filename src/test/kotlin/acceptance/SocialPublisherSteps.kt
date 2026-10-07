@@ -34,7 +34,7 @@ class SocialPublisherSteps : En {
         Before(HookNoArgsBody { WireMockTwitter.start() })
         After(HookNoArgsBody { WireMockTwitter.stop() })
 
-        Given("A new cli") { ->
+        Given("A new cli") {
             cmd = buildCommandLine(isInTestMode = true)
             cleanUp()
         }
@@ -80,13 +80,11 @@ class SocialPublisherSteps : En {
             exitCode = cmd.execute("scheduler", "list")
         }
 
-        When("I list the scheduled posts starting from {string}") {
-                startDate: String ->
+        When("I list the scheduled posts starting from {string}") { startDate: String ->
             exitCode = cmd.execute("scheduler", "list", "--start-date", startDate)
         }
 
-        When("I list the scheduled posts with the end date for {string}") {
-                endDate: String ->
+        When("I list the scheduled posts with the end date for {string}") { endDate: String ->
             exitCode = cmd.execute("scheduler", "list", "--end-date", endDate)
         }
 
@@ -142,8 +140,7 @@ class SocialPublisherSteps : En {
             exitCode = cmd.execute("poster", "-r")
         }
 
-        Then("I remove post {string} from twitter") {
-                _: String ->
+        Then("I remove post {string} from twitter") { _: String ->
 //            deleteTweet.deleteTweetByTweetText(postText)
         }
 

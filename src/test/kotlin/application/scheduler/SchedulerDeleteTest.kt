@@ -62,11 +62,10 @@ class SchedulerDeleteTest {
 
     companion object {
         @JvmStatic
-        fun scheduleProvider(): Stream<Arguments> {
-            return Stream.of(
+        fun scheduleProvider(): Stream<Arguments> =
+            Stream.of(
                 Arguments.of("1", "1"),
                 Arguments.of("2", "1"),
             )
-        }
     }
 }

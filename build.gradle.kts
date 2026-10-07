@@ -1,21 +1,21 @@
 import org.gradle.jvm.toolchain.JavaToolchainService
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    kotlin("jvm") version "1.9.22"
-    kotlin("plugin.serialization") version "1.9.22"
+    kotlin("jvm") version "2.4.20"
+    kotlin("plugin.serialization") version "2.4.20"
     application
     java
     jacoco
-    id("com.github.nbaztec.coveralls-jacoco") version "1.2.14"
-    id("io.gitlab.arturbosch.detekt").version("1.23.4")
-    id("info.solidsoft.pitest").version("1.7.4")
-    id("org.jlleitschuh.gradle.ktlint") version "12.0.3"
+    id("com.github.nbaztec.coveralls-jacoco") version "1.2.20"
+    id("dev.detekt") version "2.0.0-alpha.6"
+    id("info.solidsoft.pitest").version("1.19.0")
+    id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
 
     `maven-publish`
     signing
-    id("org.jetbrains.dokka") version "1.9.20"
-    id("io.github.gradle-nexus.publish-plugin") version "1.0.0"
+    id("org.jetbrains.dokka") version "2.2.0"
+    id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
 }
 
 group = "com.marabesi"
@@ -25,9 +25,10 @@ configurations {}
 
 val javaToolchains = extensions.getByType<JavaToolchainService>()
 
-val cucumberRuntime by configurations.creating {
-    extendsFrom(configurations["testImplementation"])
-}
+val cucumberRuntime: Configuration =
+    configurations.create("cucumberRuntime") {
+        extendsFrom(configurations["testImplementation"])
+    }
 
 repositories {
     mavenCentral()
@@ -36,21 +37,21 @@ repositories {
 dependencies {
     testImplementation(kotlin("test"))
     implementation("info.picocli:picocli:4.7.6")
-    implementation("com.google.inject:guice:5.0.1")
-    implementation(kotlin("stdlib-jdk8"))
+    implementation("com.google.inject:guice:7.0.0")
+    implementation(kotlin("stdlib"))
     implementation("org.apache.commons:commons-csv:1.9.0")
-    testCompileOnly("org.junit.jupiter:junit-jupiter-params:5.8.1")
     implementation("org.hamcrest:hamcrest:2.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     implementation("org.springframework.social:spring-social-twitter:1.1.0.RELEASE")
     implementation("io.github.cdimascio:dotenv-kotlin:6.3.1")
 
     implementation("oauth.signpost:signpost-core:2.0.0")
     implementation("oauth.signpost:signpost-commonshttp4:2.0.0")
 
-    testImplementation("io.mockk:mockk:1.13.9")
+    testImplementation("io.mockk:mockk:1.14.11")
     testImplementation("org.wiremock:wiremock:3.13.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.1")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.11.4")
     testImplementation("io.cucumber:cucumber-java8:7.0.0")
     testImplementation("io.cucumber:cucumber-junit:7.0.0")
     implementation(kotlin("reflect"))
@@ -72,7 +73,7 @@ sourceSets {
 }
 
 val integrationTest =
-    task<Test>("integrationTest") {
+    tasks.register<Test>("integrationTest") {
         description = "Runs integration tests."
         group = "verification"
 
@@ -82,15 +83,17 @@ val integrationTest =
         }
     }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "21"
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_25)
+    }
 }
 
 detekt {
     buildUponDefaultConfig = true // preconfigure defaults
-    config = files("detek.yml")
+    config.setFrom(files("detek.yml"))
     allRules = false // activate all available (even unstable) rules.
-    // Do not fail the build for existing issues during the Java 21 upgrade.
+    // Do not fail the build for existing issues during the Java 25 upgrade.
     ignoreFailures = true
 }
 
@@ -106,36 +109,36 @@ pitest {
     avoidCallsTo.set(setOf("kotlin.jvm.internal", "kotlinx.coroutines"))
 }
 
-task("cucumber") {
+tasks.register<JavaExec>("cucumber") {
+    description = "Runs the Cucumber acceptance suite."
+    group = "verification"
     dependsOn("assemble", "compileTestJava")
-    doLast {
-        javaexec {
-            mainClass.set("io.cucumber.core.cli.Main")
-            classpath = cucumberRuntime + sourceSets.main.get().output + sourceSets.test.get().output
-            // Run with the project's Java toolchain so the launcher matches the compiled classes.
-            executable =
-                javaToolchains
-                    .launcherFor(java.toolchain)
-                    .get()
-                    .executablePath
-                    .asFile
-                    .absolutePath
-            // Change glue for your project package where the step definitions are.
-            // And where the feature files are.
-            args = listOf("--plugin", "pretty", "--glue", "acceptance", "src/test/resources")
-            // Configure jacoco agent for the test coverage.
-            val jacocoAgent =
-                zipTree(configurations.jacocoAgent.get().singleFile)
-                    .filter { it.name == "jacocoagent.jar" }
-                    .singleFile
-            jvmArgs = listOf("-javaagent:$jacocoAgent=destfile=$buildDir/results/jacoco/cucumber.exec,append=false")
-        }
-    }
+    mainClass.set("io.cucumber.core.cli.Main")
+    classpath = cucumberRuntime + sourceSets.main.get().output + sourceSets.test.get().output
+    // Run with the project's Java toolchain so the launcher matches the compiled classes.
+    javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
+    // Change glue for your project package where the step definitions are.
+    // And where the feature files are.
+    args = listOf("--plugin", "pretty", "--glue", "acceptance", "src/test/resources")
+    // Configure jacoco agent for the test coverage.
+    val jacocoAgent =
+        zipTree(configurations.jacocoAgent.get().singleFile)
+            .filter { it.name == "jacocoagent.jar" }
+            .singleFile
+    jvmArgs =
+        listOf(
+            "-javaagent:$jacocoAgent=destfile=${layout.buildDirectory.get()}/results/jacoco/cucumber.exec,append=false",
+        )
 }
 
 tasks.jacocoTestReport {
     // Give jacoco the file generated with the cucumber tests for the coverage.
-    executionData(files("$buildDir/jacoco/test.exec", "$buildDir/results/jacoco/cucumber.exec"))
+    executionData(
+        files(
+            layout.buildDirectory.file("jacoco/test.exec"),
+            layout.buildDirectory.file("results/jacoco/cucumber.exec"),
+        ),
+    )
     reports {
         xml.required.set(true)
     }
@@ -147,7 +150,7 @@ application {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(25))
     }
     withSourcesJar()
     withJavadocJar()
@@ -160,11 +163,9 @@ signing {
     val signingKey =
         providers
             .environmentVariable("GPG_SIGNING_KEY")
-            .forUseAtConfigurationTime()
     val signingPassphrase =
         providers
             .environmentVariable("GPG_SIGNING_PASSPHRASE")
-            .forUseAtConfigurationTime()
     if (signingKey.isPresent && signingPassphrase.isPresent) {
         useInMemoryPgpKeys(signingKey.get(), signingPassphrase.get())
         val extension =
@@ -235,24 +236,13 @@ nexusPublishing {
             val ossrhUsername =
                 providers
                     .environmentVariable("OSSRH_USERNAME")
-                    .forUseAtConfigurationTime()
             val ossrhPassword =
                 providers
                     .environmentVariable("OSSRH_PASSWORD")
-                    .forUseAtConfigurationTime()
             if (ossrhUsername.isPresent && ossrhPassword.isPresent) {
                 username.set(ossrhUsername.get())
                 password.set(ossrhPassword.get())
             }
         }
     }
-}
-
-val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions {
-    jvmTarget = "21"
-}
-val compileTestKotlin: KotlinCompile by tasks
-compileTestKotlin.kotlinOptions {
-    jvmTarget = "21"
 }

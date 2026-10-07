@@ -7,7 +7,7 @@ and keep changes inside it.
 
 ## Stack
 
-- Kotlin 1.9 on JDK 21, built with Gradle (Kotlin DSL).
+- Kotlin 2.4 on JDK 25, built with Gradle (Kotlin DSL).
 - CLI: picocli. DI: Guice. JSON: kotlinx-serialization. CSV: commons-csv.
 - Tests: JUnit 5, MockK, Cucumber (Gherkin), jacoco.
 - Quality: detekt (`detek.yml`), ktlint.

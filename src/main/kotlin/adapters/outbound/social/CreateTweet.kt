@@ -36,9 +36,13 @@ class TweetCreatedInterceptor(
     }
 }
 
-data class Tweet(val id: String)
+data class Tweet(
+    val id: String,
+)
 
-data class TweetCreatedResponse(val data: Tweet)
+data class TweetCreatedResponse(
+    val data: Tweet,
+)
 
 class Twitter
     @Inject
@@ -67,7 +71,10 @@ class Twitter
             val httpClient = DefaultHttpClient()
             val response = httpClient.execute(postRequest)
 
-            val responseBody = response.entity.content.bufferedReader().use { it.readText() }
+            val responseBody =
+                response.entity.content
+                    .bufferedReader()
+                    .use { it.readText() }
 
             if (response.statusLine.statusCode != HttpStatus.SC_CREATED) {
                 throw CouldNotCreateTweetException(responseBody + " " + response.allHeaders.contentDeepToString())

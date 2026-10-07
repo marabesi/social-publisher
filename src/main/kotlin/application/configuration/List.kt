@@ -11,12 +11,11 @@ class List(
     private val cliOutput: Output,
     private val configurationRepository: ConfigurationRepository,
 ) {
-    fun invoke(): String {
-        return try {
+    fun invoke(): String =
+        try {
             val data: SocialConfiguration = configurationRepository.find()
             cliOutput.write(Json.encodeToString(data))
         } catch (error: MissingConfiguration) {
             cliOutput.write(error.message!!)
         }
-    }
 }

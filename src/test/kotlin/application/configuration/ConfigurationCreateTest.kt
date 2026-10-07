@@ -36,19 +36,17 @@ class ConfigurationCreateTest {
 
     companion object {
         @JvmStatic
-        fun storeConfigurationSuccessfully(): Stream<Arguments> {
-            return Stream.of(
+        fun storeConfigurationSuccessfully(): Stream<Arguments> =
+            Stream.of(
                 Arguments.of("{}"),
                 Arguments.of("""{"fileName":"aaa","timezone":""}"""),
             )
-        }
 
         @JvmStatic
-        fun invalidConfigurationProvider(): Stream<Arguments> {
-            return Stream.of(
+        fun invalidConfigurationProvider(): Stream<Arguments> =
+            Stream.of(
                 Arguments.of("""{"random":"aaa"}""", """The give key random is not supported"""),
                 Arguments.of("""{"another":"abc"}""", """The give key another is not supported"""),
             )
-        }
     }
 }

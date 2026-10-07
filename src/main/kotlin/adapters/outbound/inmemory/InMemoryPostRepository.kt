@@ -15,9 +15,7 @@ class InMemoryPostRepository : PostsRepository {
         return true
     }
 
-    override fun findAll(): ArrayList<SocialPosts> {
-        return storedPosts
-    }
+    override fun findAll(): ArrayList<SocialPosts> = storedPosts
 
     override fun findById(postId: String): SocialPosts? {
         var socialPosts: SocialPosts? = null

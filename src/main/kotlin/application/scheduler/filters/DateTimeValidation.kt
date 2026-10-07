@@ -8,16 +8,13 @@ class DateTimeValidation(
 ) {
     private lateinit var parsedDateTime: Instant
 
-    fun isDateTimeValid(): Boolean {
-        return try {
+    fun isDateTimeValid(): Boolean =
+        try {
             parsedDateTime = Instant.parse(datetime)
             true
         } catch (_: DateTimeParseException) {
             false
         }
-    }
 
-    fun value(): Instant {
-        return parsedDateTime
-    }
+    fun value(): Instant = parsedDateTime
 }

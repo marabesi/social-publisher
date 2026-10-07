@@ -26,7 +26,8 @@ class Executor(
             result +=
                 if (currentDate < it.publishDate) {
                     val formatter =
-                        DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm:ss")
+                        DateTimeFormatter
+                            .ofPattern("dd MMM yyyy HH:mm:ss")
                             .withZone(ZoneOffset.UTC)
 
                     if (isLast) {

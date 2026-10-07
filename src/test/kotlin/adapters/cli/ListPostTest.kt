@@ -31,12 +31,11 @@ class ListPostTest {
 
     companion object {
         @JvmStatic
-        fun postProvider(): Stream<Arguments> {
-            return Stream.of(
+        fun postProvider(): Stream<Arguments> =
+            Stream.of(
                 Arguments.of("a", "1. a"),
                 Arguments.of("b", "1. b"),
             )
-        }
     }
 
     @Test

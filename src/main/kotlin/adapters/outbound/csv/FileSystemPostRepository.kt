@@ -11,7 +11,9 @@ import java.io.FileReader
 import java.io.FileWriter
 
 @Suppress("TooGenericExceptionCaught", "SwallowedException")
-class FileSystemPostRepository(private val filePath: String) : PostsRepository {
+class FileSystemPostRepository(
+    private val filePath: String,
+) : PostsRepository {
     override fun save(posts: ArrayList<SocialPosts>): Boolean {
         try {
             File(filePath).parentFile.mkdirs()
@@ -68,9 +70,7 @@ class FileSystemPostRepository(private val filePath: String) : PostsRepository {
         return posts
     }
 
-    private fun buildPostFromCsvRecord(record: CSVRecord): SocialPosts {
-        return SocialPosts(record[1], record[0])
-    }
+    private fun buildPostFromCsvRecord(record: CSVRecord): SocialPosts = SocialPosts(record[1], record[0])
 
     private fun ensureFileExists(file: File) {
         if (!file.exists()) {

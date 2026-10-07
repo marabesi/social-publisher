@@ -24,12 +24,11 @@ fun buildCommandLine(
     currentTime: Instant = Instant.now(),
     output: Output = CliOutput(),
     isInTestMode: Boolean = false,
-): CommandLine {
-    return CommandLine(
+): CommandLine =
+    CommandLine(
         Main::class.java,
         CliFactory(currentTime, output, isInTestMode),
     )
-}
 
 @Suppress("SpreadOperator")
 fun main(args: Array<String>) {

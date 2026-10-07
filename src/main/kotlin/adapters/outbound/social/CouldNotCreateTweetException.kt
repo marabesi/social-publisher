@@ -1,3 +1,5 @@
 package adapters.outbound.social
 
-class CouldNotCreateTweetException(message: String?) : RuntimeException(message)
+class CouldNotCreateTweetException(
+    message: String?,
+) : RuntimeException(message)

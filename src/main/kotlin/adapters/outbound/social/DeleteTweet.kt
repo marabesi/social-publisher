@@ -13,7 +13,9 @@ import org.apache.http.client.methods.HttpGet
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.impl.client.DefaultHttpClient
 
-class DeleteTweet(val configurationRepository: ConfigurationRepository) : DeleteTweet {
+class DeleteTweet(
+    val configurationRepository: ConfigurationRepository,
+) : DeleteTweet {
     override fun deleteTweetByTweetText(text: String): Boolean {
         val tweet = userTimeline().firstOrNull { it.second == text } ?: return false
         return deleteTweetByTweetId(tweet.first)
@@ -24,7 +26,9 @@ class DeleteTweet(val configurationRepository: ConfigurationRepository) : Delete
         sign(request)
 
         val response = DefaultHttpClient().execute(request)
-        response.entity.content.bufferedReader().use { it.readText() }
+        response.entity.content
+            .bufferedReader()
+            .use { it.readText() }
 
         return response.statusLine.statusCode == HttpStatus.SC_OK
     }
@@ -34,7 +38,10 @@ class DeleteTweet(val configurationRepository: ConfigurationRepository) : Delete
         sign(request)
 
         val response = DefaultHttpClient().execute(request)
-        val body = response.entity.content.bufferedReader().use { it.readText() }
+        val body =
+            response.entity.content
+                .bufferedReader()
+                .use { it.readText() }
 
         return Json.parseToJsonElement(body).jsonArray.map {
             val tweet = it.jsonObject

@@ -7,11 +7,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK ${{ vars.JAVA_VERSION }}
+      - uses: actions/checkout@v7
+
+      - name: Set Environment Variables
+        uses: tw3lveparsecs/github-actions-setvars@v0.2
+        with:
+          envFilePath: ./envvars.for.actions
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v2
         with:
-          java-version: ${{ vars.JAVA_VERSION }}
+          java-version: ${{ env.JAVA_VERSION }}
           distribution: 'adopt'
 
       - name: Validate Gradle wrapper

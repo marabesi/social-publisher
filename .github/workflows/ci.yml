@@ -30,20 +30,17 @@ jobs:
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
 
-      - name: Build with Gradle
+      - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
-        with:
-          arguments: build
+
+      - name: Build with Gradle
+        run: ./gradlew build
 
       - name: Test and coverage
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          arguments: test cucumber jacocoTestReport coverallsJacoco
+        run: ./gradlew test cucumber jacocoTestReport coverallsJacoco
 
       - name: Test third-party integration (WireMock)
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          arguments: integrationTest
+        run: ./gradlew integrationTest
   tests:
     needs: [build]
     name: "Run e2e"
@@ -51,6 +48,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+
+      - name: Set Environment Variables
+        uses: tw3lveparsecs/github-actions-setvars@v0.2
+        with:
+          envFilePath: ./envvars.for.actions
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Set up .env
         run: |

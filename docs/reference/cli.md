@@ -50,7 +50,9 @@ List schedules, optionally filtered.
 | --- | --- |
 | `--start-date <instant>` | Only schedules on or after this instant. |
 | `--end-date <instant>` | Only schedules on or before this instant. |
+| `-f`, `--filter <criteria>` | Filter by any property, e.g. `post.text=draft` or `day=10&month=07&year=2022`. |
 | `--group-by <criterion>` | Group the output. The only accepted value is `post`. |
+| `-o`, `--order-by <criterion>` | Order the output. Accepts `publish_date=asc` or `publish_date=desc`. |
 
 ## `social scheduler delete`
 

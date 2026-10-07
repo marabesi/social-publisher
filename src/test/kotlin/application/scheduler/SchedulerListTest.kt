@@ -45,12 +45,17 @@ class SchedulerListTest {
         cmd.execute("scheduler", "list", "--help")
         assertEquals(
             """
-            Usage: social scheduler list [-hV] [--end-date=<endDate>]
-                                         [--group-by=<groupBy>] [--start-date=<startDate>]
+            Usage: social scheduler list [-hV] [--end-date=<endDate>] [-f=<filter>]
+                                         [--group-by=<groupBy>] [-o=<orderBy>]
+                                         [--start-date=<startDate>]
                   --end-date=<endDate>   list posts until this date
+              -f, --filter=<filter>      Filters the scheduled posts by any property, e.g.
+                                           post.text=draft
                   --group-by=<groupBy>   Outputs the scheduled posts grouped by a given
                                            criteria
               -h, --help                 Show this help message and exit.
+              -o, --order-by=<orderBy>   Orders the scheduled posts by publish_date asc or
+                                           desc
                   --start-date=<startDate>
                                          list posts that has they publish date starting
                                            with this value

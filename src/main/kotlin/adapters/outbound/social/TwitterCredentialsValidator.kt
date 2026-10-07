@@ -2,6 +2,7 @@ package adapters.outbound.social
 
 import application.entities.ScheduledItem
 import application.entities.SocialPosts
+import application.entities.TwitterCredentials
 import application.persistence.configuration.ConfigurationRepository
 import application.socialnetwork.CreateTweet
 import application.socialnetwork.MissingConfigurationSetup
@@ -17,27 +18,26 @@ open class TwitterCredentialsValidator
         @TweetCreated
         override fun send(scheduledItem: ScheduledItem): SocialPosts {
             val configuration = configurationRepository.find()
-
-            if (configuration.twitter == null) {
-                throw MissingConfigurationSetup("twitter")
-            }
-
-            if (configuration.twitter!!.consumerKey.isEmpty()) {
-                throw MissingConfigurationSetup("consumer key")
-            }
-
-            if (configuration.twitter!!.consumerSecret.isEmpty()) {
-                throw MissingConfigurationSetup("consumer secret")
-            }
-
-            if (configuration.twitter!!.accessToken.isEmpty()) {
-                throw MissingConfigurationSetup("access token")
-            }
-
-            if (configuration.twitter!!.accessTokenSecret.isEmpty()) {
-                throw MissingConfigurationSetup("token secret")
-            }
+            validate(configuration.twitter)
 
             return createTweet.sendTweet(scheduledItem.post.text)
         }
+
+        private fun validate(twitter: TwitterCredentials?) {
+            val missingParameter = firstMissingParameter(twitter)
+
+            if (missingParameter != null) {
+                throw MissingConfigurationSetup(missingParameter)
+            }
+        }
+
+        private fun firstMissingParameter(twitter: TwitterCredentials?): String? =
+            when {
+                twitter == null -> "twitter"
+                twitter.consumerKey.isEmpty() -> "consumer key"
+                twitter.consumerSecret.isEmpty() -> "consumer secret"
+                twitter.accessToken.isEmpty() -> "access token"
+                twitter.accessTokenSecret.isEmpty() -> "token secret"
+                else -> null
+            }
     }

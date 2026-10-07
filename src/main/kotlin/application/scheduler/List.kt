@@ -3,16 +3,19 @@ package application.scheduler
 import application.Output
 import application.persistence.SchedulerRepository
 import application.scheduler.filters.Criterion
+import application.scheduler.order.Order
 
 class List(
     private val scheduleRepository: SchedulerRepository,
     private val cliOutput: Output,
     private val filters: ArrayList<Criterion>,
     private val groupBy: String,
+    private val order: Order? = null,
 ) {
     fun invoke(): String {
         var result = ""
-        val findAll = scheduleRepository.findAll(filters)
+        val filtered = scheduleRepository.findAll(filters)
+        val findAll = order?.apply(filtered) ?: filtered
         var index = 1
 
         for (scheduledItem in findAll) {

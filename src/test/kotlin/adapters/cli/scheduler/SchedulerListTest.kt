@@ -45,12 +45,17 @@ class SchedulerListTest {
         cmd.execute("scheduler", "list", "--help")
         assertEquals(
             """
-            Usage: social scheduler list [-hV] [--end-date=<endDate>]
-                                         [--group-by=<groupBy>] [--start-date=<startDate>]
+            Usage: social scheduler list [-hV] [--end-date=<endDate>] [-f=<filter>]
+                                         [--group-by=<groupBy>] [-o=<orderBy>]
+                                         [--start-date=<startDate>]
                   --end-date=<endDate>   list posts until this date
+              -f, --filter=<filter>      Filters the scheduled posts by any property, e.g.
+                                           post.text=draft
                   --group-by=<groupBy>   Outputs the scheduled posts grouped by a given
                                            criteria
               -h, --help                 Show this help message and exit.
+              -o, --order-by=<orderBy>   Orders the scheduled posts by publish_date asc or
+                                           desc
                   --start-date=<startDate>
                                          list posts that has they publish date starting
                                            with this value
@@ -304,5 +309,319 @@ class SchedulerListTest {
         cmd.execute("--group-by", "whatever")
 
         assertEquals("Value for group-by is not valid".trimIndent(), cmd.getExecutionResult())
+    }
+
+    @Test
+    fun `should order scheduled posts by publish date ascending`() {
+        val post1 = SocialPosts(text = "anything")
+        val post2 = SocialPosts(text = "anything-2")
+        postsRepository.save(
+            arrayListOf(
+                post1,
+                post2,
+            ),
+        )
+
+        scheduleRepository.save(
+            ScheduledItem(
+                post1,
+                Instant.parse("2023-11-02T10:00:00Z"),
+            ),
+        )
+        scheduleRepository.save(
+            ScheduledItem(
+                post2,
+                Instant.parse("2022-10-02T09:00:00Z"),
+            ),
+        )
+
+        cmd.execute("-o", "publish_date=asc")
+
+        assertEquals(
+            """
+            1. Post with id 2 will be published on 2022-10-02T09:00:00Z
+            2. Post with id 1 will be published on 2023-11-02T10:00:00Z
+            """.trimIndent(),
+            cmd.getExecutionResult(),
+        )
+    }
+
+    @Test
+    fun `should order scheduled posts by publish date descending`() {
+        val post1 = SocialPosts(text = "anything")
+        val post2 = SocialPosts(text = "anything-2")
+        postsRepository.save(
+            arrayListOf(
+                post1,
+                post2,
+            ),
+        )
+
+        scheduleRepository.save(
+            ScheduledItem(
+                post1,
+                Instant.parse("2022-10-02T09:00:00Z"),
+            ),
+        )
+        scheduleRepository.save(
+            ScheduledItem(
+                post2,
+                Instant.parse("2023-11-02T10:00:00Z"),
+            ),
+        )
+
+        cmd.execute("--order-by", "publish_date=desc")
+
+        assertEquals(
+            """
+            1. Post with id 2 will be published on 2023-11-02T10:00:00Z
+            2. Post with id 1 will be published on 2022-10-02T09:00:00Z
+            """.trimIndent(),
+            cmd.getExecutionResult(),
+        )
+    }
+
+    @Test
+    fun `should filter and order the scheduled posts together`() {
+        val post1 = SocialPosts(text = "anything")
+        val post2 = SocialPosts(text = "anything-2")
+        postsRepository.save(
+            arrayListOf(
+                post1,
+                post2,
+            ),
+        )
+
+        scheduleRepository.save(
+            ScheduledItem(
+                post1,
+                Instant.parse("2021-10-02T09:00:00Z"),
+            ),
+        )
+        scheduleRepository.save(
+            ScheduledItem(
+                post2,
+                Instant.parse("2023-11-02T10:00:00Z"),
+            ),
+        )
+
+        cmd.execute("--start-date", "2022-01-01T00:00:00Z", "-o", "publish_date=asc")
+
+        assertEquals(
+            """
+            1. Post with id 2 will be published on 2023-11-02T10:00:00Z
+            """.trimIndent(),
+            cmd.getExecutionResult(),
+        )
+    }
+
+    @Test
+    fun `should validate if entry given for order by is valid`() {
+        cmd.execute("-o", "whatever")
+
+        assertEquals(Messages.INVALID_ORDER_BY_PARAMETER, cmd.getExecutionResult())
+    }
+
+    @Test
+    fun `should validate if direction given for order by is valid`() {
+        cmd.execute("-o", "publish_date=whatever")
+
+        assertEquals(Messages.INVALID_ORDER_BY_PARAMETER, cmd.getExecutionResult())
+    }
+
+    @Test
+    fun `should filter scheduled posts by day month and year`() {
+        val post1 = SocialPosts(text = "anything")
+        val post2 = SocialPosts(text = "anything-2")
+        val post3 = SocialPosts(text = "anything-3")
+        postsRepository.save(
+            arrayListOf(
+                post1,
+                post2,
+                post3,
+            ),
+        )
+
+        scheduleRepository.save(
+            ScheduledItem(
+                post1,
+                Instant.parse("2022-07-10T09:00:00Z"),
+            ),
+        )
+        scheduleRepository.save(
+            ScheduledItem(
+                post2,
+                Instant.parse("2022-07-11T09:00:00Z"),
+            ),
+        )
+        scheduleRepository.save(
+            ScheduledItem(
+                post3,
+                Instant.parse("2023-07-10T09:00:00Z"),
+            ),
+        )
+
+        cmd.execute("-f", "day=10&month=07&year=2022")
+
+        assertEquals(
+            """
+            1. Post with id 1 will be published on 2022-07-10T09:00:00Z
+            """.trimIndent(),
+            cmd.getExecutionResult(),
+        )
+    }
+
+    @Test
+    fun `should filter scheduled posts by a single date part`() {
+        val post1 = SocialPosts(text = "anything")
+        val post2 = SocialPosts(text = "anything-2")
+        val post3 = SocialPosts(text = "anything-3")
+        postsRepository.save(
+            arrayListOf(
+                post1,
+                post2,
+                post3,
+            ),
+        )
+
+        scheduleRepository.save(
+            ScheduledItem(
+                post1,
+                Instant.parse("2022-07-10T09:00:00Z"),
+            ),
+        )
+        scheduleRepository.save(
+            ScheduledItem(
+                post2,
+                Instant.parse("2022-07-11T09:00:00Z"),
+            ),
+        )
+        scheduleRepository.save(
+            ScheduledItem(
+                post3,
+                Instant.parse("2023-07-10T09:00:00Z"),
+            ),
+        )
+
+        cmd.execute("--filter", "year=2022")
+
+        assertEquals(
+            """
+            1. Post with id 1 will be published on 2022-07-10T09:00:00Z
+            2. Post with id 2 will be published on 2022-07-11T09:00:00Z
+            """.trimIndent(),
+            cmd.getExecutionResult(),
+        )
+    }
+
+    @Test
+    fun `should combine the filter and order criteria`() {
+        val post1 = SocialPosts(text = "anything")
+        val post2 = SocialPosts(text = "anything-2")
+        val post3 = SocialPosts(text = "anything-3")
+        postsRepository.save(
+            arrayListOf(
+                post1,
+                post2,
+                post3,
+            ),
+        )
+
+        scheduleRepository.save(
+            ScheduledItem(
+                post1,
+                Instant.parse("2022-07-10T09:00:00Z"),
+            ),
+        )
+        scheduleRepository.save(
+            ScheduledItem(
+                post2,
+                Instant.parse("2022-07-11T09:00:00Z"),
+            ),
+        )
+        scheduleRepository.save(
+            ScheduledItem(
+                post3,
+                Instant.parse("2023-07-10T09:00:00Z"),
+            ),
+        )
+
+        cmd.execute("-f", "year=2022", "-o", "publish_date=desc")
+
+        assertEquals(
+            """
+            1. Post with id 2 will be published on 2022-07-11T09:00:00Z
+            2. Post with id 1 will be published on 2022-07-10T09:00:00Z
+            """.trimIndent(),
+            cmd.getExecutionResult(),
+        )
+    }
+
+    @Test
+    fun `should validate if entry given for filter is not a key value pair`() {
+        cmd.execute("-f", "whatever")
+
+        assertEquals(Messages.INVALID_FILTER_PARAMETER, cmd.getExecutionResult())
+    }
+
+    @Test
+    fun `should validate if property given for filter is not supported`() {
+        cmd.execute("-f", "week=10")
+
+        assertEquals(Messages.INVALID_FILTER_PARAMETER, cmd.getExecutionResult())
+    }
+
+    @Test
+    fun `should filter scheduled posts by any property`() {
+        val post1 = SocialPosts(text = "release notes")
+        val post2 = SocialPosts(text = "random")
+        postsRepository.save(
+            arrayListOf(
+                post1,
+                post2,
+            ),
+        )
+
+        scheduleRepository.save(
+            ScheduledItem(
+                post1,
+                Instant.parse("2022-07-10T09:00:00Z"),
+            ),
+        )
+        scheduleRepository.save(
+            ScheduledItem(
+                post2,
+                Instant.parse("2022-07-11T09:00:00Z"),
+            ),
+        )
+
+        cmd.execute("-f", "post.text=release notes")
+
+        assertEquals(
+            """
+            1. Post with id 1 will be published on 2022-07-10T09:00:00Z
+            """.trimIndent(),
+            cmd.getExecutionResult(),
+        )
+    }
+
+    @Test
+    fun `should show no posts scheduled when the filter matches nothing`() {
+        val post = SocialPosts(text = "anything")
+        postsRepository.save(
+            arrayListOf(
+                post,
+            ),
+        )
+        scheduleRepository.save(
+            ScheduledItem(
+                post,
+                Instant.parse("2022-07-10T09:00:00Z"),
+            ),
+        )
+
+        cmd.execute("-f", "post.text=missing")
+
+        assertEquals("No posts scheduled", cmd.getExecutionResult())
     }
 }

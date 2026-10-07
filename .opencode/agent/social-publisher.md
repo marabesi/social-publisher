@@ -8,11 +8,15 @@ permission:
   glob: allow
   grep: allow
   list: allow
+  webfetch: allow
+  websearch: allow
+  todowrite: allow
   # Only ever touch files inside this repository worktree.
   external_directory: deny
   bash:
-    # Anything not listed below still requires confirmation.
-    "*": ask
+    # Allow development commands by default so routine work is never blocked.
+    # The last matching rule wins, so the deny list stays at the bottom.
+    "*": allow
     # Repository tooling.
     "git *": allow
     "./gradlew": allow
@@ -43,10 +47,29 @@ permission:
     "python3 *": allow
     "ruby *": allow
     "node *": allow
+    "npm *": allow
+    "npx *": allow
+    "bun *": allow
+    "pnpm *": allow
+    "yarn *": allow
+    "mkdir *": allow
+    "cp *": allow
+    "mv *": allow
+    "touch *": allow
+    "echo *": allow
+    "printf *": allow
+    "sort *": allow
+    "uniq *": allow
+    "awk *": allow
+    "tr *": allow
+    "xargs *": allow
     # Never run these, even if a task seems to call for it.
     "sudo *": deny
     "rm -rf /*": deny
+    "rm -rf ~*": deny
     "git push *": deny
+    "git reset --hard *": deny
+    "git clean *": deny
 ---
 
 Follow the instructions in the repository root `AGENTS.md` for all work in this

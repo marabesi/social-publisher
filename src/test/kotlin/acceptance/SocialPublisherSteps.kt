@@ -88,6 +88,20 @@ class SocialPublisherSteps : En {
             exitCode = cmd.execute("scheduler", "list", "--end-date", endDate)
         }
 
+        When("I list the scheduled posts filtering by {string}") { filter: String ->
+            exitCode = cmd.execute("scheduler", "list", "--filter", filter)
+        }
+
+        When("I list the scheduled posts ordering by {string}") { orderBy: String ->
+            exitCode = cmd.execute("scheduler", "list", "--order-by", orderBy)
+        }
+
+        When(
+            "I list the scheduled posts filtering by {string} ordering by {string}",
+        ) { filter: String, orderBy: String ->
+            exitCode = cmd.execute("scheduler", "list", "--filter", filter, "--order-by", orderBy)
+        }
+
         When(
             "I schedule the post with id {string} to be published at {string}",
         ) { postId: String, dateToBePublished: String ->

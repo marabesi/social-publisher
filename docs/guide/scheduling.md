@@ -43,6 +43,33 @@ social scheduler list
 1. Post with id 1 will be published on 2026-10-02T09:00:00Z
 ```
 
+### Filter by any property
+
+Use `-f` / `--filter` to keep only schedules whose property matches a value.
+Expressions are `property=value` pairs joined with `&`, and any property of the
+scheduled item can be used, not just the date:
+
+```sh
+social scheduler list --filter "day=10&month=07&year=2022"
+social scheduler list --filter "post.text=release notes"
+social scheduler list --filter "published=false"
+```
+
+Numbers are compared numerically, so `month=07` and `month=7` are equivalent. An
+unknown property or a malformed expression returns
+`Value for filter is not valid`; when nothing matches you get
+`No posts scheduled`.
+
+| Property | Meaning |
+| --- | --- |
+| `id` | Schedule id. |
+| `published` | Whether the schedule has already been sent (`true` / `false`). |
+| `publishDate` | Full instant, e.g. `2022-07-10T09:00:00Z`. |
+| `year`, `month`, `day` | Parts of the publish date. |
+| `post.id` | Id of the scheduled post. |
+| `post.text` | Text of the scheduled post. |
+| `post.socialMediaId` | Social network id, set once published. |
+
 ### Filter by date range
 
 ```sh
@@ -65,6 +92,26 @@ social scheduler list --group-by post
 
 `post` is the only accepted value for `--group-by`; anything else returns
 `Value for group-by is not valid`.
+
+### Order the output
+
+Use `-o` / `--order-by` to control the order of the listed schedules. The only
+orderable field is `publish_date`, with an `asc` or `desc` direction:
+
+```sh
+social scheduler list --order-by "publish_date=asc"
+social scheduler list --order-by "publish_date=desc"
+```
+
+Ordering and filtering are independent and can be combined, including the `-f`
+filter from the issue:
+
+```sh
+social scheduler list --filter "day=10&month=07&year=2022" --order-by "publish_date=asc"
+social scheduler list --start-date "2026-10-01T00:00:00Z" --order-by "publish_date=desc"
+```
+
+An unknown field or direction returns `Value for order-by is not valid`.
 
 ## Delete a schedule
 

@@ -67,6 +67,33 @@ function test_list_scheduled_post_with_start_and_end_data() {
     assert_contains "${expected}" "${output}"
 }
 
+function test_order_scheduled_posts_by_publish_date_desc() {
+    sh ./social/bin/social post -c "random 2" > /dev/null
+    sh ./social/bin/social scheduler create -p "2" -d "2089-10-02T09:00:00Z" -s "TWITTER" > /dev/null
+
+    output=$(sh ./social/bin/social scheduler list --order-by "publish_date=desc")
+    local expected="1. Post with id 1 will be published on 2090-10-02T09:00:00Z"
+    assert_contains "${expected}" "${output}"
+}
+
+function test_filter_scheduled_posts_by_date_parts() {
+    output=$(sh ./social/bin/social scheduler list --filter "day=02&month=10&year=2089")
+    local expected="1. Post with id 2 will be published on 2089-10-02T09:00:00Z"
+    assert_contains "${expected}" "${output}"
+}
+
+function test_filter_scheduled_posts_by_any_property() {
+    output=$(sh ./social/bin/social scheduler list --filter "post.text=random 2")
+    local expected="1. Post with id 2 will be published on 2089-10-02T09:00:00Z"
+    assert_contains "${expected}" "${output}"
+}
+
+function test_filter_and_order_scheduled_posts_together() {
+    output=$(sh ./social/bin/social scheduler list --filter "day=02&month=10" --order-by "publish_date=asc")
+    local expected="1. Post with id 2 will be published on 2089-10-02T09:00:00Z"
+    assert_contains "${expected}" "${output}"
+}
+
 function test_delete_scheduled_post_by_its_id() {
     output=$(sh ./social/bin/social scheduler delete -id "1")
     local expected="Schedule 1 has been removed from post 1"

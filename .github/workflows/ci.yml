@@ -35,6 +35,16 @@ jobs:
 
       - name: Test and coverage
         run: ./gradlew test :cli:cucumber :core:integrationTest jacocoTestReport
+
+      - name: Package social.jar
+        run: ./distribute.sh
+
+      - name: Store social.jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: social-jar
+          path: social.jar
+          if-no-files-found: error
   tests:
     needs: [build]
     name: "Run e2e"

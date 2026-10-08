@@ -19,6 +19,12 @@ root and keep changes inside it.
 
 `cli`, `rest-api` and `desktop` depend on `core`. `core` must never depend on them.
 
+## Agents
+
+- `.opencode/agent/social-publisher.md` — general agent for the whole monorepo.
+- `.opencode/agent/desktop.md` — desktop-only Compose Multiplatform expert. Use
+  it for any work scoped to `desktop/`; it must not modify the other modules.
+
 ## Stack
 
 - Kotlin 2.4 on JDK 25, built with Gradle (Kotlin DSL), multi-project.

@@ -1,3 +1,3 @@
-FROM eclipse-temurin:25-jdk-alpine
-COPY ./social /app
-ENTRYPOINT ["/app/bin/social"]
+FROM eclipse-temurin:25-jre-alpine
+COPY ./social.jar /app.jar
+ENTRYPOINT ["java", "-jar", "/app.jar"]

@@ -18,11 +18,13 @@ hero:
 
 features:
   - title: Local-first
-    details: Posts, schedules and credentials live in plain files under data/. No database or server to run.
+    details: Posts, schedules and credentials live in plain files under a local store directory (default data/). No database or server to run.
   - title: Schedule once, publish later
     details: Create a post, attach a publish date, then run the poster routine to send everything that is due.
   - title: Hexagonal by design
     details: The core is framework-free and talks to storage and social networks through ports, so new adapters are easy to add.
+  - title: CLI, REST API and Desktop
+    details: A picocli command line, a Spring Boot API and a Compose desktop UI drive the same application core and the same local data.
   - title: Twitter today
     details: X (Twitter) is supported through OAuth 1.0a, with LinkedIn on the roadmap.
 ---

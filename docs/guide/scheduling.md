@@ -1,7 +1,7 @@
 # Scheduling posts
 
 Scheduling links a post to a publish date. Schedules are stored in
-`data/scheduler-production.csv`.
+`scheduler-<fileName>.csv` in the [store directory](/guide/configuration#where-data-lives).
 
 ## Create a schedule
 

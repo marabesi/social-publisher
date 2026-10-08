@@ -4,10 +4,34 @@ Before the CLI can publish anything, it needs to know **which social network to
 use** and **how to authenticate**. Configuration is a single JSON document that
 the `configuration` command validates and stores on disk.
 
+## Where data lives
+
+Posts, schedules and configuration are stored as files in one directory. By
+default that directory is `data/` relative to where you run the tool, but you
+can point it anywhere with the `SOCIAL_STORE_PATH` environment variable:
+
+```sh
+export SOCIAL_STORE_PATH=/my/path
+social configuration -c '{"storage":"csv","timezone":"UTC"}'
+social post -c "hello"
+```
+
+The directory is created on first use and holds `global.json` plus the data
+files. The data files are named after the `fileName` set in the configuration:
+
+- `posts-<fileName>.csv`
+- `scheduler-<fileName>.csv`
+
+So a configuration with `"fileName": "e2e-file"` produces
+`posts-e2e-file.csv` and `scheduler-e2e-file.csv` in the store directory. When
+no `fileName` is set (or no configuration is stored yet), the suffix `production`
+is used. The same environment variable is honoured by the CLI, the REST API and
+the desktop app.
+
 ## What gets stored
 
-Everything is written to `data/global.json`, relative to the directory you run
-the CLI from. The document accepts the following keys:
+Everything is written to `global.json` in the store directory, relative to the
+directory you run the CLI from. The document accepts the following keys:
 
 | Key | Required | Default | Description |
 | --- | --- | --- | --- |
@@ -18,15 +42,15 @@ the CLI from. The document accepts the following keys:
 | `twitter.accessTokenSecret` | yes | — | Access token secret for your X account. |
 | `storage` | no | `csv` | Storage adapter. Only `csv` is currently wired. |
 | `timezone` | no | `UTC` | Timezone reported when a post is scheduled. |
-| `fileName` | no | `""` | Label for the configuration. Informational only. |
+| `fileName` | no | `production` | Suffix for the data files: `posts-<fileName>.csv` and `scheduler-<fileName>.csv`. |
 
 Only these keys are accepted. Any other key makes the command fail with
 `The give key <name> is not supported`.
 
 ::: warning Credentials are stored in plain text
-`data/global.json` contains your X credentials unencrypted. Keep it out of
-version control (the repository already ignores `data/`) and restrict access to
-the machine that runs the CLI.
+`global.json` in the store directory contains your X credentials unencrypted.
+Keep it out of version control (the repository already ignores `data/`) and
+restrict access to the machine that runs the tool.
 :::
 
 ## Get X (Twitter) credentials
@@ -67,8 +91,8 @@ On success the CLI prints:
 Configuration has been stored
 ```
 
-Running the command again overwrites `data/global.json`, so it is also the way
-to rotate credentials or change the timezone.
+Running the command again overwrites `global.json`, so it is also the way
+to rotate credentials or change the timezone or file suffix.
 
 ## Inspect the stored configuration
 

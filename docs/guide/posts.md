@@ -1,7 +1,7 @@
 # Managing posts
 
 Posts are the text you want to publish. Each post gets an incrementing numeric
-id and is appended to `data/posts-production.csv`.
+id and is appended to `posts-<fileName>.csv` in the [store directory](/guide/configuration#where-data-lives).
 
 ## Create a post
 

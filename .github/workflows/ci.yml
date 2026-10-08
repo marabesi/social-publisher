@@ -6,9 +6,6 @@ concurrency:
 
 on: [push]
 
-env:
-  COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -37,10 +34,7 @@ jobs:
         run: ./gradlew build
 
       - name: Test and coverage
-        run: ./gradlew test cucumber jacocoTestReport coverallsJacoco
-
-      - name: Test third-party integration (WireMock)
-        run: ./gradlew integrationTest
+        run: ./gradlew test :cli:cucumber :core:integrationTest jacocoTestReport
   tests:
     needs: [build]
     name: "Run e2e"
@@ -78,7 +72,7 @@ jobs:
           ./install.sh
 
       - name: "Test"
-        run: "./lib/bashunit e2e"
+        run: "./lib/bashunit cli/e2e"
   docs:
     needs: [build]
     name: "Build and deploy docs"

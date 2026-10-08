@@ -54,9 +54,10 @@ docker run --rm -v "$(pwd)/data:/data" social poster -r
 :::
 
 ::: tip
-The routine reads its credentials from `data/global.json` at publish time, so the
-working directory must contain your `data/` folder. Set it explicitly in cron —
-`cd` does not happen automatically.
+The routine reads its credentials from `global.json` at publish time, so the
+store directory must be reachable from the working directory (default `data/`,
+or override with `SOCIAL_STORE_PATH`). Set it explicitly in cron — `cd` does not
+happen automatically.
 :::
 
 ## Troubleshooting

@@ -15,6 +15,7 @@ node_modules/
 .env
 
 /social/
+/social.jar
 
 lib/bashunit
 

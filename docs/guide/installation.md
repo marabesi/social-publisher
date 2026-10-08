@@ -27,14 +27,26 @@ cd social-publisher
 ./distribute.sh
 ```
 
-`distribute.sh` runs `./gradlew distZip`, unpacks the archive and leaves a
-ready-to-run `social/` directory in the project root.
+`./distribute.sh` builds the runnable `social/` distribution and a single
+self-contained `social.jar` in the project root.
 
 Run the CLI through the generated launcher:
 
 ```sh
 ./social/bin/social --help
 ```
+
+::: tip Single jar
+`social.jar` contains everything, so the whole tool runs with a plain Java
+command — including the REST API and the desktop app:
+
+```sh
+java -jar social.jar --help
+java -jar social.jar post -c "hello from the jar"
+java -jar social.jar rest serve
+java -jar social.jar desktop run
+```
+:::
 
 ::: tip Make it global
 Add the launcher to your `PATH` to run `social` from anywhere:

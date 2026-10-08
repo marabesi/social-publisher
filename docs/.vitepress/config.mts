@@ -28,6 +28,8 @@ export default defineConfig({
           { text: 'Managing posts', link: '/guide/posts' },
           { text: 'Scheduling posts', link: '/guide/scheduling' },
           { text: 'Publishing posts', link: '/guide/publishing' },
+          { text: 'REST API', link: '/guide/rest-api' },
+          { text: 'Desktop app', link: '/guide/desktop' },
         ],
       },
       {

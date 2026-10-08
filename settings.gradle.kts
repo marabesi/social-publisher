@@ -1,2 +1,6 @@
+rootProject.name = "social-publisher"
 
-rootProject.name = "social"
+include("core")
+include("cli")
+include("rest-api")
+include("desktop")

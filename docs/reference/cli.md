@@ -10,7 +10,28 @@ Commands:
   scheduler      Create, list and delete schedules
   poster         Publish due schedules
   configuration  Store and inspect configuration
+  desktop        Launch the Compose desktop app
+  rest           Serve the REST API
 ```
+
+## `social desktop run`
+
+Launch the Compose desktop UI (see [Desktop app](/guide/desktop)).
+
+```sh
+social desktop run
+```
+
+## `social rest serve`
+
+Start the Spring Boot REST API (see [REST API](/guide/rest-api)).
+
+```sh
+social rest serve
+social rest serve --server.port=9090
+```
+
+Any additional arguments are forwarded to Spring Boot.
 
 ## `social configuration`
 

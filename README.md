@@ -7,6 +7,10 @@ media. At the moment, the current medias are supported:
 
 - Twitter
 
+It ships as a monorepo with four Gradle modules — `core` (domain and shared
+adapters), `cli` (picocli command line), `rest-api` (Spring Boot REST API) and
+`desktop` (Compose desktop UI) — that share the same use cases and data.
+
 # Planned to be supported
 
 - Linkedin
@@ -24,6 +28,28 @@ npm run docs:dev
 
 Other available scripts are `npm run docs:build` and `npm run docs:preview`.
 
+# REST API
+
+Run the Spring Boot API with:
+
+```sh
+./gradlew :rest-api:bootRun
+```
+
+It listens on `http://localhost:8080`. See the
+[REST API guide](docs/guide/rest-api.md) for the endpoints and examples.
+
+# Desktop app
+
+Run the Compose desktop UI with:
+
+```sh
+./gradlew :desktop:run
+```
+
+See the [Desktop guide](docs/guide/desktop.md) for what it can do and how to
+package a distributable app.
+
 # Refs
 
 - https://kotlinlang.org/docs/command-line.html#compile-a-library
@@ -31,6 +57,18 @@ Other available scripts are `npm run docs:build` and `npm run docs:preview`.
 - https://cucumber.io/docs/gherkin/reference
 
 ## Running
+
+### Single jar
+
+`./distribute.sh` produces a self-contained `social.jar` with everything on
+board. Run the whole tool with just Java:
+
+```sh
+java -jar social.jar --help
+java -jar social.jar post -c "hello"
+java -jar social.jar rest serve          # start the REST API on :8080
+java -jar social.jar desktop run         # launch the Compose desktop app
+```
 
 ### Docker
 
@@ -51,10 +89,28 @@ docker run --platform=linux/amd64 -v $(pwd)/data:/data --rm social
 ### Running standalone
 
 ```sh
-kotlin -classpath "/home/marabesi/Downloads/picocli-4.6.2.jar:build/libs/social-1.0-SNAPSHOT.jar" MainKt post -l
-````
+./distribute.sh
+./social/bin/social post -l
+```
 
 ## Usage documentation
+
+### Data location
+
+Posts, schedules and configuration are stored as files in one directory. By
+default the directory is `data/` (relative to where you run the tool), but you
+can point it anywhere with the `SOCIAL_STORE_PATH` environment variable:
+
+```sh
+export SOCIAL_STORE_PATH=/my/path
+social post -c "hello"
+```
+
+The directory is created on first use and holds `global.json` plus the data
+files. The data files are named after the `fileName` stored in the
+configuration (e.g. `posts-e2e-file.csv`, `scheduler-e2e-file.csv` when
+`"fileName":"e2e-file"`); without a `fileName` the `production` suffix is used.
+It applies to the CLI, the REST API and the desktop app.
 
 ### Twitter credentials
 

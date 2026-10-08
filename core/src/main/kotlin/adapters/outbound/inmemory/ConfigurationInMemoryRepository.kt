@@ -5,17 +5,12 @@ import application.persistence.configuration.ConfigurationRepository
 import application.persistence.configuration.MissingConfiguration
 
 class ConfigurationInMemoryRepository : ConfigurationRepository {
-    private val configurationList: ArrayList<SocialConfiguration> = arrayListOf()
+    private var stored: SocialConfiguration? = null
 
     override fun save(configuration: SocialConfiguration): SocialConfiguration {
-        configurationList.add(configuration)
-        return configurationList[0]
+        stored = configuration
+        return configuration
     }
 
-    override fun find(): SocialConfiguration {
-        if (configurationList.isEmpty()) {
-            throw MissingConfiguration()
-        }
-        return configurationList[0]
-    }
+    override fun find(): SocialConfiguration = stored ?: throw MissingConfiguration()
 }

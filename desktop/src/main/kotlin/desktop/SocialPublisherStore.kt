@@ -2,10 +2,12 @@ package desktop
 
 import application.Output
 import application.entities.ScheduledItem
+import application.entities.SocialConfiguration
 import application.entities.SocialPosts
 import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
 import application.persistence.configuration.ConfigurationRepository
+import application.persistence.configuration.MissingConfiguration
 import application.post.Create
 
 class SocialPublisherStore(
@@ -17,6 +19,13 @@ class SocialPublisherStore(
     fun createPost(text: String): String = Create(postsRepository, output).invoke(text)
 
     fun posts(): ArrayList<SocialPosts> = postsRepository.findAll()
+
+    fun deletePost(id: String): String = application.post.Delete(postsRepository, output).invoke(id)
+
+    fun updatePost(
+        id: String,
+        text: String,
+    ): String = application.post.Update(postsRepository, output).invoke(id, text)
 
     fun schedule(
         postId: String,
@@ -32,8 +41,13 @@ class SocialPublisherStore(
         schedulerRepository.deleteById(id)
     }
 
-    fun storeConfiguration(json: String): String {
-        val create = application.configuration.Create(output, configurationRepository)
-        return create.invoke(json)
-    }
+    fun configuration(): SocialConfiguration? =
+        try {
+            configurationRepository.find()
+        } catch (error: MissingConfiguration) {
+            null
+        }
+
+    fun storeConfiguration(configuration: SocialConfiguration): String =
+        application.configuration.Create(output, configurationRepository).invoke(configuration)
 }

@@ -23,7 +23,7 @@ class DesktopShellTest {
 
             setContent { desktopAppShell(store) }
 
-            onNodeWithText("1. hello desktop").assertIsDisplayed()
+            onNodeWithText("hello desktop").assertIsDisplayed()
 
             onNodeWithContentDescription("Menu").performClick()
             onNodeWithText("Schedules").performClick()
@@ -36,6 +36,20 @@ class DesktopShellTest {
             onNodeWithContentDescription("Menu").performClick()
             onNodeWithText("Configuration").performClick()
             onNodeWithText("Store configuration").assertIsDisplayed()
+        }
+
+    @Test
+    fun `opens the shared editor prepopulated when editing a post`() =
+        runComposeUiTest {
+            val store = storeWith()
+
+            setContent { desktopAppShell(store) }
+
+            onNodeWithText("Edit").performClick()
+
+            onNodeWithText("Edit post").assertIsDisplayed()
+            onNodeWithText("hello desktop").assertIsDisplayed()
+            onNodeWithText("Save").assertIsDisplayed()
         }
 
     private fun storeWith(): SocialPublisherStore {

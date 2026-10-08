@@ -4,21 +4,22 @@ The `rest-api` module exposes the same application layer over HTTP with Spring
 Boot. It reuses the `core` use cases and the shared `csv`/`social` outbound
 adapters, so posts, schedules and configuration are the same data the CLI uses.
 
-## Run it
+## Start it
+
+The REST API is part of the same download. Start it with:
 
 ```sh
-./gradlew :rest-api:bootRun
+java -jar social.jar rest serve
 ```
 
-The API listens on `http://localhost:8080` and stores its data in the
+It listens on `http://localhost:8080` and stores its data in the
 [store directory](/guide/configuration#where-data-lives) (`data/` by default, or
 wherever `SOCIAL_STORE_PATH` points).
 
-To build and run the executable jar:
+Any extra arguments are passed on to Spring Boot, so you can pick another port:
 
 ```sh
-./gradlew :rest-api:bootJar
-java -jar rest-api/build/libs/rest-api-1.0.0.jar
+java -jar social.jar rest serve --server.port=9090
 ```
 
 ## Endpoints

@@ -28,6 +28,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import application.Output
+import application.entities.SocialPosts
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,6 +44,7 @@ fun desktopAppShell(store: SocialPublisherStore) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var selectedPage by remember { mutableStateOf(AppPage.POSTS) }
+    var postToEdit by remember { mutableStateOf<SocialPosts?>(null) }
 
     MaterialTheme {
         ModalNavigationDrawer(
@@ -54,6 +56,7 @@ fun desktopAppShell(store: SocialPublisherStore) {
                             label = { Text(page.title) },
                             selected = selectedPage == page,
                             onClick = {
+                                postToEdit = null
                                 selectedPage = page
                                 scope.launch { drawerState.close() }
                             },
@@ -79,9 +82,24 @@ fun desktopAppShell(store: SocialPublisherStore) {
                     modifier = Modifier.fillMaxSize().padding(padding),
                 ) {
                     when (selectedPage) {
-                        AppPage.POSTS -> postsPage(store)
+                        AppPage.POSTS ->
+                            postsPage(
+                                store = store,
+                                onEdit = {
+                                    postToEdit = it
+                                    selectedPage = AppPage.COMPOSE
+                                },
+                            )
                         AppPage.SCHEDULES -> schedulesPage(store)
-                        AppPage.COMPOSE -> composePostPage(store)
+                        AppPage.COMPOSE ->
+                            composePostPage(
+                                store = store,
+                                postToEdit = postToEdit,
+                                onFinish = {
+                                    postToEdit = null
+                                    selectedPage = AppPage.POSTS
+                                },
+                            )
                         AppPage.CONFIGURATION -> configurationPage(store)
                     }
                 }

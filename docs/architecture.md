@@ -1,5 +1,10 @@
 # Architecture
 
+::: info For developers
+This page describes how Social Publisher is built. If you only want to use the
+tool, start with [Installation](/guide/installation).
+:::
+
 Social Publisher is a Kotlin/JVM monorepo built around a hexagonal (ports and
 adapters) architecture. The core use cases are plain Kotlin and never import a
 framework or touch I/O directly; everything external is reached through a port.

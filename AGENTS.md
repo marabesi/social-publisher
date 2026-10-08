@@ -51,6 +51,27 @@ root and keep changes inside it.
   edges. Do not leak adapters into `application/`. Outbound adapters use
   `jakarta.inject.Inject` so both Guice and Spring can construct them.
 
+## Cross-surface consistency (CLI, REST API, desktop) — required
+
+The same core features are exposed through three inbound adapters: the CLI
+(`cli`), the REST API (`rest-api`) and the desktop app (`desktop`). The user
+picks whichever surface they like, so the surfaces must stay in sync and share
+the same data.
+
+- A user-facing capability belongs in `core/` (a use case behind a port) and is
+  then wired into **every** surface. Do not implement a feature in only one
+  adapter.
+- When you add or change a core feature, update the CLI, REST API and desktop
+  together. If a surface genuinely cannot support it, say so explicitly in the
+  final report instead of leaving it silently out of sync.
+- Keep behavior, messages and defaults identical across surfaces — they all run
+  the same use cases and share the same store directory (`data/` by default, or
+  `SOCIAL_STORE_PATH`), so anything written by one surface is visible to the
+  others.
+- When the adapters already hold structured data (entities/values), prefer a
+  structured use-case entry point over round-tripping through a serialized
+  format just to satisfy one surface.
+
 ## Conventions
 
 - Match the surrounding style: small classes, constructor injection, one public
@@ -105,7 +126,8 @@ java -jar social.jar --help           # run the CLI from a single jar (also: res
 ## Workflow
 
 1. Read the relevant `application/` use case and its port before editing.
-2. Implement in `core/`, then the inbound/outbound adapter as needed.
+2. Implement in `core/`, then wire the change into the CLI, REST API and desktop
+   surfaces (see "Cross-surface consistency").
 3. Add tests next to the matching existing test package/module.
 4. Run the module test task (and `detekt`/`ktlintCheck` when touching style).
 5. Report files changed with `file_path:line` references.

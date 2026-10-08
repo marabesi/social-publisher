@@ -2,8 +2,10 @@ package application.configuration
 
 import MockedOutput
 import adapters.outbound.inmemory.ConfigurationInMemoryRepository
+import application.entities.SocialConfiguration
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -11,10 +13,22 @@ import java.util.stream.Stream
 
 class ConfigurationCreateTest {
     private lateinit var createConfiguration: Create
+    private lateinit var configurationRepository: ConfigurationInMemoryRepository
 
     @BeforeEach
     fun setUp() {
-        createConfiguration = Create(MockedOutput(), ConfigurationInMemoryRepository())
+        configurationRepository = ConfigurationInMemoryRepository()
+        createConfiguration = Create(MockedOutput(), configurationRepository)
+    }
+
+    @Test
+    fun `should apply defaults when storing a structured configuration`() {
+        val result = createConfiguration.invoke(SocialConfiguration(fileName = "prod"))
+
+        Assertions.assertEquals("Configuration has been stored", result)
+        Assertions.assertEquals("prod", configurationRepository.find().fileName)
+        Assertions.assertEquals("csv", configurationRepository.find().storage)
+        Assertions.assertEquals("UTC", configurationRepository.find().timezone)
     }
 
     @ParameterizedTest

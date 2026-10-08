@@ -14,6 +14,10 @@ export default defineConfig({
       { text: 'Reference', link: '/reference/cli' },
       { text: 'Architecture', link: '/architecture' },
       {
+        text: 'Contributing',
+        link: 'https://github.com/marabesi/social-publisher/blob/main/CONTRIBUTING.md',
+      },
+      {
         text: 'GitHub',
         link: 'https://github.com/marabesi/social-publisher',
       },

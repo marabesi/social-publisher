@@ -78,3 +78,20 @@ truth and is loaded automatically.
 
 Never read, write, list, or otherwise access files outside this repository
 worktree. All file tools and commands stay under the project root.
+
+## Cross-surface features
+
+Social Publisher is one product with three surfaces over the same `core`: the CLI
+(`cli`), the REST API (`rest-api`) and the desktop app (`desktop`). A user should
+be able to move between them and have the exact same features, messages and data.
+
+- Design user-facing capabilities in `core/` first (a use case behind a port),
+  then wire them into **all three** surfaces.
+- Never ship a feature in a single adapter. If a surface truly cannot support it,
+  call that out explicitly instead of leaving it out silently.
+- All surfaces share the same store directory (`data/` or `SOCIAL_STORE_PATH`),
+  so a change made in one must be visible from the others.
+- Prefer structured use-case entry points over serializing only to satisfy a
+  single adapter.
+
+See the "Cross-surface consistency" section in `AGENTS.md` for the full rule.

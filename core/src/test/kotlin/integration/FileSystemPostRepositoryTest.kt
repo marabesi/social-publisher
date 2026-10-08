@@ -97,6 +97,51 @@ class FileSystemPostRepositoryTest {
         assertEquals("1", findById?.id.toString())
     }
 
+    @Test
+    fun deletePostByIdFromCsv() {
+        val repository = FileSystemPostRepository(filePath)
+        repository.save(
+            arrayListOf(
+                SocialPosts(text = "first post"),
+                SocialPosts(text = "second post"),
+            ),
+        )
+
+        val deleted = repository.deleteById("1")
+
+        assertEquals("first post", deleted?.text)
+        assertEquals(1, repository.findAll().size)
+        assertEquals("second post", repository.findAll().first().text)
+    }
+
+    @Test
+    fun updatePostFromCsv() {
+        val repository = FileSystemPostRepository(filePath)
+        repository.save(arrayListOf(SocialPosts(text = "original text")))
+
+        assertTrue(repository.update(SocialPosts("1", "edited text")))
+
+        assertEquals("edited text", repository.findById("1")?.text)
+        assertEquals(1, repository.findAll().size)
+    }
+
+    @Test
+    fun keepsIdsUniqueAfterDeletingAPost() {
+        val repository = FileSystemPostRepository(filePath)
+        repository.save(
+            arrayListOf(
+                SocialPosts(text = "first post"),
+                SocialPosts(text = "second post"),
+                SocialPosts(text = "third post"),
+            ),
+        )
+
+        repository.deleteById("2")
+        repository.save(arrayListOf(SocialPosts(text = "fourth post")))
+
+        assertEquals("4", repository.findAll().last().id)
+    }
+
     private fun cleanUp() {
         File(filePath).delete()
         File(filePathWithSubfolder).delete()

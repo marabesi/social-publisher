@@ -5,8 +5,6 @@ import application.Output
 import application.configuration.Create
 import application.entities.SocialConfiguration
 import application.persistence.configuration.ConfigurationRepository
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -22,10 +20,7 @@ class ConfigurationController(
     @PostMapping
     fun store(
         @RequestBody configuration: SocialConfiguration,
-    ): MessageResponse =
-        MessageResponse(
-            Create(output, configurationRepository).invoke(Json.encodeToString(configuration)),
-        )
+    ): MessageResponse = MessageResponse(Create(output, configurationRepository).invoke(configuration))
 
     @GetMapping
     fun get(): SocialConfiguration = configurationRepository.find()

@@ -23,10 +23,11 @@ class FileSystemPostRepository(
         val writer = FileWriter(file, true)
         val printer = CSVPrinter(writer, CSVFormat.DEFAULT)
 
-        val nextId = findAll().size + 1
+        var nextId = nextId()
 
         for (post: SocialPosts in posts) {
             printer.printRecord(post.text, nextId)
+            ++nextId
         }
         printer.close()
 
@@ -67,6 +68,38 @@ class FileSystemPostRepository(
         parser.close()
 
         return posts
+    }
+
+    override fun deleteById(postId: String): SocialPosts? {
+        val toBeDeleted = findById(postId) ?: return null
+        writeAll(findAll().filterNot { it.id == postId })
+        return toBeDeleted
+    }
+
+    override fun update(post: SocialPosts): Boolean {
+        val posts = findAll()
+        val index = posts.indexOfFirst { it.id == post.id }
+        if (index < 0) {
+            return false
+        }
+        posts[index] = post
+        writeAll(posts)
+        return true
+    }
+
+    private fun nextId(): Int = (findAll().mapNotNull { it.id?.toIntOrNull() }.maxOrNull() ?: 0) + 1
+
+    private fun writeAll(posts: List<SocialPosts>) {
+        val file = File(currentFile())
+        file.parentFile?.mkdirs()
+
+        val writer = FileWriter(file, false)
+        val printer = CSVPrinter(writer, CSVFormat.DEFAULT)
+
+        for (post in posts) {
+            printer.printRecord(post.text, post.id)
+        }
+        printer.close()
     }
 
     private fun currentFile(): String {

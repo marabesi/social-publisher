@@ -6,6 +6,7 @@ import adapters.outbound.inmemory.InMemoryPostRepository
 import adapters.outbound.inmemory.InMemorySchedulerRepository
 import application.entities.SocialConfiguration
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -34,6 +35,49 @@ class SocialPublisherStoreTest {
         assertEquals("Post has been scheduled using UTC timezone", store.schedule("1", "2099-01-02T09:00:00Z"))
         assertEquals(1, store.schedules().size)
         assertEquals("2099-01-02T09:00:00Z", store.schedules()[0].publishDate.toString())
+    }
+
+    @Test
+    fun `should delete a post`() {
+        store.createPost("release notes")
+
+        assertEquals("Post 1 has been removed", store.deletePost("1"))
+        assertEquals(0, store.posts().size)
+    }
+
+    @Test
+    fun `should update a post`() {
+        store.createPost("release notes")
+
+        assertEquals("Post has been updated", store.updatePost("1", "edited notes"))
+        assertEquals("edited notes", store.posts().first().text)
+    }
+
+    @Test
+    fun `should load the stored configuration`() {
+        assertEquals("UTC", store.configuration()?.timezone)
+    }
+
+    @Test
+    fun `should return no configuration when none is stored`() {
+        val emptyStore =
+            SocialPublisherStore(
+                postsRepository = InMemoryPostRepository(),
+                schedulerRepository = InMemorySchedulerRepository(),
+                configurationRepository = ConfigurationInMemoryRepository(),
+                output = MockedOutput(),
+            )
+
+        assertNull(emptyStore.configuration())
+    }
+
+    @Test
+    fun `should store a structured configuration`() {
+        val configuration = SocialConfiguration(fileName = "prod", storage = "csv", timezone = "Europe/Madrid")
+
+        assertEquals("Configuration has been stored", store.storeConfiguration(configuration))
+        assertEquals("Europe/Madrid", store.configuration()?.timezone)
+        assertEquals("prod", store.configuration()?.fileName)
     }
 
     @Test

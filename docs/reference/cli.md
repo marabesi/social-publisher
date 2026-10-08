@@ -2,6 +2,13 @@
 
 All commands accept `-h` / `--help` and `-V` / `--version`.
 
+::: tip Running the commands
+The examples below use the `social` launcher. If you run the single jar instead,
+replace `social` with `java -jar social.jar` — for example
+`java -jar social.jar post -l`. See [Installation](/guide/installation) for how
+to download Social Publisher and add the `social` alias.
+:::
+
 ```text
 Usage: social [-hV] [COMMAND]
 post to any social media

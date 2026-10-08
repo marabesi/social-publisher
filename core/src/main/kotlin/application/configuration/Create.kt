@@ -23,21 +23,23 @@ class Create(
 
         try {
             validateConfigurationJson(configuration)
-
-            val data = Json.decodeFromString<SocialConfiguration>(configuration)
-
-            if (data.storage.isEmpty()) {
-                data.storage = DEFAULT_STORAGE_FORMAT
-            }
-
-            if (data.timezone.isEmpty()) {
-                data.timezone = DEFAULT_TIMEZONE
-            }
-
-            configurationRepository.save(data)
         } catch (error: ConfigurationGivenHasInvalidProperty) {
             return cliOutput.write(error.message.toString())
         }
+
+        return invoke(Json.decodeFromString<SocialConfiguration>(configuration))
+    }
+
+    fun invoke(configuration: SocialConfiguration): String {
+        if (configuration.storage.isEmpty()) {
+            configuration.storage = DEFAULT_STORAGE_FORMAT
+        }
+
+        if (configuration.timezone.isEmpty()) {
+            configuration.timezone = DEFAULT_TIMEZONE
+        }
+
+        configurationRepository.save(configuration)
 
         return cliOutput.write("Configuration has been stored")
     }

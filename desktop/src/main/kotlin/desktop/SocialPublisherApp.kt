@@ -31,26 +31,15 @@ import application.Output
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Suppress("FunctionNaming", "LongMethod")
 @Composable
 fun socialPublisherApp() {
-    val store =
-        remember {
-            val configurationRepository = FileSystemConfigurationRepository()
-            val postsRepository = FileSystemPostRepository(configurationRepository = configurationRepository)
-            val schedulerRepository =
-                FileSystemSchedulerRepository(
-                    postsRepository = postsRepository,
-                    configurationRepository = configurationRepository,
-                )
-            SocialPublisherStore(
-                postsRepository = postsRepository,
-                schedulerRepository = schedulerRepository,
-                configurationRepository = configurationRepository,
-                output = restOutput(),
-            )
-        }
+    desktopAppShell(store = rememberDesktopStore())
+}
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Suppress("FunctionNaming", "LongMethod")
+@Composable
+fun desktopAppShell(store: SocialPublisherStore) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var selectedPage by remember { mutableStateOf(AppPage.POSTS) }
@@ -100,6 +89,24 @@ fun socialPublisherApp() {
         }
     }
 }
+
+@Composable
+private fun rememberDesktopStore(): SocialPublisherStore =
+    remember {
+        val configurationRepository = FileSystemConfigurationRepository()
+        val postsRepository = FileSystemPostRepository(configurationRepository = configurationRepository)
+        val schedulerRepository =
+            FileSystemSchedulerRepository(
+                postsRepository = postsRepository,
+                configurationRepository = configurationRepository,
+            )
+        SocialPublisherStore(
+            postsRepository = postsRepository,
+            schedulerRepository = schedulerRepository,
+            configurationRepository = configurationRepository,
+            output = restOutput(),
+        )
+    }
 
 private fun restOutput(): Output =
     object : Output {

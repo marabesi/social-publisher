@@ -20,7 +20,12 @@ detekt {
 
 dependencies {
     implementation(project(":core"))
-    implementation(compose.desktop.currentOs)
+    // Bundle the native skiko runtime for every platform so the distribution
+    // jar (social.jar) can launch the desktop app on any OS/architecture.
+    implementation(compose.desktop.linux_x64)
+    implementation(compose.desktop.linux_arm64)
+    implementation(compose.desktop.macos_arm64)
+    implementation(compose.desktop.windows_x64)
     implementation(compose.material3)
     implementation("org.jetbrains.compose.material:material-icons-core:1.7.3")
 

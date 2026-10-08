@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test
 
 class AppPageTest {
     @Test
-    fun `offers posts, schedules and compose pages in order`() {
+    fun `offers every page in order`() {
         assertEquals(
-            listOf("Posts", "Schedules", "Compose"),
-            AppPage.entries.take(3).map { it.title },
+            listOf("Posts", "Schedules", "Compose", "Poster", "Configuration"),
+            AppPage.entries.map { it.title },
         )
     }
 }

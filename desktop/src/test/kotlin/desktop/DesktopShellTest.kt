@@ -34,6 +34,11 @@ class DesktopShellTest {
             onNodeWithText("Create post").assertIsDisplayed()
 
             onNodeWithContentDescription("Menu").performClick()
+            onNodeWithText("Poster").performClick()
+            onNodeWithText("Run every").assertIsDisplayed()
+            onNodeWithText("The poster is disabled.").assertIsDisplayed()
+
+            onNodeWithContentDescription("Menu").performClick()
             onNodeWithText("Configuration").performClick()
             onNodeWithText("Store configuration").assertIsDisplayed()
         }
@@ -63,6 +68,7 @@ class DesktopShellTest {
                 ConfigurationInMemoryRepository()
                     .apply { save(SocialConfiguration(timezone = "UTC")) },
             output = MockedOutput(),
+            twitterClient = MockedSocialThirdParty(),
         )
     }
 }

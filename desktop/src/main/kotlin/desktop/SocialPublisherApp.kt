@@ -3,6 +3,8 @@ package desktop
 import adapters.outbound.csv.FileSystemConfigurationRepository
 import adapters.outbound.csv.FileSystemPostRepository
 import adapters.outbound.csv.FileSystemSchedulerRepository
+import adapters.outbound.social.Twitter
+import adapters.outbound.social.TwitterCredentialsValidator
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -21,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import application.Output
 import application.entities.SocialPosts
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,6 +49,14 @@ fun desktopAppShell(store: SocialPublisherStore) {
     val scope = rememberCoroutineScope()
     var selectedPage by remember { mutableStateOf(AppPage.POSTS) }
     var postToEdit by remember { mutableStateOf<SocialPosts?>(null) }
+    val posterState = remember { PosterState(runPoster = store::runPoster) }
+
+    LaunchedEffect(posterState.enabled) {
+        while (posterState.enabled) {
+            posterState.runNow()
+            delay(posterState.cadenceMinutes * 60_000L)
+        }
+    }
 
     MaterialTheme {
         ModalNavigationDrawer(
@@ -100,6 +112,7 @@ fun desktopAppShell(store: SocialPublisherStore) {
                                     selectedPage = AppPage.POSTS
                                 },
                             )
+                        AppPage.POSTER -> posterPage(posterState)
                         AppPage.CONFIGURATION -> configurationPage(store)
                     }
                 }
@@ -123,6 +136,7 @@ private fun rememberDesktopStore(): SocialPublisherStore =
             schedulerRepository = schedulerRepository,
             configurationRepository = configurationRepository,
             output = restOutput(),
+            twitterClient = TwitterCredentialsValidator(configurationRepository, Twitter(configurationRepository)),
         )
     }
 

@@ -25,7 +25,10 @@ schedules and configuration as the terminal and the REST API.
 - Store your JSON configuration and credentials.
 - Create new posts with a rich text editor (bold, italic and underline).
 - Browse every post in a table and **edit** or **remove** any of them.
+- Pick a publish date and time with a calendar and clock picker when scheduling.
 - Schedule a post for a publish date and delete schedules.
+- Run the poster automatically every minute (or on a cadence you choose) and see
+  when it will run next.
 
 Everything you do in the desktop app is written to the same local files the other
 surfaces use, so nothing gets lost when you switch between them.

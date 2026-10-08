@@ -43,10 +43,10 @@ fun schedulesPage(store: SocialPublisherStore) {
                 label = { Text("Post id") },
                 modifier = Modifier.width(120.dp),
             )
-            OutlinedTextField(
+            dateTimePicker(
+                label = "Publish date",
                 value = publishDate,
                 onValueChange = { publishDate = it },
-                label = { Text("Publish date") },
                 modifier = Modifier.weight(1f),
             )
         }

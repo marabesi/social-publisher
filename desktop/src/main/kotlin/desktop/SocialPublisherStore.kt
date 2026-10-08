@@ -9,12 +9,16 @@ import application.persistence.SchedulerRepository
 import application.persistence.configuration.ConfigurationRepository
 import application.persistence.configuration.MissingConfiguration
 import application.post.Create
+import application.socialnetwork.SocialThirdParty
+import java.time.Instant
 
 class SocialPublisherStore(
     private val postsRepository: PostsRepository,
     private val schedulerRepository: SchedulerRepository,
     private val configurationRepository: ConfigurationRepository,
     private val output: Output,
+    private val twitterClient: SocialThirdParty,
+    private val currentDate: () -> Instant = { Instant.now() },
 ) {
     fun createPost(text: String): String = Create(postsRepository, output).invoke(text)
 
@@ -50,4 +54,6 @@ class SocialPublisherStore(
 
     fun storeConfiguration(configuration: SocialConfiguration): String =
         application.configuration.Create(output, configurationRepository).invoke(configuration)
+
+    fun runPoster(): String = application.poster.Executor(schedulerRepository, output, currentDate(), twitterClient).invoke()
 }

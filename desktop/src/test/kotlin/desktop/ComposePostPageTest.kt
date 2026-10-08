@@ -89,6 +89,7 @@ class ComposePostPageTest {
                 ConfigurationInMemoryRepository()
                     .apply { save(SocialConfiguration(timezone = "UTC")) },
             output = MockedOutput(),
+            twitterClient = MockedSocialThirdParty(),
         )
     }
 }

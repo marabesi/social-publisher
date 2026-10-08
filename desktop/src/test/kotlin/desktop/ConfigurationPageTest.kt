@@ -108,6 +108,7 @@ class ConfigurationPageTest {
             schedulerRepository = InMemorySchedulerRepository(),
             configurationRepository = configurationRepository,
             output = MockedOutput(),
+            twitterClient = MockedSocialThirdParty(),
         )
     }
 }

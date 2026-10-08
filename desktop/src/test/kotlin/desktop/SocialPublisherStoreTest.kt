@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.time.Instant
 
 class SocialPublisherStoreTest {
     private val postsRepository = InMemoryPostRepository()
@@ -20,6 +21,7 @@ class SocialPublisherStoreTest {
             schedulerRepository = schedulerRepository,
             configurationRepository = configurationRepository,
             output = MockedOutput(),
+            twitterClient = MockedSocialThirdParty(),
         )
 
     @BeforeEach
@@ -66,9 +68,31 @@ class SocialPublisherStoreTest {
                 schedulerRepository = InMemorySchedulerRepository(),
                 configurationRepository = ConfigurationInMemoryRepository(),
                 output = MockedOutput(),
+                twitterClient = MockedSocialThirdParty(),
             )
 
         assertNull(emptyStore.configuration())
+    }
+
+    @Test
+    fun `should run the poster and publish due schedules`() {
+        val posterStore =
+            SocialPublisherStore(
+                postsRepository = InMemoryPostRepository(),
+                schedulerRepository = InMemorySchedulerRepository(),
+                configurationRepository =
+                    ConfigurationInMemoryRepository()
+                        .apply { save(SocialConfiguration(timezone = "UTC")) },
+                output = MockedOutput(),
+                twitterClient = MockedSocialThirdParty(),
+                currentDate = { Instant.parse("2026-10-02T09:00:00Z") },
+            )
+
+        posterStore.createPost("release notes")
+        posterStore.schedule("1", "2020-01-01T00:00:00Z")
+
+        assertEquals("Post 1 sent to twitter", posterStore.runPoster())
+        assertEquals(0, posterStore.schedules().filter { !it.published }.size)
     }
 
     @Test

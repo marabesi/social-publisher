@@ -47,8 +47,11 @@ social scheduler list
 ```
 
 ```text
-1. Post with id 1 will be published on 2026-10-02T09:00:00Z
+1. Post with id 1 will be published on 2026-10-02T09:00:00Z (Twitter)
 ```
+
+The target social network (the `-s` value) is shown in parentheses. The desktop
+app and the REST API report the same value for each schedule.
 
 ### Filter by any property
 

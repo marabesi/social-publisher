@@ -19,16 +19,14 @@ class List(
         var index = 1
         for (post in findAll) {
             val isLast: Boolean = index == findAll.size
-
-            result +=
-                when {
-                    post.text.length > ALLOWED_CHARACTERS_TO_SHOW -> {
-                        post.id.toString() + ". " + post.text.substring(0, ALLOWED_CHARACTERS_TO_SHOW) + "..."
-                    }
-                    else -> {
-                        post.id.toString() + ". " + post.text
-                    }
+            val text =
+                if (post.text.length > ALLOWED_CHARACTERS_TO_SHOW) {
+                    post.text.substring(0, ALLOWED_CHARACTERS_TO_SHOW) + "..."
+                } else {
+                    post.text
                 }
+
+            result += "${post.id}. $text (${post.text.length}/${PostLimits.MAX_CHARACTERS})"
             if (!isLast) {
                 result += "\n"
             }

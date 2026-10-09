@@ -6,6 +6,7 @@ import adapters.inbound.rest.dto.PostResponse
 import application.Output
 import application.persistence.PostsRepository
 import application.post.Create
+import application.post.PostLimits
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -26,6 +27,11 @@ class PostController(
     @GetMapping
     fun list(): List<PostResponse> =
         postsRepository.findAll().map {
-            PostResponse(it.id ?: "", it.text)
+            PostResponse(
+                id = it.id ?: "",
+                text = it.text,
+                characterCount = it.text.length,
+                characterLimit = PostLimits.MAX_CHARACTERS,
+            )
         }
 }

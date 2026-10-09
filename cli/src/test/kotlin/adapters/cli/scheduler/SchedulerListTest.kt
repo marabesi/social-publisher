@@ -90,7 +90,7 @@ class SchedulerListTest {
 
         assertEquals(
             """
-            1. Post with id 1 will be published on 2022-10-02T09:00:00Z
+            1. Post with id 1 will be published on 2022-10-02T09:00:00Z (Twitter)
             """.trimIndent(),
             cmd.getExecutionResult(),
         )
@@ -122,8 +122,8 @@ class SchedulerListTest {
 
         assertEquals(
             """
-            1. Post with id 1 will be published on 2022-10-02T09:00:00Z
-            2. Post with id 1 will be published on 2022-10-03T09:00:00Z
+            1. Post with id 1 will be published on 2022-10-02T09:00:00Z (Twitter)
+            2. Post with id 1 will be published on 2022-10-03T09:00:00Z (Twitter)
             """.trimIndent(),
             cmd.getExecutionResult(),
         )
@@ -157,8 +157,8 @@ class SchedulerListTest {
 
         assertEquals(
             """
-            1. Post with id 1 will be published on 2022-10-02T09:00:00Z
-            2. Post with id 2 will be published on 2022-11-02T10:00:00Z
+            1. Post with id 1 will be published on 2022-10-02T09:00:00Z (Twitter)
+            2. Post with id 2 will be published on 2022-11-02T10:00:00Z (Twitter)
             """.trimIndent(),
             cmd.getExecutionResult(),
         )
@@ -192,7 +192,7 @@ class SchedulerListTest {
 
         assertEquals(
             """
-            1. Post with id 2 will be published on 2023-11-02T10:00:00Z
+            1. Post with id 2 will be published on 2023-11-02T10:00:00Z (Twitter)
             """.trimIndent(),
             cmd.getExecutionResult(),
         )
@@ -226,7 +226,7 @@ class SchedulerListTest {
 
         assertEquals(
             """
-            1. Post with id 1 will be published on 2024-01-02T09:00:00Z
+            1. Post with id 1 will be published on 2024-01-02T09:00:00Z (Twitter)
             """.trimIndent(),
             cmd.getExecutionResult(),
         )
@@ -343,8 +343,8 @@ class SchedulerListTest {
 
         assertEquals(
             """
-            1. Post with id 2 will be published on 2022-10-02T09:00:00Z
-            2. Post with id 1 will be published on 2023-11-02T10:00:00Z
+            1. Post with id 2 will be published on 2022-10-02T09:00:00Z (Twitter)
+            2. Post with id 1 will be published on 2023-11-02T10:00:00Z (Twitter)
             """.trimIndent(),
             cmd.getExecutionResult(),
         )
@@ -378,8 +378,8 @@ class SchedulerListTest {
 
         assertEquals(
             """
-            1. Post with id 2 will be published on 2023-11-02T10:00:00Z
-            2. Post with id 1 will be published on 2022-10-02T09:00:00Z
+            1. Post with id 2 will be published on 2023-11-02T10:00:00Z (Twitter)
+            2. Post with id 1 will be published on 2022-10-02T09:00:00Z (Twitter)
             """.trimIndent(),
             cmd.getExecutionResult(),
         )
@@ -413,7 +413,7 @@ class SchedulerListTest {
 
         assertEquals(
             """
-            1. Post with id 2 will be published on 2023-11-02T10:00:00Z
+            1. Post with id 2 will be published on 2023-11-02T10:00:00Z (Twitter)
             """.trimIndent(),
             cmd.getExecutionResult(),
         )
@@ -469,7 +469,7 @@ class SchedulerListTest {
 
         assertEquals(
             """
-            1. Post with id 1 will be published on 2022-07-10T09:00:00Z
+            1. Post with id 1 will be published on 2022-07-10T09:00:00Z (Twitter)
             """.trimIndent(),
             cmd.getExecutionResult(),
         )
@@ -511,8 +511,8 @@ class SchedulerListTest {
 
         assertEquals(
             """
-            1. Post with id 1 will be published on 2022-07-10T09:00:00Z
-            2. Post with id 2 will be published on 2022-07-11T09:00:00Z
+            1. Post with id 1 will be published on 2022-07-10T09:00:00Z (Twitter)
+            2. Post with id 2 will be published on 2022-07-11T09:00:00Z (Twitter)
             """.trimIndent(),
             cmd.getExecutionResult(),
         )
@@ -554,8 +554,8 @@ class SchedulerListTest {
 
         assertEquals(
             """
-            1. Post with id 2 will be published on 2022-07-11T09:00:00Z
-            2. Post with id 1 will be published on 2022-07-10T09:00:00Z
+            1. Post with id 2 will be published on 2022-07-11T09:00:00Z (Twitter)
+            2. Post with id 1 will be published on 2022-07-10T09:00:00Z (Twitter)
             """.trimIndent(),
             cmd.getExecutionResult(),
         )
@@ -603,7 +603,7 @@ class SchedulerListTest {
 
         assertEquals(
             """
-            1. Post with id 1 will be published on 2022-07-10T09:00:00Z
+            1. Post with id 1 will be published on 2022-07-10T09:00:00Z (Twitter)
             """.trimIndent(),
             cmd.getExecutionResult(),
         )
@@ -649,7 +649,7 @@ class SchedulerListTest {
 
         assertEquals(
             """
-            1. Post with id 1 will be published on 2022-10-02T09:00:00Z
+            1. Post with id 1 will be published on 2022-10-02T09:00:00Z (Twitter)
             """.trimIndent(),
             cmd.getExecutionResult(),
         )

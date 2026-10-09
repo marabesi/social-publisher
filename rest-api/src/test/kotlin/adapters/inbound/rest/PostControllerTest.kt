@@ -20,6 +20,8 @@ class PostControllerTest {
 
         assertEquals(1, posts.size)
         assertEquals("hello from rest", posts[0].text)
+        assertEquals(15, posts[0].characterCount)
+        assertEquals(280, posts[0].characterLimit)
     }
 
     @Test

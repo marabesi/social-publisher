@@ -26,14 +26,29 @@ java -jar social.jar rest serve --server.port=9090
 
 | Method | Path | Description |
 | --- | --- | --- |
+| `GET` | `/` | Index of the available resources (the API "home"). |
 | `POST` | `/api/posts` | Create a post. Body: `{"text": "..."}`. |
-| `GET` | `/api/posts` | List posts. |
+| `GET` | `/api/posts` | List posts. Each entry includes `characterCount` and `characterLimit`. |
 | `POST` | `/api/schedules` | Schedule a post. Body: `{"postId": "1", "publishDate": "2099-01-02T09:00:00Z", "socialMedia": "TWITTER"}`. |
-| `GET` | `/api/schedules` | List schedules. Query: `startDate`, `endDate`, `filter`, `orderBy`. |
+| `GET` | `/api/schedules` | List schedules (each entry includes `socialMedia`). Query: `startDate`, `endDate`, `filter`, `orderBy`. |
 | `DELETE` | `/api/schedules/{id}` | Delete a schedule. |
 | `POST` | `/api/poster/run` | Publish every due schedule. |
 | `GET` | `/api/configuration` | Read the stored configuration. |
 | `POST` | `/api/configuration` | Store a configuration. |
+
+`GET /` returns the index of resources:
+
+```json
+{
+  "name": "Social Publisher API",
+  "resources": {
+    "posts": "/api/posts",
+    "schedules": "/api/schedules",
+    "poster": "/api/poster/run",
+    "configuration": "/api/configuration"
+  }
+}
+```
 
 `GET /api/schedules` accepts the same filter and order expressions as the CLI
 (see [Scheduling posts](/guide/scheduling)):

@@ -23,15 +23,17 @@ Empty or blank text is rejected with `Missing required fields`.
 social post -l
 ```
 
-Output is one line per post, prefixed with its id:
+Output is one line per post, prefixed with its id, followed by the character
+count and the limit:
 
 ```text
-1. Shipping the docs for social-publisher today.
+1. Shipping the docs for social-publisher today. (45/280)
 ```
 
 Text longer than 50 characters is truncated in the listing with a trailing
-`...`; the full text is still published. When there are no posts you get
-`No post found`.
+`...`; the full text is still published. The number in parentheses is always the
+full length of the post and the platform limit (280), so you can see at a glance
+whether a post still fits. When there are no posts you get `No post found`.
 
 ## Next step
 

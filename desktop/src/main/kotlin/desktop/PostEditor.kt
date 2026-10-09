@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import application.post.PostLimits
 
 class PostEditorState(
     initialText: String,
@@ -38,7 +39,7 @@ fun rememberPostEditorState(initialText: String): PostEditorState = remember(ini
 fun postEditor(
     state: PostEditorState,
     modifier: Modifier = Modifier,
-    charLimit: Int = TWITTER_CHAR_LIMIT,
+    charLimit: Int = PostLimits.MAX_CHARACTERS,
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
         OutlinedTextField(
@@ -60,5 +61,3 @@ fun postEditor(
         )
     }
 }
-
-private const val TWITTER_CHAR_LIMIT = 280

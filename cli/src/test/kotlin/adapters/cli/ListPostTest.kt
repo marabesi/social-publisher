@@ -17,39 +17,38 @@ class ListPostTest {
 
     @MethodSource("postProvider")
     @ParameterizedTest
-    fun `should list post created`(
-        text: String,
-        expected: String,
-    ) {
+    fun `should list post created`(text: String) {
         cmd.execute("-c", text)
         cmd.execute("-l")
 
         val result = cmd.getExecutionResult<String>()
 
-        assertEquals(expected.trimIndent(), result)
+        assertEquals("1. $text (${text.length}/280)", result)
     }
 
     companion object {
         @JvmStatic
         fun postProvider(): Stream<Arguments> =
             Stream.of(
-                Arguments.of("a", "1. a"),
-                Arguments.of("b", "1. b"),
+                Arguments.of("a"),
+                Arguments.of("b"),
             )
     }
 
     @Test
     fun `should list posts created`() {
-        cmd.execute("-c", "this is my first post")
-        cmd.execute("-c", "this is my second post")
+        val first = "this is my first post"
+        val second = "this is my second post"
+        cmd.execute("-c", first)
+        cmd.execute("-c", second)
         cmd.execute("-l")
 
         val result = cmd.getExecutionResult<String>()
 
         assertEquals(
             """
-            1. this is my first post
-            2. this is my second post
+            1. $first (${first.length}/280)
+            2. $second (${second.length}/280)
             """.trimIndent(),
             result,
         )
@@ -57,22 +56,17 @@ class ListPostTest {
 
     @Test
     fun `should list post with three dots if it is greater than 50 chars`() {
-        cmd.execute(
-            "-c",
+        val text =
             """
                 caracters, our online editor can help you to improve word choice and writing style, and, optionally,
                 help you to detect grammar mistakes and plagiarism. To check word count, simply 1
-            """,
-        )
+            """
+
+        cmd.execute("-c", text)
         cmd.execute("-l")
 
         val result = cmd.getExecutionResult<String>()
 
-        assertEquals(
-            """1. 
-                caracters, our online editor can ...
-            """.trimIndent(),
-            result,
-        )
+        assertEquals("1. ${text.substring(0, 50)}... (${text.length}/280)", result)
     }
 }

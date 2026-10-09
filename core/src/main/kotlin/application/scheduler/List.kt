@@ -20,12 +20,10 @@ class List(
 
         for (scheduledItem in findAll) {
             val isLast: Boolean = findAll.size == index
-            result +=
-                if (isLast) {
-                    "$index. Post with id ${scheduledItem.post.id} will be published on ${scheduledItem.publishDate}"
-                } else {
-                    "$index. Post with id ${scheduledItem.post.id} will be published on ${scheduledItem.publishDate}\n"
-                }
+            val line =
+                "$index. Post with id ${scheduledItem.post.id} will be published on ${scheduledItem.publishDate} " +
+                    "(${scheduledItem.socialMedia.displayName})"
+            result += if (isLast) line else "$line\n"
             index++
         }
 

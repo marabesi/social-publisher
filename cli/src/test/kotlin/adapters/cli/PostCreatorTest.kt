@@ -3,6 +3,7 @@ package adapters.cli
 import MockedOutput
 import adapters.inbound.cli.Post
 import adapters.outbound.inmemory.InMemoryPostRepository
+import adapters.outbound.inmemory.InMemorySchedulerRepository
 import application.Messages
 import buildCommandLine
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -14,7 +15,7 @@ import java.io.PrintWriter
 import java.io.StringWriter
 
 class PostCreatorTest {
-    private val cmd = CommandLine(Post(InMemoryPostRepository(), MockedOutput()))
+    private val cmd = CommandLine(Post(InMemoryPostRepository(), InMemorySchedulerRepository(), MockedOutput()))
 
     @Test
     fun `should show help message for post command`() {
@@ -26,14 +27,19 @@ class PostCreatorTest {
 
         cmd.execute("post", "--help")
         assertEquals(
-            """
-            Usage: social post [-hlV] [-c=<text>]
-              -c=<text>       Creates a post
-              -h, --help      Show this help message and exit.
-              -l              List created posts
-              -V, --version   Print version information and exit.
-            
-            """.trimIndent(),
+            listOf(
+                "Usage: social post [-hlV] [-c=<text>] [--ids=<ids>] [--search=<search>]",
+                "                   [--social-media=<socialMedia>]",
+                "  -c=<text>               Creates a post",
+                "  -h, --help              Show this help message and exit.",
+                "      --ids=<ids>         List posts whose ids match the comma separated list",
+                "  -l                      List created posts",
+                "      --search=<search>   List posts matching the fuzzy text search",
+                "      --social-media=<socialMedia>",
+                "                          List posts scheduled for the given social media",
+                "  -V, --version           Print version information and exit.",
+                "",
+            ).joinToString("\n"),
             sw.toString(),
         )
     }

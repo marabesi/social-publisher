@@ -46,7 +46,7 @@ with `--server.port`, use that port in the URLs above.
 | --- | --- | --- |
 | `GET` | `/` | Index of the available resources (the API "home"). |
 | `POST` | `/api/posts` | Create a post. Body: `{"text": "..."}`. |
-| `GET` | `/api/posts` | List posts. Each entry includes `characterCount` and `characterLimit`. |
+| `GET` | `/api/posts` | List posts. Each entry includes `characterCount` and `characterLimit`. Query: `search`, `ids`, `socialMedia`. |
 | `POST` | `/api/schedules` | Schedule a post. Body: `{"postId": "1", "publishDate": "2099-01-02T09:00:00Z", "socialMedia": "TWITTER"}`. `socialMedia` accepts `TWITTER` or `LINKEDIN`. |
 | `GET` | `/api/schedules` | List schedules (each entry includes `socialMedia`). Query: `startDate`, `endDate`, `filter`, `orderBy`. |
 | `DELETE` | `/api/schedules/{id}` | Delete a schedule. |
@@ -76,6 +76,15 @@ with `--server.port`, use that port in the URLs above.
 ```sh
 curl --get localhost:8080/api/schedules --data-urlencode 'filter=post.text=release notes'
 curl --get localhost:8080/api/schedules --data-urlencode 'orderBy=publish_date=desc'
+```
+
+`GET /api/posts` accepts the same search filters as `social post -l` (see
+[Search posts](/guide/posts#search-posts)):
+
+```sh
+curl --get localhost:8080/api/posts --data-urlencode 'search=release notes'
+curl --get localhost:8080/api/posts --data-urlencode 'ids=1,3'
+curl --get localhost:8080/api/posts --data-urlencode 'socialMedia=LINKEDIN'
 ```
 
 ## Examples

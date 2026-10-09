@@ -60,6 +60,11 @@ Create or list posts.
 | --- | --- |
 | `-c <text>` | Create a post with the given text. |
 | `-l` | List created posts. |
+| `--search <text>` | Only posts matching the fuzzy, case-insensitive text search. |
+| `--ids <ids>` | Only posts whose id is in the comma separated list, e.g. `1,3`. |
+| `--social-media <network>` | Only posts scheduled for the given network (`TWITTER` or `LINKEDIN`). |
+
+The `-l` filters can be combined. See [Managing posts](/guide/posts#search-posts).
 
 ## `social scheduler create`
 

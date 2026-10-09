@@ -3,17 +3,23 @@ package adapters.cli
 import MockedOutput
 import adapters.inbound.cli.Post
 import adapters.outbound.inmemory.InMemoryPostRepository
+import adapters.outbound.inmemory.InMemorySchedulerRepository
+import application.entities.ScheduledItem
+import application.entities.SocialMedia
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import picocli.CommandLine
+import java.time.Instant
 import java.util.stream.Stream
 
 @Suppress("ktlint:standard:max-line-length", "ktlint:standard:string-template-indent")
 class ListPostTest {
-    private val cmd = CommandLine(Post(InMemoryPostRepository(), MockedOutput()))
+    private val postsRepository = InMemoryPostRepository()
+    private val schedulerRepository = InMemorySchedulerRepository()
+    private val cmd = CommandLine(Post(postsRepository, schedulerRepository, MockedOutput()))
 
     @MethodSource("postProvider")
     @ParameterizedTest
@@ -68,5 +74,45 @@ class ListPostTest {
         val result = cmd.getExecutionResult<String>()
 
         assertEquals("1. ${text.substring(0, 50)}... (${text.length}/280)", result)
+    }
+
+    @Test
+    fun `should list posts matching a fuzzy search`() {
+        cmd.execute("-c", "hello desktop")
+        cmd.execute("-c", "release notes")
+
+        cmd.execute("-l", "--search", "hlo dsk")
+
+        assertEquals("1. hello desktop (13/280)", cmd.getExecutionResult<String>())
+    }
+
+    @Test
+    fun `should list posts by more than one id`() {
+        cmd.execute("-c", "hello desktop")
+        cmd.execute("-c", "release notes")
+        cmd.execute("-c", "third post")
+
+        cmd.execute("-l", "--ids", "1,3")
+
+        assertEquals(
+            """
+            1. hello desktop (13/280)
+            3. third post (10/280)
+            """.trimIndent(),
+            cmd.getExecutionResult<String>(),
+        )
+    }
+
+    @Test
+    fun `should list posts scheduled for a social media`() {
+        cmd.execute("-c", "hello desktop")
+        cmd.execute("-c", "release notes")
+        schedulerRepository.save(
+            ScheduledItem(postsRepository.findById("2")!!, Instant.EPOCH, socialMedia = SocialMedia.LINKEDIN),
+        )
+
+        cmd.execute("-l", "--social-media", "LINKEDIN")
+
+        assertEquals("2. release notes (13/280)", cmd.getExecutionResult<String>())
     }
 }

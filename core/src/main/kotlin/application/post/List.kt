@@ -2,15 +2,18 @@ package application.post
 
 import application.Output
 import application.persistence.PostsRepository
+import application.persistence.SchedulerRepository
 
 const val ALLOWED_CHARACTERS_TO_SHOW = 50
 
 class List(
     private val postsRepository: PostsRepository,
+    private val schedulerRepository: SchedulerRepository,
     private val cliOutput: Output,
+    private val search: PostSearch = PostSearch(),
 ) {
     fun invoke(): String {
-        val findAll = postsRepository.findAll()
+        val findAll = Search(postsRepository, schedulerRepository).invoke(search)
         if (findAll.isEmpty()) {
             return cliOutput.write("No post found")
         }

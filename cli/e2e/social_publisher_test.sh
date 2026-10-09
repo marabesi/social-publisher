@@ -116,3 +116,30 @@ function test_schedule_with_local_time_converted_to_utc_using_configured_timezon
     local expected="1. Post with id 1 will be published on 2022-10-02T07:00:00Z"
     assert_contains "${expected}" "${output}"
 }
+
+###############################################
+## searching posts
+###############################################
+function test_search_posts_by_fuzzy_text() {
+    sh ./social/bin/social configuration -c '{"storage":"csv","fileName":"search-e2e","timezone":"UTC"}' > /dev/null
+    sh ./social/bin/social post -c "hello desktop" > /dev/null
+    sh ./social/bin/social post -c "release notes" > /dev/null
+
+    output=$(sh ./social/bin/social post -l --search "hlo dsk")
+    local expected="1. hello desktop"
+    assert_contains "${expected}" "${output}"
+}
+
+function test_search_posts_by_more_than_one_id() {
+    output=$(sh ./social/bin/social post -l --ids "1,2")
+    local expected="2. release notes"
+    assert_contains "${expected}" "${output}"
+}
+
+function test_search_posts_by_social_media() {
+    sh ./social/bin/social scheduler create -p "2" -d "2090-10-02T09:00:00Z" -s "LINKEDIN" > /dev/null
+
+    output=$(sh ./social/bin/social post -l --social-media "LINKEDIN")
+    local expected="2. release notes"
+    assert_contains "${expected}" "${output}"
+}

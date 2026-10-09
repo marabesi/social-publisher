@@ -3,6 +3,7 @@ package desktop
 import application.Output
 import application.entities.ScheduledItem
 import application.entities.SocialConfiguration
+import application.entities.SocialMedia
 import application.entities.SocialPosts
 import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
@@ -34,9 +35,10 @@ class SocialPublisherStore(
     fun schedule(
         postId: String,
         publishDate: String,
+        socialMedia: SocialMedia = SocialMedia.TWITTER,
     ): String {
         val create = application.scheduler.Create(postsRepository, schedulerRepository, configurationRepository, output)
-        return create.invoke(postId, publishDate)
+        return create.invoke(postId, publishDate, socialMedia)
     }
 
     fun schedules(): ArrayList<ScheduledItem> = schedulerRepository.findAll()

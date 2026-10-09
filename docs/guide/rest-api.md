@@ -28,7 +28,7 @@ java -jar social.jar rest serve --server.port=9090
 | --- | --- | --- |
 | `POST` | `/api/posts` | Create a post. Body: `{"text": "..."}`. |
 | `GET` | `/api/posts` | List posts. |
-| `POST` | `/api/schedules` | Schedule a post. Body: `{"postId": "1", "publishDate": "2099-01-02T09:00:00Z"}`. |
+| `POST` | `/api/schedules` | Schedule a post. Body: `{"postId": "1", "publishDate": "2099-01-02T09:00:00Z", "socialMedia": "TWITTER"}`. |
 | `GET` | `/api/schedules` | List schedules. Query: `startDate`, `endDate`, `filter`, `orderBy`. |
 | `DELETE` | `/api/schedules/{id}` | Delete a schedule. |
 | `POST` | `/api/poster/run` | Publish every due schedule. |
@@ -52,7 +52,7 @@ curl -X POST localhost:8080/api/posts \
 
 curl -X POST localhost:8080/api/schedules \
   -H 'Content-Type: application/json' \
-  -d '{"postId":"1","publishDate":"2099-01-02T09:00:00Z"}'
+  -d '{"postId":"1","publishDate":"2099-01-02T09:00:00Z","socialMedia":"TWITTER"}'
 
 curl localhost:8080/api/schedules
 ```

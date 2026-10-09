@@ -2,11 +2,11 @@ package adapters.inbound.cli.scheduler
 
 import application.Messages
 import application.Output
+import application.entities.SocialMedia
 import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
 import application.persistence.configuration.ConfigurationRepository
 import application.scheduler.Create
-import application.scheduler.SocialMedia
 import com.google.inject.Inject
 import picocli.CommandLine
 import java.util.concurrent.Callable
@@ -42,6 +42,6 @@ class SchedulerCreate
                 scheduleRepository,
                 configurationRepository,
                 cliOutput,
-            ).invoke(postId, targetDate)
+            ).invoke(postId, targetDate, socialMedia)
         }
     }

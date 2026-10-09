@@ -1,6 +1,7 @@
 package adapters.outbound.csv
 
 import application.entities.ScheduledItem
+import application.entities.SocialMedia
 import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
 import application.persistence.configuration.ConfigurationRepository
@@ -18,6 +19,7 @@ private const val POST_ID_INDEX = 0
 private const val PUBLISH_DATE_INDEX = 1
 private const val SCHEDULE_ITEM_ID_INDEX = 2
 private const val IS_PUBLISHED_INDEX = 3
+private const val SOCIAL_MEDIA_INDEX = 4
 
 class FileSystemSchedulerRepository(
     private val filePath: String = StorePath.DEFAULT.file("scheduler-${DataFileSuffix.DEFAULT_FALLBACK}.csv"),
@@ -44,6 +46,7 @@ class FileSystemSchedulerRepository(
             scheduledItem.publishDate,
             nextId,
             scheduledItem.published.toString(),
+            scheduledItem.socialMedia.name,
         )
         printer.close()
 
@@ -121,7 +124,16 @@ class FileSystemSchedulerRepository(
             Instant.parse(publishDate),
             scheduleId,
             isPublished.equals("true", ignoreCase = true),
+            socialMediaOf(record),
         )
+    }
+
+    private fun socialMediaOf(record: CSVRecord): SocialMedia {
+        if (record.size() <= SOCIAL_MEDIA_INDEX) {
+            return SocialMedia.TWITTER
+        }
+        val value = record[SOCIAL_MEDIA_INDEX].trim()
+        return SocialMedia.entries.firstOrNull { it.name.equals(value, ignoreCase = true) } ?: SocialMedia.TWITTER
     }
 
     private fun ensureFileExists(file: File) {

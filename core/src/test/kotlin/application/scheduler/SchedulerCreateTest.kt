@@ -6,6 +6,7 @@ import adapters.outbound.inmemory.InMemoryPostRepository
 import adapters.outbound.inmemory.InMemorySchedulerRepository
 import application.Messages
 import application.entities.SocialConfiguration
+import application.entities.SocialMedia
 import application.entities.SocialPosts
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -87,6 +88,34 @@ class SchedulerCreateTest {
 
         app.invoke("1", "2022-10-02T09:00:00Z")
         val result = app.invoke("1", "2022-10-02T09:00:00Z")
+
+        assertEquals("Post is already scheduled for 2022-10-02T09:00:00Z", result)
+    }
+
+    @Test
+    fun `should schedule post for the selected social media`() {
+        postsRepository.save(
+            arrayListOf(
+                SocialPosts(text = "anything"),
+            ),
+        )
+
+        val result = app.invoke("1", "2022-10-02T09:00:00Z", SocialMedia.TWITTER)
+
+        assertEquals("Post has been scheduled using UTC timezone", result)
+        assertEquals(SocialMedia.TWITTER, scheduleRepository.findAll()[0].socialMedia)
+    }
+
+    @Test
+    fun `should not schedule the same post twice for the same social media`() {
+        postsRepository.save(
+            arrayListOf(
+                SocialPosts(text = "anything"),
+            ),
+        )
+
+        app.invoke("1", "2022-10-02T09:00:00Z")
+        val result = app.invoke("1", "2022-10-02T09:00:00Z", SocialMedia.TWITTER)
 
         assertEquals("Post is already scheduled for 2022-10-02T09:00:00Z", result)
     }

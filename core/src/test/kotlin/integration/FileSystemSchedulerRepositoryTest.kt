@@ -3,6 +3,7 @@ package integration
 import adapters.outbound.csv.FileSystemSchedulerRepository
 import adapters.outbound.inmemory.InMemoryPostRepository
 import application.entities.ScheduledItem
+import application.entities.SocialMedia
 import application.entities.SocialPosts
 import application.scheduler.filters.StartDate
 import application.scheduler.filters.UntilDate
@@ -222,5 +223,61 @@ class FileSystemSchedulerRepositoryTest {
 
         assertEquals("1", scheduledItem.id)
         assertEquals(true, scheduledItem.published)
+    }
+
+    @Test
+    fun persistsAndReadsBackTheSocialMediaColumn() {
+        val post = SocialPosts("1", "another post")
+        val postsRepository = InMemoryPostRepository()
+        postsRepository.save(arrayListOf(post))
+
+        val repository = FileSystemSchedulerRepository(filePath, postsRepository)
+
+        repository.save(
+            ScheduledItem(
+                post,
+                Instant.parse("2021-11-25T11:00:00Z"),
+                socialMedia = SocialMedia.TWITTER,
+            ),
+        )
+
+        assertEquals(SocialMedia.TWITTER, repository.findAll()[0].socialMedia)
+    }
+
+    @Test
+    fun readsSchedulesWithoutTheSocialMediaColumnAsTwitter() {
+        val postsRepository = InMemoryPostRepository()
+        postsRepository.save(arrayListOf(SocialPosts("1", "legacy row")))
+        File(filePath).writeText("1,2022-10-02T09:00:00Z,1,false\n")
+
+        val repository = FileSystemSchedulerRepository(filePath, postsRepository)
+        val scheduledItem = repository.findAll().first()
+
+        assertEquals(SocialMedia.TWITTER, scheduledItem.socialMedia)
+    }
+
+    @Test
+    fun readsSchedulesWithAnIncompatibleSocialMediaColumnAsTwitter() {
+        val postsRepository = InMemoryPostRepository()
+        postsRepository.save(arrayListOf(SocialPosts("1", "legacy row")))
+        File(filePath).writeText("1,2026-10-10T11:11:11Z,1,false,2026-10-10T11:11:11Z\n")
+
+        val repository = FileSystemSchedulerRepository(filePath, postsRepository)
+        val scheduledItem = repository.findAll().first()
+
+        assertEquals(Instant.parse("2026-10-10T11:11:11Z"), scheduledItem.publishDate)
+        assertEquals(SocialMedia.TWITTER, scheduledItem.socialMedia)
+    }
+
+    @Test
+    fun readsSchedulesWithALowercaseSocialMediaColumnAsTwitter() {
+        val postsRepository = InMemoryPostRepository()
+        postsRepository.save(arrayListOf(SocialPosts("1", "legacy row")))
+        File(filePath).writeText("1,2022-10-02T09:00:00Z,1,false,twitter\n")
+
+        val repository = FileSystemSchedulerRepository(filePath, postsRepository)
+        val scheduledItem = repository.findAll().first()
+
+        assertEquals(SocialMedia.TWITTER, scheduledItem.socialMedia)
     }
 }

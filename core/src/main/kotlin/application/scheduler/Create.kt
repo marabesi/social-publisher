@@ -4,6 +4,7 @@ import application.Messages
 import application.Output
 import application.Timezone
 import application.entities.ScheduledItem
+import application.entities.SocialMedia
 import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
 import application.persistence.configuration.ConfigurationRepository
@@ -18,6 +19,7 @@ class Create(
     fun invoke(
         postId: String,
         targetDate: String,
+        socialMedia: SocialMedia = SocialMedia.TWITTER,
     ): String {
         if (postId.isNotEmpty() && targetDate.isNotEmpty()) {
             val post = postsRepository.findById(postId) ?: return cliOutput.write("Couldn't find post with id $postId")
@@ -30,7 +32,7 @@ class Create(
             }
 
             scheduleRepository.findAll().forEach {
-                if (it.publishDate == validTargetDate.value() && it.post.id == postId) {
+                if (it.publishDate == validTargetDate.value() && it.post.id == postId && it.socialMedia == socialMedia) {
                     return cliOutput.write("Post is already scheduled for $targetDate")
                 }
             }
@@ -39,6 +41,7 @@ class Create(
                 ScheduledItem(
                     post,
                     validTargetDate.value(),
+                    socialMedia = socialMedia,
                 ),
             )
             return cliOutput.write("Post has been scheduled using $timezone timezone")

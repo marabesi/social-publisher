@@ -7,7 +7,7 @@ class AppPageTest {
     @Test
     fun `offers every page in order`() {
         assertEquals(
-            listOf("Posts", "Schedules", "Compose", "Poster", "Configuration"),
+            listOf("Posts", "Schedules", "Compose", "Poster", "Configuration", "Home"),
             AppPage.entries.map { it.title },
         )
     }

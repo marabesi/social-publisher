@@ -6,6 +6,7 @@ import adapters.outbound.inmemory.ConfigurationInMemoryRepository
 import adapters.outbound.inmemory.InMemoryPostRepository
 import adapters.outbound.inmemory.InMemorySchedulerRepository
 import application.entities.SocialConfiguration
+import application.entities.SocialMedia
 import application.entities.SocialPosts
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -35,6 +36,15 @@ class SchedulerControllerTest {
         val message = controller.create(SchedulePostRequest("1", "2022-07-10T09:00:00Z"))
 
         assertEquals("Post has been scheduled using UTC timezone", message.message)
+    }
+
+    @Test
+    fun `should schedule a post for the selected social media`() {
+        postsRepository.save(arrayListOf(SocialPosts(text = "release notes")))
+
+        controller.create(SchedulePostRequest("1", "2022-07-10T09:00:00Z", SocialMedia.TWITTER))
+
+        assertEquals(SocialMedia.TWITTER, schedulerRepository.findAll()[0].socialMedia)
     }
 
     @Test

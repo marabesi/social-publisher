@@ -38,7 +38,7 @@ Common failures:
 | `Missing required fields` | `-d` was omitted. |
 | `Couldn't find post with id <id>` | No post exists with that id. |
 | `Invalid date time to schedule post` | The date is not a valid ISO-8601 date time. |
-| `Post is already scheduled for <date>` | The same post is already scheduled at that exact time. |
+| `Post is already scheduled for <date>` | The same post is already scheduled at that exact time for the same social network. |
 
 ## List schedules
 
@@ -76,6 +76,7 @@ unknown property or a malformed expression returns
 | `post.id` | Id of the scheduled post. |
 | `post.text` | Text of the scheduled post. |
 | `post.socialMediaId` | Social network id, set once published. |
+| `socialMedia` | Target social network, e.g. `TWITTER`. |
 
 ### Filter by date range
 

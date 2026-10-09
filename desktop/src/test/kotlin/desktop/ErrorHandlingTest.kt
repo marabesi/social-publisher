@@ -7,6 +7,7 @@ import adapters.outbound.inmemory.InMemorySchedulerRepository
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
@@ -26,6 +27,7 @@ class ErrorHandlingTest {
 
             setContent { desktopAppShell(storeWith(postsRepository)) }
 
+            onNodeWithTag(homeNavigationTag(AppPage.POSTS)).performClick()
             onNodeWithText("Remove").performClick()
 
             onNodeWithText("Something went wrong").assertIsDisplayed()
@@ -38,6 +40,8 @@ class ErrorHandlingTest {
         runComposeUiTest {
             setContent { desktopAppShell(storeWith(FailingFindAllPostsRepository())) }
 
+            onNodeWithTag(homeNavigationTag(AppPage.POSTS)).performClick()
+
             onNodeWithText("Something went wrong").assertIsDisplayed()
             onNodeWithText("Could not read the posts").assertIsDisplayed()
         }
@@ -47,6 +51,7 @@ class ErrorHandlingTest {
         runComposeUiTest {
             setContent { desktopAppShell(storeWith(FailingFindAllPostsRepository())) }
 
+            onNodeWithTag(homeNavigationTag(AppPage.POSTS)).performClick()
             onNodeWithText("Dismiss").performClick()
 
             onNodeWithText("Something went wrong").assertDoesNotExist()

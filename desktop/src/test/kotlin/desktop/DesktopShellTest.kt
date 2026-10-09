@@ -7,6 +7,7 @@ import adapters.outbound.inmemory.InMemorySchedulerRepository
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
@@ -23,6 +24,8 @@ class DesktopShellTest {
 
             setContent { desktopAppShell(store) }
 
+            onNodeWithText("What do you want to do?").assertIsDisplayed()
+            onNodeWithTag(homeNavigationTag(AppPage.POSTS)).performClick()
             onNodeWithText("hello desktop").assertIsDisplayed()
 
             onNodeWithContentDescription("Menu").performClick()
@@ -50,6 +53,7 @@ class DesktopShellTest {
 
             setContent { desktopAppShell(store) }
 
+            onNodeWithTag(homeNavigationTag(AppPage.POSTS)).performClick()
             onNodeWithText("Edit").performClick()
 
             onNodeWithText("Edit post").assertIsDisplayed()

@@ -7,6 +7,7 @@ import adapters.outbound.inmemory.InMemoryPostRepository
 import adapters.outbound.inmemory.InMemorySchedulerRepository
 import application.Messages
 import application.entities.SocialConfiguration
+import application.entities.SocialMedia
 import application.entities.SocialPosts
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -69,6 +70,20 @@ class SchedulerCreateTest {
 
         cmd.execute("-p", "1", "-d", "2022-10-02T09:00:00Z")
         assertEquals("Post has been scheduled using UTC timezone", cmd.getExecutionResult())
+    }
+
+    @Test
+    fun `should schedule post for the selected social media`() {
+        postsRepository.save(
+            arrayListOf(
+                SocialPosts(text = "anything"),
+            ),
+        )
+
+        cmd.execute("-p", "1", "-d", "2022-10-02T09:00:00Z", "-s", "TWITTER")
+
+        assertEquals("Post has been scheduled using UTC timezone", cmd.getExecutionResult())
+        assertEquals(SocialMedia.TWITTER, scheduleRepository.findAll()[0].socialMedia)
     }
 
     @Test

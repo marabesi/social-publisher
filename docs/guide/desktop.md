@@ -22,11 +22,14 @@ schedules and configuration as the terminal and the REST API.
 
 ## What you can do
 
+- Land on a home page with buttons that jump straight to any section, without
+  opening the drawer.
 - Store your JSON configuration and credentials.
 - Create new posts with a plain text editor and a live character count.
 - Browse every post in a table and **edit** or **remove** any of them.
 - Pick a publish date and time with a calendar and clock picker when scheduling.
-- Schedule a post for a publish date and delete schedules.
+- Schedule a post for a publish date — pick the target social network from a
+  dropdown — and delete schedules.
 - Run the poster automatically every minute (or on a cadence you choose) and see
   when it will run next.
 

@@ -40,7 +40,7 @@ class SchedulerController(
     ): MessageResponse =
         MessageResponse(
             Create(postsRepository, schedulerRepository, configurationRepository, output)
-                .invoke(request.postId, request.publishDate),
+                .invoke(request.postId, request.publishDate, request.socialMedia),
         )
 
     @GetMapping
@@ -62,6 +62,7 @@ class SchedulerController(
                 text = it.post.text,
                 publishDate = it.publishDate.toString(),
                 published = it.published,
+                socialMedia = it.socialMedia,
             )
         }
     }

@@ -14,6 +14,8 @@ class InMemorySchedulerRepository : SchedulerRepository {
                 scheduledItem.post,
                 scheduledItem.publishDate,
                 id.toString(),
+                scheduledItem.published,
+                scheduledItem.socialMedia,
             ),
         )
     }

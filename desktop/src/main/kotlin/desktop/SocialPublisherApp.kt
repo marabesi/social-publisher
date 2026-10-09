@@ -48,7 +48,7 @@ fun socialPublisherApp() {
 fun desktopAppShell(store: SocialPublisherStore) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    var selectedPage by remember { mutableStateOf(AppPage.POSTS) }
+    var selectedPage by remember { mutableStateOf(AppPage.HOME) }
     var postToEdit by remember { mutableStateOf<SocialPosts?>(null) }
     var error by remember { mutableStateOf<Throwable?>(null) }
     val errorReporter = remember { ErrorReporter { error = it } }
@@ -98,6 +98,13 @@ fun desktopAppShell(store: SocialPublisherStore) {
                         modifier = Modifier.fillMaxSize().padding(padding),
                     ) {
                         when (selectedPage) {
+                            AppPage.HOME ->
+                                homePage(
+                                    onNavigate = { page ->
+                                        postToEdit = null
+                                        selectedPage = page
+                                    },
+                                )
                             AppPage.POSTS ->
                                 postsPage(
                                     store = store,

@@ -7,4 +7,5 @@ data class ScheduledItem(
     val publishDate: Instant,
     val id: String? = "",
     var published: Boolean = false,
+    val socialMedia: SocialMedia = SocialMedia.TWITTER,
 )

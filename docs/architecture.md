@@ -42,8 +42,8 @@ others.
                                 |         |           |
                                 v         v           v
                          +-----------+  +-----+  +-----------------+
-                         |  data/    |  |stdout| | X / Twitter API |
-                         | CSV+JSON  |  +-----+ |   OAuth 1.0a    |
+                         |  data/    |  |stdout| | X / LinkedIn    |
+                         | CSV+JSON  |  +-----+ |   APIs          |
                          +-----------+          +-----------------+
 ```
 
@@ -53,7 +53,7 @@ others.
 | --- | --- | --- |
 | Core | `core/src/main/kotlin/application` | Entities, use cases and ports. No framework or I/O imports. |
 | Inbound adapters | `cli/.../adapters/inbound/cli`, `rest-api/.../adapters/inbound/rest`, `desktop/` | picocli commands, REST controllers, and a Compose UI that drive the use cases. |
-| Outbound adapters | `core/src/main/kotlin/adapters/outbound` | Port implementations: CSV persistence, Twitter, in-memory (tests). |
+| Outbound adapters | `core/src/main/kotlin/adapters/outbound` | Port implementations: CSV persistence, Twitter, LinkedIn, in-memory (tests). |
 
 Persistence ports live under `application/persistence`, output under
 `application/Output.kt`, and social network integrations under
@@ -88,6 +88,7 @@ The same store is shared by the CLI, the REST API and the desktop app. See
 ## Extending it
 
 New behavior belongs in `application/` behind a port, with concrete adapters
-wired at the edges. For example, adding LinkedIn means a new
-`SocialThirdParty` implementation rather than changes to the publishing use
-case. See the repository's `AGENTS.md` for the full conventions.
+wired at the edges. Each supported network is a `SocialThirdParty`
+implementation (Twitter, LinkedIn) resolved by `SocialThirdPartyProvider` from
+the schedule's `socialMedia`, so the publishing use case stays unaware of the
+concrete APIs. See the repository's `AGENTS.md` for the full conventions.

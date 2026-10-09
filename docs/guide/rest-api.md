@@ -47,12 +47,14 @@ with `--server.port`, use that port in the URLs above.
 | `GET` | `/` | Index of the available resources (the API "home"). |
 | `POST` | `/api/posts` | Create a post. Body: `{"text": "..."}`. |
 | `GET` | `/api/posts` | List posts. Each entry includes `characterCount` and `characterLimit`. |
-| `POST` | `/api/schedules` | Schedule a post. Body: `{"postId": "1", "publishDate": "2099-01-02T09:00:00Z", "socialMedia": "TWITTER"}`. |
+| `POST` | `/api/schedules` | Schedule a post. Body: `{"postId": "1", "publishDate": "2099-01-02T09:00:00Z", "socialMedia": "TWITTER"}`. `socialMedia` accepts `TWITTER` or `LINKEDIN`. |
 | `GET` | `/api/schedules` | List schedules (each entry includes `socialMedia`). Query: `startDate`, `endDate`, `filter`, `orderBy`. |
 | `DELETE` | `/api/schedules/{id}` | Delete a schedule. |
 | `POST` | `/api/poster/run` | Publish every due schedule. |
 | `GET` | `/api/configuration` | Read the stored configuration. |
 | `POST` | `/api/configuration` | Store a configuration. |
+| `GET` | `/api/linkedin/authorization-url` | Get the LinkedIn authorization URL. Optional query: `state`. |
+| `POST` | `/api/linkedin/token` | Exchange a LinkedIn authorization code. Body: `{"code": "..."}`. |
 
 `GET /` returns the index of resources:
 
@@ -86,6 +88,10 @@ curl -X POST localhost:8080/api/posts \
 curl -X POST localhost:8080/api/schedules \
   -H 'Content-Type: application/json' \
   -d '{"postId":"1","publishDate":"2099-01-02T09:00:00Z","socialMedia":"TWITTER"}'
+
+curl -X POST localhost:8080/api/schedules \
+  -H 'Content-Type: application/json' \
+  -d '{"postId":"1","publishDate":"2099-01-03T09:00:00Z","socialMedia":"LINKEDIN"}'
 
 curl localhost:8080/api/schedules
 ```

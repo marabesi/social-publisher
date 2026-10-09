@@ -24,7 +24,9 @@ schedules and configuration as the terminal and the REST API.
 
 - Land on a home page with buttons that jump straight to any section, without
   opening the drawer.
-- Store your JSON configuration and credentials.
+- Store your JSON configuration, including Twitter (X) and LinkedIn credentials.
+- Connect LinkedIn from the configuration page: generate the authorization URL,
+  open it in your browser and paste the returned code back to store the token.
 - Create new posts with a plain text editor and a live character count.
 - Browse every post in a table and **edit** or **remove** any of them.
 - Pick a publish date and time with a calendar and clock picker when scheduling.

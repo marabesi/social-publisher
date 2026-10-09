@@ -2,7 +2,7 @@ package adapters.outbound.social
 
 import application.entities.SocialPosts
 import application.persistence.configuration.ConfigurationRepository
-import application.socialnetwork.CreateTweet
+import application.socialnetwork.PublishPost
 import jakarta.inject.Inject
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.buildJsonObject
@@ -48,8 +48,8 @@ class Twitter
     @Inject
     constructor(
         val configurationRepository: ConfigurationRepository,
-    ) : CreateTweet {
-        override fun sendTweet(text: String): SocialPosts {
+    ) : PublishPost {
+        override fun publish(text: String): SocialPosts {
             val configuration = configurationRepository.find()
             val consumerKey = configuration.twitter!!.consumerKey
             val consumerSecret = configuration.twitter!!.consumerSecret
@@ -77,7 +77,7 @@ class Twitter
                     .use { it.readText() }
 
             if (response.statusLine.statusCode != HttpStatus.SC_CREATED) {
-                throw CouldNotCreateTweetException(responseBody + " " + response.allHeaders.contentDeepToString())
+                throw CouldNotPublishPostException(responseBody + " " + response.allHeaders.contentDeepToString())
             }
 
             val jsonData = Json.parseToJsonElement(responseBody)

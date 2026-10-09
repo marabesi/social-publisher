@@ -5,8 +5,8 @@ import application.entities.SocialConfiguration
 import application.entities.SocialPosts
 import application.entities.TwitterCredentials
 import application.persistence.configuration.ConfigurationRepository
-import application.socialnetwork.CreateTweet
 import application.socialnetwork.MissingConfigurationSetup
+import application.socialnetwork.PublishPost
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -22,12 +22,12 @@ class TwitterTest {
             Instant.parse("2014-12-22T10:15:30Z"),
         )
 
-    private val socialIntegration: CreateTweet = mockk()
+    private val socialIntegration: PublishPost = mockk()
     private val configurationRepository: ConfigurationRepository = mockk()
 
     private fun buildTwitter(
         configuration: SocialConfiguration,
-        createTweet: CreateTweet,
+        createTweet: PublishPost,
     ): TwitterCredentialsValidator {
         every { configurationRepository.find() } returns configuration
 
@@ -126,7 +126,7 @@ class TwitterTest {
                 scheduledPost.post.text,
                 "twitter-id",
             )
-        every { socialIntegration.sendTweet(any()) } returns tweet
+        every { socialIntegration.publish(any()) } returns tweet
 
         val twitter =
             buildTwitter(
@@ -144,6 +144,6 @@ class TwitterTest {
 
         twitter.send(scheduledPost)
 
-        verify(exactly = 1) { socialIntegration.sendTweet(scheduledPost.post.text) }
+        verify(exactly = 1) { socialIntegration.publish(scheduledPost.post.text) }
     }
 }

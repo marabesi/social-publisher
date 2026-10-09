@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import application.entities.LinkedInCredentials
 import application.entities.SocialConfiguration
 import application.entities.TwitterCredentials
 
@@ -35,6 +36,13 @@ fun configurationPage(store: SocialPublisherStore) {
     var consumerSecret by remember { mutableStateOf(existing?.twitter?.consumerSecret.orEmpty()) }
     var accessToken by remember { mutableStateOf(existing?.twitter?.accessToken.orEmpty()) }
     var accessTokenSecret by remember { mutableStateOf(existing?.twitter?.accessTokenSecret.orEmpty()) }
+    var linkedinClientId by remember { mutableStateOf(existing?.linkedin?.clientId.orEmpty()) }
+    var linkedinClientSecret by remember { mutableStateOf(existing?.linkedin?.clientSecret.orEmpty()) }
+    var linkedinRedirectUri by remember { mutableStateOf(existing?.linkedin?.redirectUri.orEmpty()) }
+    var linkedinAccessToken by remember { mutableStateOf(existing?.linkedin?.accessToken.orEmpty()) }
+    var linkedinAuthorUrn by remember { mutableStateOf(existing?.linkedin?.authorUrn.orEmpty()) }
+    var linkedinUrl by remember { mutableStateOf("") }
+    var linkedinCode by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("") }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
@@ -58,6 +66,14 @@ fun configurationPage(store: SocialPublisherStore) {
                                             consumerSecret = consumerSecret,
                                             accessToken = accessToken,
                                             accessTokenSecret = accessTokenSecret,
+                                        ),
+                                    linkedin =
+                                        LinkedInCredentials(
+                                            clientId = linkedinClientId,
+                                            clientSecret = linkedinClientSecret,
+                                            redirectUri = linkedinRedirectUri,
+                                            accessToken = linkedinAccessToken,
+                                            authorUrn = linkedinAuthorUrn,
                                         ),
                                 ),
                             )
@@ -122,6 +138,100 @@ fun configurationPage(store: SocialPublisherStore) {
                 label = { Text("Access token secret") },
                 modifier = Modifier.fillMaxWidth(),
             )
+
+            Text("LinkedIn credentials", style = MaterialTheme.typography.titleMedium)
+
+            OutlinedTextField(
+                value = linkedinClientId,
+                onValueChange = { linkedinClientId = it },
+                label = { Text("LinkedIn client id") },
+                modifier = Modifier.fillMaxWidth(),
+            )
+            OutlinedTextField(
+                value = linkedinClientSecret,
+                onValueChange = { linkedinClientSecret = it },
+                label = { Text("LinkedIn client secret") },
+                modifier = Modifier.fillMaxWidth(),
+            )
+            OutlinedTextField(
+                value = linkedinRedirectUri,
+                onValueChange = { linkedinRedirectUri = it },
+                label = { Text("LinkedIn redirect uri") },
+                modifier = Modifier.fillMaxWidth(),
+            )
+            OutlinedTextField(
+                value = linkedinAccessToken,
+                onValueChange = { linkedinAccessToken = it },
+                label = { Text("LinkedIn access token") },
+                modifier = Modifier.fillMaxWidth(),
+            )
+            OutlinedTextField(
+                value = linkedinAuthorUrn,
+                onValueChange = { linkedinAuthorUrn = it },
+                label = { Text("LinkedIn author urn") },
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            Text("Connect LinkedIn", style = MaterialTheme.typography.titleMedium)
+            Text(
+                "Store the configuration first, then generate the URL, approve it in your browser and paste the code back.",
+                style = MaterialTheme.typography.bodyMedium,
+            )
+
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(
+                    onClick = {
+                        linkedinUrl = errorReporter.reporting("") { store.linkedInAuthorizationUrl() }
+                    },
+                ) {
+                    Text("Generate authorization URL")
+                }
+                Button(
+                    enabled = linkedinUrl.startsWith("http"),
+                    onClick = { openInBrowser(linkedinUrl) },
+                ) {
+                    Text("Open in browser")
+                }
+            }
+
+            if (linkedinUrl.isNotBlank()) {
+                OutlinedTextField(
+                    value = linkedinUrl,
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { Text("Authorization URL") },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+
+            OutlinedTextField(
+                value = linkedinCode,
+                onValueChange = { linkedinCode = it },
+                label = { Text("Authorization code") },
+                modifier = Modifier.fillMaxWidth(),
+            )
+            Button(
+                onClick = {
+                    errorReporter.reporting {
+                        message = store.connectLinkedIn(linkedinCode)
+                        linkedinCode = ""
+                        val connected = store.configuration()?.linkedin
+                        linkedinAccessToken = connected?.accessToken.orEmpty()
+                        linkedinAuthorUrn = connected?.authorUrn.orEmpty()
+                    }
+                },
+            ) {
+                Text("Store token")
+            }
+        }
+    }
+}
+
+private fun openInBrowser(url: String) {
+    runCatching {
+        if (java.awt.Desktop.isDesktopSupported()) {
+            val desktop = java.awt.Desktop.getDesktop()
+            desktop.browse(java.net.URI(url))
         }
     }
 }
@@ -131,6 +241,7 @@ internal fun configurationFrom(
     storage: String,
     timezone: String,
     twitter: TwitterCredentials?,
+    linkedin: LinkedInCredentials? = null,
 ): SocialConfiguration {
     val credentials =
         twitter?.takeIf {
@@ -140,10 +251,20 @@ internal fun configurationFrom(
                 it.accessTokenSecret.isNotBlank()
         }
 
+    val linkedinCredentials =
+        linkedin?.takeIf {
+            it.clientId.isNotBlank() ||
+                it.clientSecret.isNotBlank() ||
+                it.redirectUri.isNotBlank() ||
+                it.accessToken.isNotBlank() ||
+                it.authorUrn.isNotBlank()
+        }
+
     return SocialConfiguration(
         fileName = fileName,
         storage = storage,
         twitter = credentials,
+        linkedin = linkedinCredentials,
         timezone = timezone,
     )
 }

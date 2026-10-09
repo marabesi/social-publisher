@@ -4,10 +4,12 @@ import MockedOutput
 import adapters.outbound.inmemory.ConfigurationInMemoryRepository
 import adapters.outbound.inmemory.InMemorySchedulerRepository
 import application.entities.ScheduledItem
+import application.entities.SocialMedia
 import application.entities.SocialPosts
 import application.persistence.SchedulerRepository
 import application.persistence.configuration.ConfigurationRepository
 import application.socialnetwork.SocialThirdParty
+import application.socialnetwork.SocialThirdPartyProvider
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
@@ -25,6 +27,10 @@ class ExecutorTest {
     private lateinit var configurationRepository: ConfigurationRepository
     private var currentDate: Instant = Instant.now()
     private val socialThirdParty: SocialThirdParty = mockk()
+    private val socialNetworks: SocialThirdPartyProvider =
+        object : SocialThirdPartyProvider {
+            override fun forMedia(socialMedia: SocialMedia): SocialThirdParty = socialThirdParty
+        }
 
     @BeforeEach
     fun setUp() {
@@ -84,6 +90,24 @@ class ExecutorTest {
             """.trimIndent(),
             result,
         )
+    }
+
+    @Test
+    fun `should send posts to the destination configured in the schedule`() {
+        val scheduledItem =
+            ScheduledItem(
+                SocialPosts(id = "1", text = "linkedin post"),
+                Instant.parse("2014-12-22T10:15:30Z"),
+                "1",
+                socialMedia = SocialMedia.LINKEDIN,
+            )
+
+        schedulerRepository.save(scheduledItem)
+        every { socialThirdParty.send(scheduledItem) } returns scheduledItem.post
+
+        val result = executor.invoke()
+
+        Assertions.assertEquals("Post 1 sent to linkedin", result)
     }
 
     @Test
@@ -172,7 +196,7 @@ class ExecutorTest {
                 schedulerRepository,
                 MockedOutput(),
                 currentDate,
-                socialThirdParty,
+                socialNetworks,
             )
     }
 

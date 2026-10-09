@@ -4,21 +4,28 @@ import Main
 import adapters.outbound.csv.FileSystemConfigurationRepository
 import adapters.outbound.csv.FileSystemPostRepository
 import adapters.outbound.csv.FileSystemSchedulerRepository
+import adapters.outbound.social.LinkedInOAuthClient
+import adapters.outbound.social.LinkedinCredentialsValidator
+import adapters.outbound.social.SocialThirdPartyRouting
 import adapters.outbound.social.TweetCreated
 import adapters.outbound.social.TweetCreatedInterceptor
 import adapters.outbound.social.Twitter
 import adapters.outbound.social.TwitterCredentialsValidator
 import application.Output
+import application.entities.SocialMedia
 import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
 import application.persistence.configuration.ConfigurationRepository
-import application.socialnetwork.CreateTweet
+import application.socialnetwork.ExchangeLinkedInAuthorization
+import application.socialnetwork.PublishPost
 import application.socialnetwork.SocialThirdParty
+import application.socialnetwork.SocialThirdPartyProvider
 import com.google.inject.AbstractModule
 import com.google.inject.ConfigurationException
 import com.google.inject.Guice
 import com.google.inject.matcher.Matchers.annotatedWith
 import com.google.inject.matcher.Matchers.any
+import com.google.inject.multibindings.MapBinder
 import picocli.CommandLine
 import java.time.Instant
 
@@ -46,8 +53,14 @@ class TweetCreatedModule(
         val scheduler = FileSystemSchedulerRepository(postsRepository = postRepository, configurationRepository = configuration)
         bind(SchedulerRepository::class.java).toInstance(scheduler)
 
-        bind(SocialThirdParty::class.java).to(TwitterCredentialsValidator::class.java)
-        bind(CreateTweet::class.java).to(Twitter::class.java)
+        bind(PublishPost::class.java).to(Twitter::class.java)
+
+        val socialNetworks = MapBinder.newMapBinder(binder(), SocialMedia::class.java, SocialThirdParty::class.java)
+        socialNetworks.addBinding(SocialMedia.TWITTER).to(TwitterCredentialsValidator::class.java)
+        socialNetworks.addBinding(SocialMedia.LINKEDIN).to(LinkedinCredentialsValidator::class.java)
+
+        bind(SocialThirdPartyProvider::class.java).to(SocialThirdPartyRouting::class.java)
+        bind(ExchangeLinkedInAuthorization::class.java).to(LinkedInOAuthClient::class.java)
     }
 }
 

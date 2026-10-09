@@ -4,7 +4,7 @@ layout: home
 hero:
   name: Social Publisher
   text: Schedule once, publish later
-  tagline: A desktop app, a command line and a REST API that store your posts in plain local files and publish them to X (Twitter) when the time comes.
+  tagline: A desktop app, a command line and a REST API that store your posts in plain local files and publish them to X (Twitter) or LinkedIn when the time comes.
   actions:
     - theme: brand
       text: Download & get started
@@ -25,6 +25,6 @@ features:
     details: Create a post, attach a publish date, then run the poster routine to send everything that is due.
   - title: Desktop, terminal or API
     details: A Compose desktop app, a picocli command line and a REST API drive the same data, so you can switch between them freely.
-  - title: Twitter today
-    details: X (Twitter) is supported through OAuth 1.0a, with LinkedIn on the roadmap.
+  - title: Twitter and LinkedIn
+    details: X (Twitter) is supported through OAuth 1.0a and LinkedIn through OAuth 2.0. Pick the destination per schedule.
 ---

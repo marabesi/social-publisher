@@ -6,10 +6,12 @@ import adapters.outbound.inmemory.ConfigurationInMemoryRepository
 import adapters.outbound.inmemory.InMemorySchedulerRepository
 import application.Messages
 import application.entities.ScheduledItem
+import application.entities.SocialMedia
 import application.entities.SocialPosts
 import application.persistence.SchedulerRepository
 import application.persistence.configuration.ConfigurationRepository
 import application.socialnetwork.SocialThirdParty
+import application.socialnetwork.SocialThirdPartyProvider
 import buildCommandLine
 import io.mockk.clearMocks
 import io.mockk.every
@@ -34,6 +36,10 @@ class PosterTest {
     private lateinit var configurationRepository: ConfigurationRepository
     private var currentDate: Instant = Instant.now()
     private val socialThirdParty: SocialThirdParty = mockk()
+    private val socialNetworks: SocialThirdPartyProvider =
+        object : SocialThirdPartyProvider {
+            override fun forMedia(socialMedia: SocialMedia): SocialThirdParty = socialThirdParty
+        }
 
     @BeforeEach
     fun setUp() {
@@ -100,6 +106,15 @@ class PosterTest {
     }
 
     @Test
+    fun `should report the target social media`() {
+        val code = cmd.execute("-p", "1", "-s", "linkedin")
+        val result = cmd.getExecutionResult<String>()
+
+        Assertions.assertEquals(0, code)
+        Assertions.assertEquals("Post 1 set to linkedin", result)
+    }
+
+    @Test
     fun `should send post to twitter`() {
         val instantExpected = "2014-12-22T10:15:31Z"
         val clock: Clock = Clock.fixed(Instant.parse(instantExpected), ZoneId.of("UTC"))
@@ -129,7 +144,7 @@ class PosterTest {
                 schedulerRepository,
                 MockedOutput(),
                 currentDate,
-                socialThirdParty,
+                socialNetworks,
             )
         cmd = CommandLine(app)
     }

@@ -4,9 +4,13 @@ import MockedOutput
 import adapters.outbound.inmemory.ConfigurationInMemoryRepository
 import adapters.outbound.inmemory.InMemoryPostRepository
 import adapters.outbound.inmemory.InMemorySchedulerRepository
+import application.entities.LinkedInCredentials
 import application.entities.SocialConfiguration
+import application.socialnetwork.ExchangeLinkedInAuthorization
+import application.socialnetwork.LinkedInToken
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Instant
@@ -21,7 +25,7 @@ class SocialPublisherStoreTest {
             schedulerRepository = schedulerRepository,
             configurationRepository = configurationRepository,
             output = MockedOutput(),
-            twitterClient = MockedSocialThirdParty(),
+            socialNetworks = MockedSocialThirdParty(),
         )
 
     @BeforeEach
@@ -77,7 +81,7 @@ class SocialPublisherStoreTest {
                 schedulerRepository = InMemorySchedulerRepository(),
                 configurationRepository = ConfigurationInMemoryRepository(),
                 output = MockedOutput(),
-                twitterClient = MockedSocialThirdParty(),
+                socialNetworks = MockedSocialThirdParty(),
             )
 
         assertNull(emptyStore.configuration())
@@ -93,7 +97,7 @@ class SocialPublisherStoreTest {
                     ConfigurationInMemoryRepository()
                         .apply { save(SocialConfiguration(timezone = "UTC")) },
                 output = MockedOutput(),
-                twitterClient = MockedSocialThirdParty(),
+                socialNetworks = MockedSocialThirdParty(),
                 currentDate = { Instant.parse("2026-10-02T09:00:00Z") },
             )
 
@@ -121,5 +125,37 @@ class SocialPublisherStoreTest {
         store.deleteSchedule("1")
 
         assertEquals(0, store.schedules().size)
+    }
+
+    @Test
+    fun `should generate the linkedin authorization url and connect`() {
+        val exchange = ExchangeLinkedInAuthorization { LinkedInToken("token", "urn:li:person:1") }
+        val connectStore =
+            SocialPublisherStore(
+                postsRepository = InMemoryPostRepository(),
+                schedulerRepository = InMemorySchedulerRepository(),
+                configurationRepository =
+                    ConfigurationInMemoryRepository()
+                        .apply {
+                            save(
+                                SocialConfiguration(
+                                    linkedin =
+                                        LinkedInCredentials(
+                                            clientId = "client-id",
+                                            clientSecret = "client-secret",
+                                            redirectUri = "https://example.com/callback",
+                                        ),
+                                ),
+                            )
+                        },
+                output = MockedOutput(),
+                socialNetworks = MockedSocialThirdParty(),
+                exchangeLinkedIn = exchange,
+            )
+
+        assertTrue(connectStore.linkedInAuthorizationUrl().contains("client_id=client-id"))
+
+        assertEquals("LinkedIn account connected", connectStore.connectLinkedIn("code"))
+        assertEquals("token", connectStore.configuration()?.linkedin?.accessToken)
     }
 }

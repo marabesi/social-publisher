@@ -43,8 +43,10 @@ class SchedulerControllerTest {
         postsRepository.save(arrayListOf(SocialPosts(text = "release notes")))
 
         controller.create(SchedulePostRequest("1", "2022-07-10T09:00:00Z", SocialMedia.TWITTER))
+        controller.create(SchedulePostRequest("1", "2022-07-11T09:00:00Z", SocialMedia.LINKEDIN))
 
         assertEquals(SocialMedia.TWITTER, schedulerRepository.findAll()[0].socialMedia)
+        assertEquals(SocialMedia.LINKEDIN, schedulerRepository.findAll()[1].socialMedia)
     }
 
     @Test

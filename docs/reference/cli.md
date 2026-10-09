@@ -17,6 +17,7 @@ Commands:
   scheduler      Create, list and delete schedules
   poster         Publish due schedules
   configuration  Store and inspect configuration
+  linkedin       Connect a LinkedIn account
   desktop        Launch the Compose desktop app
   rest           Serve the REST API
 ```
@@ -68,7 +69,7 @@ Schedule a post for a publish date.
 | --- | --- |
 | `-p <id>` | Id of the post to schedule. |
 | `-d <instant>` | Publish date as an ISO-8601 instant, e.g. `2026-10-02T09:00:00Z`. |
-| `-s <network>` | Target network. Defaults to `TWITTER`. |
+| `-s <network>` | Target network. Accepts `TWITTER` or `LINKEDIN`. Defaults to `TWITTER`. |
 
 ## `social scheduler list`
 
@@ -90,6 +91,25 @@ Delete a schedule by its listed id.
 | --- | --- |
 | `-id <id>` | Id of the schedule to remove. |
 
+## `social linkedin connect`
+
+Print the LinkedIn authorization URL to obtain an access token. Requires
+`linkedin.clientId` and `linkedin.redirectUri` to be stored. See
+[Connect LinkedIn](/guide/configuration#connect-linkedin).
+
+| Option | Description |
+| --- | --- |
+| `--state <value>` | Opaque value echoed back by LinkedIn (defaults to `social-publisher`). |
+
+## `social linkedin token`
+
+Exchange the authorization code for an access token and store it together with
+the member URN.
+
+| Option | Description |
+| --- | --- |
+| `-c`, `--code <code>` | Authorization code from the redirect URL (required). |
+
 ## `social poster`
 
 Publish due schedules.
@@ -104,5 +124,9 @@ Publish due schedules.
 | --- | --- | --- |
 | `twitter.api.baseUrl` (system property) | `https://api.twitter.com` | Base URL for the X API. |
 | `TWITTER_API_BASE_URL` (environment variable) | — | Fallback base URL for the X API. |
+| `linkedin.api.baseUrl` (system property) | `https://api.linkedin.com` | Base URL for the LinkedIn API. |
+| `LINKEDIN_API_BASE_URL` (environment variable) | — | Fallback base URL for the LinkedIn API. |
+| `linkedin.oauth.baseUrl` (system property) | `https://www.linkedin.com` | Base URL for the LinkedIn OAuth token exchange. |
+| `LINKEDIN_OAUTH_BASE_URL` (environment variable) | — | Fallback base URL for the LinkedIn OAuth token exchange. |
 
 These are mainly useful for pointing the CLI at a stub during tests.

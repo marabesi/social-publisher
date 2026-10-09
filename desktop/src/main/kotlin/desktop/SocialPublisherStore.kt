@@ -10,7 +10,10 @@ import application.persistence.SchedulerRepository
 import application.persistence.configuration.ConfigurationRepository
 import application.persistence.configuration.MissingConfiguration
 import application.post.Create
-import application.socialnetwork.SocialThirdParty
+import application.socialnetwork.AuthorizationUrl
+import application.socialnetwork.ConnectLinkedIn
+import application.socialnetwork.ExchangeLinkedInAuthorization
+import application.socialnetwork.SocialThirdPartyProvider
 import java.time.Instant
 
 class SocialPublisherStore(
@@ -18,7 +21,9 @@ class SocialPublisherStore(
     private val schedulerRepository: SchedulerRepository,
     private val configurationRepository: ConfigurationRepository,
     private val output: Output,
-    private val twitterClient: SocialThirdParty,
+    private val socialNetworks: SocialThirdPartyProvider,
+    private val exchangeLinkedIn: ExchangeLinkedInAuthorization =
+        ExchangeLinkedInAuthorization { error("LinkedIn OAuth exchange is not configured") },
     private val currentDate: () -> Instant = { Instant.now() },
 ) {
     fun createPost(text: String): String = Create(postsRepository, output).invoke(text)
@@ -57,8 +62,16 @@ class SocialPublisherStore(
     fun storeConfiguration(configuration: SocialConfiguration): String =
         application.configuration.Create(output, configurationRepository).invoke(configuration)
 
+    fun linkedInAuthorizationUrl(state: String = AuthorizationUrl.DEFAULT_STATE): String =
+        AuthorizationUrl(configurationRepository, output).invoke(state)
+
+    fun connectLinkedIn(code: String): String {
+        val connect = ConnectLinkedIn(configurationRepository, exchangeLinkedIn, output)
+        return connect.invoke(code)
+    }
+
     fun runPoster(): String {
-        val executor = application.poster.Executor(schedulerRepository, output, currentDate(), twitterClient)
+        val executor = application.poster.Executor(schedulerRepository, output, currentDate(), socialNetworks)
         return executor.invoke()
     }
 }

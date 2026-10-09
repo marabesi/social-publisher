@@ -23,10 +23,18 @@ time:
   Waiting for the date to come to publish post 1 (scheduled for 02 Oct 2026 09:00:00)
   ```
 
-- **Date reached** → the post is sent and marked as published:
+- **Date reached** → the post is sent to the schedule's target network and
+  marked as published:
 
   ```text
   Post 1 sent to twitter
+  ```
+
+  Each schedule is sent to the network chosen with
+  [`scheduler create -s`](/guide/scheduling#create-a-schedule):
+
+  ```text
+  Post 1 sent to linkedin
   ```
 
 When there is nothing left to send:
@@ -67,8 +75,9 @@ happen automatically.
 | `Missing required configuration: twitter` | No `twitter` object in the configuration. |
 | `Missing required configuration: consumer key` | `twitter.consumerKey` is empty. |
 | `Missing required configuration: consumer secret` | `twitter.consumerSecret` is empty. |
-| `Missing required configuration: access token` | `twitter.accessToken` is empty. |
+| `Missing required configuration: access token` | `twitter.accessToken` (or `linkedin.accessToken`) is empty. |
 | `Missing required configuration: token secret` | `twitter.accessTokenSecret` is empty. |
+| `Missing required configuration: author urn` | `linkedin.authorUrn` is empty. |
 
-If the network rejects the request, the underlying error body from the X API is
-surfaced to help you debug permissions or revoked tokens.
+If the network rejects the request, the underlying error body from the X or
+LinkedIn API is surfaced to help you debug permissions or revoked tokens.

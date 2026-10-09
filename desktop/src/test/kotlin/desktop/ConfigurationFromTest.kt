@@ -1,5 +1,6 @@
 package desktop
 
+import application.entities.LinkedInCredentials
 import application.entities.TwitterCredentials
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
@@ -46,5 +47,33 @@ class ConfigurationFromTest {
             )
 
         assertNull(configuration.twitter)
+    }
+
+    @Test
+    fun `keeps the linkedin credentials when at least one field is set`() {
+        val configuration =
+            configurationFrom(
+                fileName = "prod",
+                storage = "csv",
+                timezone = "UTC",
+                twitter = null,
+                linkedin = LinkedInCredentials(accessToken = "linkedin-token"),
+            )
+
+        assertEquals("linkedin-token", configuration.linkedin?.accessToken)
+    }
+
+    @Test
+    fun `drops empty linkedin credentials`() {
+        val configuration =
+            configurationFrom(
+                fileName = "prod",
+                storage = "csv",
+                timezone = "UTC",
+                twitter = null,
+                linkedin = LinkedInCredentials(),
+            )
+
+        assertNull(configuration.linkedin)
     }
 }

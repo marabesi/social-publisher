@@ -27,6 +27,7 @@ class MainTest {
               scheduler
               poster
               configuration
+              linkedin       Connect a LinkedIn account
               desktop
               rest
             

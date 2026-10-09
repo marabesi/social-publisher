@@ -40,6 +40,12 @@ directory you run the CLI from. The document accepts the following keys:
 | `twitter.consumerSecret` | yes | — | API key secret of your X app. |
 | `twitter.accessToken` | yes | — | Access token for your X account. |
 | `twitter.accessTokenSecret` | yes | — | Access token secret for your X account. |
+| `linkedin` | to publish | — | OAuth 2.0 credentials for LinkedIn. |
+| `linkedin.clientId` | to connect | — | Client ID of your LinkedIn app. |
+| `linkedin.clientSecret` | to connect | — | Client secret of your LinkedIn app. |
+| `linkedin.redirectUri` | to connect | — | Redirect URL registered in your LinkedIn app. |
+| `linkedin.accessToken` | yes | — | Access token for your LinkedIn account. |
+| `linkedin.authorUrn` | yes | — | Author of the post, e.g. `urn:li:person:123`. |
 | `storage` | no | `csv` | Storage adapter. Only `csv` is currently wired. |
 | `timezone` | no | `UTC` | Timezone used to interpret local publish dates and reported when a post is scheduled. |
 | `fileName` | no | `production` | Suffix for the data files: `posts-<fileName>.csv` and `scheduler-<fileName>.csv`. |
@@ -48,7 +54,7 @@ Only these keys are accepted. Any other key makes the command fail with
 `The give key <name> is not supported`.
 
 ::: warning Credentials are stored in plain text
-`global.json` in the store directory contains your X credentials unencrypted.
+`global.json` in the store directory contains your credentials unencrypted.
 Keep it out of version control (the repository already ignores `data/`) and
 restrict access to the machine that runs the tool.
 :::
@@ -67,6 +73,55 @@ Social Publisher authenticates with OAuth 1.0a using credentials created in the
 4. Make sure the app has **Read and Write** permissions, otherwise the publish
    step will fail.
 
+## Connect LinkedIn
+
+Social Publisher authenticates with LinkedIn through OAuth 2.0. You need a
+LinkedIn app, and then a short helper flow turns an authorization code into the
+stored access token.
+
+1. Create an app in the [LinkedIn developer portal](https://www.linkedin.com/developers/)
+   and associate it with a LinkedIn Page.
+2. Under **Products**, request **Share on LinkedIn** (grants `w_member_social`)
+   and **Sign In with LinkedIn using OpenID Connect** (grants `openid profile`).
+3. Under **Auth**, copy the **Client ID** and **Client Secret** and add a
+   **redirect URL** you control (a page that returns 404 is fine).
+
+Store those three values, then let the CLI generate the authorization URL:
+
+```sh
+social configuration -c '{
+  "storage": "csv",
+  "linkedin": {
+    "clientId": "your-client-id",
+    "clientSecret": "your-client-secret",
+    "redirectUri": "https://example.com/linkedin/callback"
+  }
+}'
+
+social linkedin connect
+```
+
+`linkedin connect` prints the URL to open in your browser. Approve the consent
+screen; LinkedIn redirects to your redirect URL with a `?code=...` parameter.
+Copy that code and exchange it for the token:
+
+```sh
+social linkedin token -c "the-code-from-the-redirect"
+```
+
+```text
+LinkedIn account connected
+```
+
+The command stores `linkedin.accessToken` and `linkedin.authorUrn` (derived from
+`GET /v2/userinfo`) for you, so there is no manual `curl`. The access token lasts
+about 60 days; run `linkedin connect` + `linkedin token` again when it expires.
+
+::: tip Token lifetime
+LinkedIn's self-serve apps do not get a refresh token, so reconnect before the
+~60-day expiry to avoid a failed publish.
+:::
+
 ## Create the configuration
 
 Pass the JSON document to `configuration -c`:
@@ -81,9 +136,23 @@ social configuration -c '{
     "consumerSecret": "your-api-key-secret",
     "accessToken": "your-access-token",
     "accessTokenSecret": "your-access-token-secret"
+  },
+  "linkedin": {
+    "clientId": "your-client-id",
+    "clientSecret": "your-client-secret",
+    "redirectUri": "https://example.com/linkedin/callback",
+    "accessToken": "your-linkedin-access-token",
+    "authorUrn": "urn:li:person:your-id"
   }
 }'
 ```
+
+`linkedin.clientId`, `linkedin.clientSecret` and `linkedin.redirectUri` are only
+needed for the connect flow; `accessToken` and `authorUrn` are what publishing
+uses.
+
+Both credential blocks are optional; provide the ones for the networks you
+schedule to.
 
 On success the CLI prints:
 
@@ -110,7 +179,9 @@ has been saved yet.
 | `Missing required fields` | No `-c` value and no `-l` flag were passed. |
 | `The give key <name> is not supported` | The JSON contains an unknown key. |
 | `There is no configuration stored` | `configuration -l` ran before a configuration was created. |
-| `Missing required configuration: <name>` | A Twitter field was empty at publish time. |
+| `Missing required configuration: twitter` | No `twitter` block was stored but a Twitter schedule is due. |
+| `Missing required configuration: linkedin` | No `linkedin` block was stored but a LinkedIn schedule is due. |
+| `Missing required configuration: <name>` | A Twitter or LinkedIn field was empty at publish time. |
 
 With a valid configuration in place you can start
 [managing posts](/guide/posts).

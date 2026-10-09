@@ -4,8 +4,8 @@ import application.entities.ScheduledItem
 import application.entities.SocialPosts
 import application.entities.TwitterCredentials
 import application.persistence.configuration.ConfigurationRepository
-import application.socialnetwork.CreateTweet
 import application.socialnetwork.MissingConfigurationSetup
+import application.socialnetwork.PublishPost
 import application.socialnetwork.SocialThirdParty
 import jakarta.inject.Inject
 
@@ -13,14 +13,14 @@ open class TwitterCredentialsValidator
     @Inject
     constructor(
         private val configurationRepository: ConfigurationRepository,
-        private val createTweet: CreateTweet,
+        private val publishPost: PublishPost,
     ) : SocialThirdParty {
         @TweetCreated
         override fun send(scheduledItem: ScheduledItem): SocialPosts {
             val configuration = configurationRepository.find()
             validate(configuration.twitter)
 
-            return createTweet.sendTweet(scheduledItem.post.text)
+            return publishPost.publish(scheduledItem.post.text)
         }
 
         private fun validate(twitter: TwitterCredentials?) {

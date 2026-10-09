@@ -10,6 +10,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.runComposeUiTest
+import application.entities.LinkedInCredentials
 import application.entities.SocialConfiguration
 import application.entities.TwitterCredentials
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -30,6 +31,12 @@ class ConfigurationPageTest {
             onNodeWithText("Consumer secret").assertExists()
             onNodeWithText("Access token").assertExists()
             onNodeWithText("Access token secret").assertExists()
+            onNodeWithText("LinkedIn client id").assertExists()
+            onNodeWithText("LinkedIn client secret").assertExists()
+            onNodeWithText("LinkedIn redirect uri").assertExists()
+            onNodeWithText("LinkedIn access token").assertExists()
+            onNodeWithText("LinkedIn author urn").assertExists()
+            onNodeWithText("Connect LinkedIn").assertExists()
         }
 
     @Test
@@ -59,6 +66,11 @@ class ConfigurationPageTest {
                                 accessToken = "access-token",
                                 accessTokenSecret = "access-token-secret",
                             ),
+                        linkedin =
+                            LinkedInCredentials(
+                                accessToken = "linkedin-access-token",
+                                authorUrn = "urn:li:person:123",
+                            ),
                     ),
                 )
 
@@ -69,6 +81,8 @@ class ConfigurationPageTest {
             onNodeWithText("consumer-secret").assertExists()
             onNodeWithText("access-token").assertExists()
             onNodeWithText("access-token-secret").assertExists()
+            onNodeWithText("linkedin-access-token").assertExists()
+            onNodeWithText("urn:li:person:123").assertExists()
         }
 
     @Test
@@ -108,7 +122,7 @@ class ConfigurationPageTest {
             schedulerRepository = InMemorySchedulerRepository(),
             configurationRepository = configurationRepository,
             output = MockedOutput(),
-            twitterClient = MockedSocialThirdParty(),
+            socialNetworks = MockedSocialThirdParty(),
         )
     }
 }

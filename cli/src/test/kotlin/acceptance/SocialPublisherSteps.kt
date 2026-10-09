@@ -1,5 +1,6 @@
 package acceptance
 
+import application.entities.LinkedInCredentials
 import application.entities.SocialConfiguration
 import application.entities.TwitterCredentials
 import buildCommandLine
@@ -9,6 +10,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions.assertEquals
 import picocli.CommandLine
+import thirdpartyintegration.WireMockLinkedIn
 import thirdpartyintegration.WireMockTwitter
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -31,8 +33,18 @@ class SocialPublisherSteps : En {
         lateinit var cmd: CommandLine
         var exitCode: Int? = null
 
-        Before(HookNoArgsBody { WireMockTwitter.start() })
-        After(HookNoArgsBody { WireMockTwitter.stop() })
+        Before(
+            HookNoArgsBody {
+                WireMockTwitter.start()
+                WireMockLinkedIn.start()
+            },
+        )
+        After(
+            HookNoArgsBody {
+                WireMockTwitter.stop()
+                WireMockLinkedIn.stop()
+            },
+        )
 
         Given("A new cli") {
             cmd = buildCommandLine(isInTestMode = true)
@@ -117,6 +129,13 @@ class SocialPublisherSteps : En {
             assertContains(outputStreamCaptor.toString(), text)
         }
 
+        When(
+            "I schedule the post with id {string} for {string} to be published at {string}",
+        ) { postId: String, socialMedia: String, dateToBePublished: String ->
+            exitCode = cmd.execute("scheduler", "create", "-p", postId, "-d", dateToBePublished, "-s", socialMedia)
+            assertEquals(0, exitCode)
+        }
+
         Then(
             "I set the post {string} to {string}",
         ) { postId: String, socialMedia: String ->
@@ -156,6 +175,24 @@ class SocialPublisherSteps : En {
 
         Then("I remove post {string} from twitter") { _: String ->
 //            deleteTweet.deleteTweetByTweetText(postText)
+        }
+
+        Given("the linkedin credentials in place") {
+            val socialConfiguration =
+                SocialConfiguration(
+                    "linkedin",
+                    "csv",
+                    linkedin =
+                        LinkedInCredentials(
+                            accessToken = "test-access-token",
+                            authorUrn = "urn:li:person:123",
+                        ),
+                )
+            val configuration = Json.encodeToString(socialConfiguration)
+
+            exitCode = cmd.execute("configuration", "-c", configuration)
+
+            assertContains(outputStreamCaptor.toString(), "Configuration has been stored")
         }
 
         Given("the twitter credentials in place") {
@@ -204,6 +241,24 @@ class SocialPublisherSteps : En {
         ) { params: String ->
             exitCode = cmd.execute("scheduler", params)
             assertEquals(0, exitCode)
+        }
+
+        When("I generate the linkedin authorization url") {
+            exitCode = cmd.execute("linkedin", "connect")
+            assertEquals(0, exitCode)
+        }
+
+        When(
+            "I connect linkedin using code {string}",
+        ) { code: String ->
+            exitCode = cmd.execute("linkedin", "token", "-c", code)
+            assertEquals(0, exitCode)
+        }
+
+        Then(
+            "the output should contain {string}",
+        ) { expected: String ->
+            assertContains(outputStreamCaptor.toString(), expected)
         }
     }
 }

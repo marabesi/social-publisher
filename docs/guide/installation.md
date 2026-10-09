@@ -106,4 +106,4 @@ you can switch between them freely. See
 ## Next step
 
 With Social Publisher installed, [configure](/guide/configuration) your X
-(Twitter) credentials so it can publish your posts.
+(Twitter) and/or LinkedIn credentials so it can publish your posts.

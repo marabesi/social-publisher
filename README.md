@@ -9,9 +9,6 @@ same local data, so you can use whichever fits your workflow.
 Currently supported:
 
 - Twitter (X)
-
-Planned:
-
 - LinkedIn
 
 ## Download and run

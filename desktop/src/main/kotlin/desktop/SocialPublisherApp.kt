@@ -3,6 +3,10 @@ package desktop
 import adapters.outbound.csv.FileSystemConfigurationRepository
 import adapters.outbound.csv.FileSystemPostRepository
 import adapters.outbound.csv.FileSystemSchedulerRepository
+import adapters.outbound.social.LinkedInOAuthClient
+import adapters.outbound.social.Linkedin
+import adapters.outbound.social.LinkedinCredentialsValidator
+import adapters.outbound.social.SocialThirdPartyRouting
 import adapters.outbound.social.Twitter
 import adapters.outbound.social.TwitterCredentialsValidator
 import androidx.compose.foundation.layout.Box
@@ -32,6 +36,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import application.Output
+import application.entities.SocialMedia
 import application.entities.SocialPosts
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -147,12 +152,22 @@ private fun rememberDesktopStore(): SocialPublisherStore =
                 postsRepository = postsRepository,
                 configurationRepository = configurationRepository,
             )
+        val socialNetworks =
+            SocialThirdPartyRouting(
+                mapOf(
+                    SocialMedia.TWITTER to
+                        TwitterCredentialsValidator(configurationRepository, Twitter(configurationRepository)),
+                    SocialMedia.LINKEDIN to
+                        LinkedinCredentialsValidator(configurationRepository, Linkedin(configurationRepository)),
+                ),
+            )
         SocialPublisherStore(
             postsRepository = postsRepository,
             schedulerRepository = schedulerRepository,
             configurationRepository = configurationRepository,
             output = restOutput(),
-            twitterClient = TwitterCredentialsValidator(configurationRepository, Twitter(configurationRepository)),
+            socialNetworks = socialNetworks,
+            exchangeLinkedIn = LinkedInOAuthClient(configurationRepository),
         )
     }
 

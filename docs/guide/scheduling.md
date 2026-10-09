@@ -7,13 +7,14 @@ Scheduling links a post to a publish date. Schedules are stored in
 
 ```sh
 social scheduler create -p "1" -d "2026-10-02T09:00:00Z" -s "TWITTER"
+social scheduler create -p "1" -d "2026-10-02T09:00:00Z" -s "LINKEDIN"
 ```
 
 | Option | Description |
 | --- | --- |
 | `-p` | Id of the post to schedule (from `social post -l`). |
 | `-d` | Publish date as an ISO-8601 instant (e.g. `2026-10-02T09:00:00Z`) or as a local date-time interpreted in the [configured timezone](/guide/configuration), e.g. `2026-10-02T09:00:00`. |
-| `-s` | Social network. Defaults to `TWITTER`. |
+| `-s` | Social network. Accepts `TWITTER` or `LINKEDIN`. Defaults to `TWITTER`. |
 
 On success:
 
@@ -79,7 +80,7 @@ unknown property or a malformed expression returns
 | `post.id` | Id of the scheduled post. |
 | `post.text` | Text of the scheduled post. |
 | `post.socialMediaId` | Social network id, set once published. |
-| `socialMedia` | Target social network, e.g. `TWITTER`. |
+| `socialMedia` | Target social network, e.g. `TWITTER` or `LINKEDIN`. |
 
 ### Filter by date range
 

@@ -2,9 +2,10 @@ package adapters.inbound.cli
 
 import application.Messages
 import application.Output
+import application.entities.SocialMedia
 import application.persistence.SchedulerRepository
 import application.poster.Executor
-import application.socialnetwork.SocialThirdParty
+import application.socialnetwork.SocialThirdPartyProvider
 import com.google.inject.Inject
 import picocli.CommandLine
 import java.time.Instant
@@ -17,7 +18,7 @@ class Poster
         private val schedulerRepository: SchedulerRepository,
         private val cliOutput: Output,
         private val currentDate: Instant,
-        private val twitterClient: SocialThirdParty,
+        private val socialNetworks: SocialThirdPartyProvider,
     ) : Callable<String> {
         @CommandLine.Option(names = ["-p"], description = ["Post Id"])
         var postId: String = ""
@@ -34,7 +35,7 @@ class Poster
                     schedulerRepository,
                     cliOutput,
                     currentDate,
-                    twitterClient,
+                    socialNetworks,
                 ).invoke()
             }
 
@@ -42,6 +43,8 @@ class Poster
                 return cliOutput.write(Messages.MISSING_REQUIRED_FIELDS)
             }
 
-            return cliOutput.write("Post $postId set to twitter")
+            val target = socialMedia.ifBlank { SocialMedia.TWITTER.displayName }.lowercase()
+
+            return cliOutput.write("Post $postId set to $target")
         }
     }

@@ -72,7 +72,7 @@ class DesktopShellTest {
                 ConfigurationInMemoryRepository()
                     .apply { save(SocialConfiguration(timezone = "UTC")) },
             output = MockedOutput(),
-            twitterClient = MockedSocialThirdParty(),
+            socialNetworks = MockedSocialThirdParty(),
         )
     }
 }

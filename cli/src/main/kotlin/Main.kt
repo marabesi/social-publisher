@@ -3,6 +3,7 @@ import adapters.inbound.cli.Configuration
 import adapters.inbound.cli.Post
 import adapters.inbound.cli.Poster
 import adapters.inbound.cli.desktop.Desktop
+import adapters.inbound.cli.linkedin.Linkedin
 import adapters.inbound.cli.rest.Rest
 import adapters.inbound.cli.scheduler.Scheduler
 import adapters.outbound.cli.CliOutput
@@ -19,6 +20,7 @@ import java.time.Instant
         Scheduler::class,
         Poster::class,
         Configuration::class,
+        Linkedin::class,
         Desktop::class,
         Rest::class,
     ],

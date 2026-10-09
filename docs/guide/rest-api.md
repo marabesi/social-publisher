@@ -22,6 +22,24 @@ Any extra arguments are passed on to Spring Boot, so you can pick another port:
 java -jar social.jar rest serve --server.port=9090
 ```
 
+## API docs (Swagger UI)
+
+The API ships with automatically generated OpenAPI 3 documentation. Start the
+server (as above) and open the Swagger UI in your browser:
+
+- **Swagger UI:** <http://localhost:8080/swagger-ui/index.html>
+
+  A browsable page listing every method with its parameters, request bodies and
+  responses. You can call the API directly from it (`Try it out`) and it shows
+  the different surfaces still share the same data.
+
+- **OpenAPI JSON:** <http://localhost:8080/v3/api-docs>
+- **OpenAPI YAML:** <http://localhost:8080/v3/api-docs.yaml>
+
+Both OpenAPI documents are generated at runtime from the registered
+controllers, so they always match the running version. If you changed the port
+with `--server.port`, use that port in the URLs above.
+
 ## Endpoints
 
 | Method | Path | Description |

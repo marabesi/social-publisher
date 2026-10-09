@@ -10,10 +10,12 @@ class RestServe
     @Inject
     constructor() : Callable<String> {
         @CommandLine.Unmatched
-        lateinit var arguments: List<String>
+        var arguments: MutableList<String> = mutableListOf()
+
+        internal var launcher: (Array<String>) -> Unit = ::serveRest
 
         override fun call(): String {
-            serveRest(arguments.toTypedArray())
+            launcher(arguments.toTypedArray())
             return ""
         }
     }

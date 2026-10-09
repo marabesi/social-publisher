@@ -26,7 +26,7 @@ Grab the latest release from the
   ```sh
   java -jar social.jar desktop run     # desktop app
   java -jar social.jar --help          # command line
-  java -jar social.jar rest serve      # REST API on :8080
+  java -jar social.jar rest serve      # REST API on :8080 (Swagger UI at /swagger-ui/index.html)
   ```
 
 The only requirement is **Java 25 or newer** when using `social.jar`; the native

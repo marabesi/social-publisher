@@ -24,6 +24,7 @@ dependencies {
     implementation(platform("org.springframework.boot:spring-boot-dependencies:4.1.1"))
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("tools.jackson.module:jackson-module-kotlin")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     implementation(kotlin("reflect"))
 

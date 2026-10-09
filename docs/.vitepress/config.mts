@@ -8,6 +8,7 @@ export default defineConfig({
   base: process.env.DOCS_BASE || '/',
   cleanUrls: true,
   lastUpdated: true,
+  ignoreDeadLinks: 'localhostLinks',
   themeConfig: {
     nav: [
       { text: 'Guide', link: '/guide/installation' },

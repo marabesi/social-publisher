@@ -125,7 +125,7 @@ function test_search_posts_by_fuzzy_text() {
     sh ./social/bin/social post -c "hello desktop" > /dev/null
     sh ./social/bin/social post -c "release notes" > /dev/null
 
-    output=$(sh ./social/bin/social post -l --search "hlo dsk")
+    output=$(sh ./social/bin/social post -l --search "hello desk")
     local expected="1. hello desktop"
     assert_contains "${expected}" "${output}"
 }
@@ -141,5 +141,28 @@ function test_search_posts_by_social_media() {
 
     output=$(sh ./social/bin/social post -l --social-media "LINKEDIN")
     local expected="2. release notes"
+    assert_contains "${expected}" "${output}"
+}
+
+###############################################
+## searching scheduled posts
+###############################################
+function test_search_scheduled_posts_by_fuzzy_text() {
+    sh ./social/bin/social scheduler create -p "1" -d "2091-10-02T09:00:00Z" -s "TWITTER" > /dev/null
+
+    output=$(sh ./social/bin/social scheduler list --search "hello desk")
+    local expected="Post with id 1 will be published on 2091-10-02T09:00:00Z"
+    assert_contains "${expected}" "${output}"
+}
+
+function test_search_scheduled_posts_by_more_than_one_post_id() {
+    output=$(sh ./social/bin/social scheduler list --ids "1,2")
+    local expected="Post with id 2 will be published on 2090-10-02T09:00:00Z"
+    assert_contains "${expected}" "${output}"
+}
+
+function test_search_scheduled_posts_by_social_media() {
+    output=$(sh ./social/bin/social scheduler list --social-media "LINKEDIN")
+    local expected="Post with id 2 will be published on 2090-10-02T09:00:00Z"
     assert_contains "${expected}" "${output}"
 }

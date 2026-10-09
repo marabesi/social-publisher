@@ -3,6 +3,8 @@ package application.post
 import application.entities.ScheduledItem
 import application.entities.SocialMedia
 import application.entities.SocialPosts
+import application.search.IdList
+import application.search.TextSearch
 
 data class PostSearch(
     val text: String = "",
@@ -17,7 +19,7 @@ data class PostSearch(
 
         return posts.filter { post ->
             val id = post.id.orEmpty()
-            matchesText(text, post.text) &&
+            TextSearch.matches(text, post.text) &&
                 (ids.isEmpty() || id in ids) &&
                 (socialMedia == null || id in scheduledIds)
         }
@@ -38,38 +40,6 @@ data class PostSearch(
             text: String = "",
             ids: String = "",
             socialMedia: SocialMedia? = null,
-        ): PostSearch = PostSearch(text, parsePostIds(ids), socialMedia)
+        ): PostSearch = PostSearch(text, IdList.parse(ids), socialMedia)
     }
-}
-
-internal fun parsePostIds(raw: String): kotlin.collections.List<String> =
-    raw
-        .split(',', ';', ' ', '\n', '\t')
-        .map { it.trim() }
-        .filter { it.isNotEmpty() }
-
-private fun matchesText(
-    query: String,
-    text: String,
-): Boolean {
-    val tokens = query.lowercase().split(' ', '\n', '\t').filter { it.isNotEmpty() }
-    if (tokens.isEmpty()) {
-        return true
-    }
-
-    val haystack = text.lowercase()
-    return tokens.all { isSubsequence(it, haystack) }
-}
-
-private fun isSubsequence(
-    needle: String,
-    haystack: String,
-): Boolean {
-    var index = 0
-    for (character in haystack) {
-        if (index < needle.length && needle[index] == character) {
-            index++
-        }
-    }
-    return index == needle.length
 }

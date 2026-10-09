@@ -54,6 +54,26 @@ social scheduler list
 The target social network (the `-s` value) is shown in parentheses. The desktop
 app and the REST API report the same value for each schedule.
 
+### Search schedules
+
+The same search used for [posts](/guide/posts#search-posts) also works on
+schedules, and can be combined with the filters below:
+
+| Option | Description |
+| --- | --- |
+| `--search <text>` | Case-insensitive search over the scheduled post text. Every whitespace-separated term must match the beginning of a word in the post text, so `aws` matches `AWS` but not `laws`. |
+| `--ids <ids>` | Only schedules for posts whose id is in the comma separated list, e.g. `1,3`. |
+| `--social-media <network>` | Only schedules targeting the given network (`TWITTER` or `LINKEDIN`). |
+
+```sh
+social scheduler list --search "release notes"
+social scheduler list --ids "1,3"
+social scheduler list --social-media LINKEDIN
+social scheduler list --search "notes" --ids "1,2,3" --social-media TWITTER
+```
+
+When nothing matches you get `No posts scheduled`.
+
 ### Filter by any property
 
 Use `-f` / `--filter` to keep only schedules whose property matches a value.

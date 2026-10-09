@@ -41,7 +41,7 @@ class PostControllerTest {
         controller.create(CreatePostRequest("hello from rest"))
         controller.create(CreatePostRequest("release notes"))
 
-        val posts = controller.list(search = "hlo rst", ids = null, socialMedia = null)
+        val posts = controller.list(search = "hello from", ids = null, socialMedia = null)
 
         assertEquals(1, posts.size)
         assertEquals("hello from rest", posts[0].text)

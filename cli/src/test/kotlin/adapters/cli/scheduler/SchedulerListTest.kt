@@ -8,6 +8,7 @@ import adapters.outbound.inmemory.InMemorySchedulerRepository
 import application.Messages
 import application.entities.ScheduledItem
 import application.entities.SocialConfiguration
+import application.entities.SocialMedia
 import application.entities.SocialPosts
 import buildCommandLine
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -48,24 +49,31 @@ class SchedulerListTest {
 
         cmd.execute("scheduler", "list", "--help")
         assertEquals(
-            """
-            Usage: social scheduler list [-hV] [--end-date=<endDate>] [-f=<filter>]
-                                         [--group-by=<groupBy>] [-o=<orderBy>]
-                                         [--start-date=<startDate>]
-                  --end-date=<endDate>   list posts until this date
-              -f, --filter=<filter>      Filters the scheduled posts by any property, e.g.
-                                           post.text=draft
-                  --group-by=<groupBy>   Outputs the scheduled posts grouped by a given
-                                           criteria
-              -h, --help                 Show this help message and exit.
-              -o, --order-by=<orderBy>   Orders the scheduled posts by publish_date asc or
-                                           desc
-                  --start-date=<startDate>
-                                         list posts that has they publish date starting
-                                           with this value
-              -V, --version              Print version information and exit.
-
-            """.trimIndent(),
+            listOf(
+                "Usage: social scheduler list [-hV] [--end-date=<endDate>] [-f=<filter>]",
+                "                             [--group-by=<groupBy>] [--ids=<ids>]",
+                "                             [-o=<orderBy>] [--search=<search>]",
+                "                             [--social-media=<socialMedia>]",
+                "                             [--start-date=<startDate>]",
+                "      --end-date=<endDate>   list posts until this date",
+                "  -f, --filter=<filter>      Filters the scheduled posts by any property, e.g.",
+                "                               post.text=draft",
+                "      --group-by=<groupBy>   Outputs the scheduled posts grouped by a given",
+                "                               criteria",
+                "  -h, --help                 Show this help message and exit.",
+                "      --ids=<ids>            Only schedules for the comma separated post ids",
+                "  -o, --order-by=<orderBy>   Orders the scheduled posts by publish_date asc or",
+                "                               desc",
+                "      --search=<search>      Only schedules whose post matches the",
+                "                               case-insensitive text search",
+                "      --social-media=<socialMedia>",
+                "                             Only schedules for the given social media",
+                "      --start-date=<startDate>",
+                "                             list posts that has they publish date starting",
+                "                               with this value",
+                "  -V, --version              Print version information and exit.",
+                "",
+            ).joinToString("\n"),
             sw.toString(),
         )
     }
@@ -674,5 +682,65 @@ class SchedulerListTest {
         cmd.execute("--end-date", "2022-10-02T08:30:00")
 
         assertEquals("No posts scheduled", cmd.getExecutionResult())
+    }
+
+    @Test
+    fun `should search scheduled posts by fuzzy post text`() {
+        val post1 = SocialPosts(text = "hello desktop")
+        val post2 = SocialPosts(text = "release notes")
+        postsRepository.save(arrayListOf(post1, post2))
+        scheduleRepository.save(ScheduledItem(post1, Instant.parse("2022-10-02T09:00:00Z")))
+        scheduleRepository.save(ScheduledItem(post2, Instant.parse("2022-11-02T09:00:00Z")))
+
+        cmd.execute("--search", "hello desk")
+
+        assertEquals(
+            """
+            1. Post with id 1 will be published on 2022-10-02T09:00:00Z (Twitter)
+            """.trimIndent(),
+            cmd.getExecutionResult(),
+        )
+    }
+
+    @Test
+    fun `should search scheduled posts by more than one post id`() {
+        val post1 = SocialPosts(text = "first")
+        val post2 = SocialPosts(text = "second")
+        val post3 = SocialPosts(text = "third")
+        postsRepository.save(arrayListOf(post1, post2, post3))
+        scheduleRepository.save(ScheduledItem(post1, Instant.parse("2022-10-02T09:00:00Z")))
+        scheduleRepository.save(ScheduledItem(post2, Instant.parse("2022-10-03T09:00:00Z")))
+        scheduleRepository.save(ScheduledItem(post3, Instant.parse("2022-10-04T09:00:00Z")))
+
+        cmd.execute("--ids", "1,3")
+
+        assertEquals(
+            """
+            1. Post with id 1 will be published on 2022-10-02T09:00:00Z (Twitter)
+            2. Post with id 3 will be published on 2022-10-04T09:00:00Z (Twitter)
+            """.trimIndent(),
+            cmd.getExecutionResult(),
+        )
+    }
+
+    @Test
+    fun `should search scheduled posts by social media`() {
+        val post = SocialPosts(text = "release notes")
+        postsRepository.save(arrayListOf(post))
+        scheduleRepository.save(
+            ScheduledItem(post, Instant.parse("2022-10-02T09:00:00Z"), socialMedia = SocialMedia.TWITTER),
+        )
+        scheduleRepository.save(
+            ScheduledItem(post, Instant.parse("2022-10-03T09:00:00Z"), socialMedia = SocialMedia.LINKEDIN),
+        )
+
+        cmd.execute("--social-media", "LINKEDIN")
+
+        assertEquals(
+            """
+            1. Post with id 1 will be published on 2022-10-03T09:00:00Z (LinkedIn)
+            """.trimIndent(),
+            cmd.getExecutionResult(),
+        )
     }
 }

@@ -25,7 +25,10 @@ class Post
         @CommandLine.Option(names = ["-l"], description = ["List created posts"])
         var list: Boolean? = false
 
-        @CommandLine.Option(names = ["--search"], description = ["List posts matching the fuzzy text search"])
+        @CommandLine.Option(
+            names = ["--search"],
+            description = ["List posts matching the case-insensitive text search"],
+        )
         var search: String = ""
 
         @CommandLine.Option(names = ["--ids"], description = ["List posts whose ids match the comma separated list"])

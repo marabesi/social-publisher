@@ -3,9 +3,11 @@ package adapters.inbound.cli.scheduler
 import application.Messages
 import application.Output
 import application.Timezone
+import application.entities.SocialMedia
 import application.persistence.SchedulerRepository
 import application.persistence.configuration.ConfigurationRepository
 import application.scheduler.List
+import application.scheduler.ScheduleSearch
 import application.scheduler.filters.Criterion
 import application.scheduler.filters.DateTimeValidation
 import application.scheduler.filters.FilterExpression
@@ -57,6 +59,24 @@ open class SchedulerList
         )
         var orderBy: String = ""
 
+        @CommandLine.Option(
+            names = ["--search"],
+            description = ["Only schedules whose post matches the case-insensitive text search"],
+        )
+        var search: String = ""
+
+        @CommandLine.Option(
+            names = ["--ids"],
+            description = ["Only schedules for the comma separated post ids"],
+        )
+        var ids: String = ""
+
+        @CommandLine.Option(
+            names = ["--social-media"],
+            description = ["Only schedules for the given social media"],
+        )
+        var socialMedia: SocialMedia? = null
+
         override fun call(): String {
             val filters: ArrayList<Criterion> = arrayListOf()
             val zoneId = Timezone.zoneId(configurationRepository)
@@ -97,6 +117,8 @@ open class SchedulerList
                 return cliOutput.write(Messages.INVALID_ORDER_BY_PARAMETER)
             }
 
-            return List(scheduleRepository, cliOutput, filters, groupBy, order).invoke()
+            val searchCriteria = ScheduleSearch.from(text = search, postIds = ids, socialMedia = socialMedia)
+
+            return List(scheduleRepository, cliOutput, filters, groupBy, order, searchCriteria).invoke()
         }
     }

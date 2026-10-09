@@ -81,7 +81,7 @@ class ListPostTest {
         cmd.execute("-c", "hello desktop")
         cmd.execute("-c", "release notes")
 
-        cmd.execute("-l", "--search", "hlo dsk")
+        cmd.execute("-l", "--search", "hello desk")
 
         assertEquals("1. hello desktop (13/280)", cmd.getExecutionResult<String>())
     }

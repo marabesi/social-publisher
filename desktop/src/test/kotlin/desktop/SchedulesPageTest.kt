@@ -15,11 +15,14 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.runComposeUiTest
+import application.entities.ScheduledItem
 import application.entities.SocialConfiguration
 import application.entities.SocialMedia
+import application.entities.SocialPosts
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import java.time.Instant
 
 @OptIn(ExperimentalTestApi::class)
 class SchedulesPageTest {
@@ -85,14 +88,106 @@ class SchedulesPageTest {
             assertEquals(SocialMedia.TWITTER, store.schedules()[0].socialMedia)
         }
 
-    private fun storeWith(): SocialPublisherStore =
-        SocialPublisherStore(
-            postsRepository = InMemoryPostRepository(),
-            schedulerRepository = InMemorySchedulerRepository(),
+    @Test
+    fun `filters schedules by fuzzy post text`() =
+        runComposeUiTest {
+            val store =
+                storeWith(
+                    posts = listOf("hello desktop", "release notes"),
+                    schedules = listOf(0 to SocialMedia.TWITTER, 1 to SocialMedia.TWITTER),
+                )
+
+            setContent { schedulesPage(store) }
+
+            onNodeWithTag(SCHEDULE_SEARCH_TEXT_TAG).performTextInput("hello desk")
+
+            onNodeWithText("Post 1 on", substring = true).assertIsDisplayed()
+            onNodeWithText("Post 2 on", substring = true).assertDoesNotExist()
+        }
+
+    @Test
+    fun `filters schedules by more than one post id`() =
+        runComposeUiTest {
+            val store =
+                storeWith(
+                    posts = listOf("first", "second", "third"),
+                    schedules =
+                        listOf(
+                            0 to SocialMedia.TWITTER,
+                            1 to SocialMedia.TWITTER,
+                            2 to SocialMedia.TWITTER,
+                        ),
+                )
+
+            setContent { schedulesPage(store) }
+
+            onNodeWithTag(SCHEDULE_SEARCH_IDS_TAG).performTextInput("1,3")
+
+            onNodeWithText("Post 1 on", substring = true).assertIsDisplayed()
+            onNodeWithText("Post 3 on", substring = true).assertIsDisplayed()
+            onNodeWithText("Post 2 on", substring = true).assertDoesNotExist()
+        }
+
+    @Test
+    fun `filters schedules by social network`() =
+        runComposeUiTest {
+            val store =
+                storeWith(
+                    posts = listOf("hello desktop", "release notes"),
+                    schedules = listOf(0 to SocialMedia.LINKEDIN, 1 to SocialMedia.TWITTER),
+                )
+
+            setContent { schedulesPage(store) }
+
+            onNodeWithText(ALL_SOCIAL_MEDIA_LABEL).performClick()
+            onNodeWithTag("$SCHEDULE_SEARCH_SOCIAL_MEDIA_TAG-${SocialMedia.LINKEDIN.name}").performClick()
+
+            onNodeWithText("Post 1 on", substring = true).assertIsDisplayed()
+            onNodeWithText("Post 2 on", substring = true).assertDoesNotExist()
+        }
+
+    @Test
+    fun `shows a message when no schedule matches the search`() =
+        runComposeUiTest {
+            val store =
+                storeWith(
+                    posts = listOf("hello desktop"),
+                    schedules = listOf(0 to SocialMedia.TWITTER),
+                )
+
+            setContent { schedulesPage(store) }
+
+            onNodeWithTag(SCHEDULE_SEARCH_TEXT_TAG).performTextInput("zzz")
+
+            onNodeWithText("No schedules match your search").assertIsDisplayed()
+        }
+
+    private fun storeWith(
+        posts: List<String> = emptyList(),
+        schedules: List<Pair<Int, SocialMedia>> = emptyList(),
+    ): SocialPublisherStore {
+        val postsRepository = InMemoryPostRepository()
+        postsRepository.save(posts.map { SocialPosts(text = it) }.toCollection(arrayListOf()))
+
+        val schedulerRepository = InMemorySchedulerRepository()
+        schedules.forEachIndexed { position, (index, media) ->
+            schedulerRepository.save(
+                ScheduledItem(
+                    post = postsRepository.findAll()[index],
+                    publishDate = Instant.parse("2022-10-02T09:00:00Z").plusSeconds(position.toLong()),
+                    socialMedia = media,
+                ),
+            )
+        }
+
+        return SocialPublisherStore(
+            postsRepository = postsRepository,
+            schedulerRepository = schedulerRepository,
             configurationRepository =
                 ConfigurationInMemoryRepository()
                     .apply { save(SocialConfiguration(timezone = "UTC")) },
             output = MockedOutput(),
             socialNetworks = MockedSocialThirdParty(),
         )
+    }
 }

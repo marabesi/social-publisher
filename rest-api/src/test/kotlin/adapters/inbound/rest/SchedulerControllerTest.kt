@@ -2,6 +2,7 @@ package adapters.inbound.rest
 
 import MockedOutput
 import adapters.inbound.rest.dto.SchedulePostRequest
+import adapters.inbound.rest.dto.ScheduleSearchRequest
 import adapters.outbound.inmemory.ConfigurationInMemoryRepository
 import adapters.outbound.inmemory.InMemoryPostRepository
 import adapters.outbound.inmemory.InMemorySchedulerRepository
@@ -71,13 +72,63 @@ class SchedulerControllerTest {
         controller.create(SchedulePostRequest("1", "2022-07-10T09:00:00Z"))
         controller.create(SchedulePostRequest("2", "2023-01-10T09:00:00Z"))
 
-        val filtered = controller.list(null, null, "post.text=release notes", null)
+        val filtered = controller.list(null, null, "post.text=release notes", null, ScheduleSearchRequest())
         assertEquals(1, filtered.size)
         assertEquals("1", filtered[0].postId)
 
-        val ordered = controller.list(null, null, null, "publish_date=desc")
+        val ordered = controller.list(null, null, null, "publish_date=desc", ScheduleSearchRequest())
         assertEquals("2", ordered[0].postId)
         assertEquals("1", ordered[1].postId)
+    }
+
+    @Test
+    fun `should search schedules by fuzzy post text`() {
+        postsRepository.save(
+            arrayListOf(
+                SocialPosts(text = "release notes"),
+                SocialPosts(text = "hello desktop"),
+            ),
+        )
+        controller.create(SchedulePostRequest("1", "2022-07-10T09:00:00Z"))
+        controller.create(SchedulePostRequest("2", "2022-07-11T09:00:00Z"))
+
+        val result =
+            controller.list(null, null, null, null, ScheduleSearchRequest().apply { search = "hello desk" })
+
+        assertEquals(1, result.size)
+        assertEquals("2", result[0].postId)
+    }
+
+    @Test
+    fun `should search schedules by more than one post id`() {
+        postsRepository.save(
+            arrayListOf(
+                SocialPosts(text = "first"),
+                SocialPosts(text = "second"),
+                SocialPosts(text = "third"),
+            ),
+        )
+        controller.create(SchedulePostRequest("1", "2022-07-10T09:00:00Z"))
+        controller.create(SchedulePostRequest("2", "2022-07-11T09:00:00Z"))
+        controller.create(SchedulePostRequest("3", "2022-07-12T09:00:00Z"))
+
+        val result =
+            controller.list(null, null, null, null, ScheduleSearchRequest().apply { ids = "1,3" })
+
+        assertEquals(listOf("1", "3"), result.map { it.postId })
+    }
+
+    @Test
+    fun `should search schedules by social media`() {
+        postsRepository.save(arrayListOf(SocialPosts(text = "release notes")))
+        controller.create(SchedulePostRequest("1", "2022-07-10T09:00:00Z", SocialMedia.TWITTER))
+        controller.create(SchedulePostRequest("1", "2022-07-11T09:00:00Z", SocialMedia.LINKEDIN))
+
+        val searchRequest = ScheduleSearchRequest().apply { socialMedia = SocialMedia.LINKEDIN }
+        val result = controller.list(null, null, null, null, searchRequest)
+
+        assertEquals(1, result.size)
+        assertEquals(SocialMedia.LINKEDIN, result[0].socialMedia)
     }
 
     @Test

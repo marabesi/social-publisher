@@ -42,7 +42,7 @@ the REST API:
 
 | Option | Description |
 | --- | --- |
-| `--search <text>` | Fuzzy, case-insensitive text search across the post text. Multiple words must all appear (as a subsequence) in the post. |
+| `--search <text>` | Case-insensitive text search. Every whitespace-separated term must match the beginning of a word in the post text, so `aws` matches `AWS` and `awsome` but not `laws`. |
 | `--ids <ids>` | Only posts whose id is in the comma separated list, e.g. `1,3`. |
 | `--social-media <network>` | Only posts scheduled for the given network (`TWITTER` or `LINKEDIN`). |
 

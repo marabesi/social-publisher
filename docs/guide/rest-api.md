@@ -48,7 +48,7 @@ with `--server.port`, use that port in the URLs above.
 | `POST` | `/api/posts` | Create a post. Body: `{"text": "..."}`. |
 | `GET` | `/api/posts` | List posts. Each entry includes `characterCount` and `characterLimit`. Query: `search`, `ids`, `socialMedia`. |
 | `POST` | `/api/schedules` | Schedule a post. Body: `{"postId": "1", "publishDate": "2099-01-02T09:00:00Z", "socialMedia": "TWITTER"}`. `socialMedia` accepts `TWITTER` or `LINKEDIN`. |
-| `GET` | `/api/schedules` | List schedules (each entry includes `socialMedia`). Query: `startDate`, `endDate`, `filter`, `orderBy`. |
+| `GET` | `/api/schedules` | List schedules (each entry includes `socialMedia`). Query: `startDate`, `endDate`, `filter`, `orderBy`, `search`, `ids`, `socialMedia`. |
 | `DELETE` | `/api/schedules/{id}` | Delete a schedule. |
 | `POST` | `/api/poster/run` | Publish every due schedule. |
 | `GET` | `/api/configuration` | Read the stored configuration. |
@@ -85,6 +85,15 @@ curl --get localhost:8080/api/schedules --data-urlencode 'orderBy=publish_date=d
 curl --get localhost:8080/api/posts --data-urlencode 'search=release notes'
 curl --get localhost:8080/api/posts --data-urlencode 'ids=1,3'
 curl --get localhost:8080/api/posts --data-urlencode 'socialMedia=LINKEDIN'
+```
+
+`GET /api/schedules` accepts the same search filters as `social scheduler list`
+(see [Search schedules](/guide/scheduling#search-schedules)):
+
+```sh
+curl --get localhost:8080/api/schedules --data-urlencode 'search=release notes'
+curl --get localhost:8080/api/schedules --data-urlencode 'ids=1,3'
+curl --get localhost:8080/api/schedules --data-urlencode 'socialMedia=LINKEDIN'
 ```
 
 ## Examples

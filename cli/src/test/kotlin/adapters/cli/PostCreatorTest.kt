@@ -34,7 +34,7 @@ class PostCreatorTest {
                 "  -h, --help              Show this help message and exit.",
                 "      --ids=<ids>         List posts whose ids match the comma separated list",
                 "  -l                      List created posts",
-                "      --search=<search>   List posts matching the fuzzy text search",
+                "      --search=<search>   List posts matching the case-insensitive text search",
                 "      --social-media=<socialMedia>",
                 "                          List posts scheduled for the given social media",
                 "  -V, --version           Print version information and exit.",

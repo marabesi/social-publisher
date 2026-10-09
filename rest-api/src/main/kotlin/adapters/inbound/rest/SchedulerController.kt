@@ -2,6 +2,7 @@ package adapters.inbound.rest
 
 import adapters.inbound.rest.dto.MessageResponse
 import adapters.inbound.rest.dto.SchedulePostRequest
+import adapters.inbound.rest.dto.ScheduleSearchRequest
 import adapters.inbound.rest.dto.ScheduledItemResponse
 import application.Output
 import application.Timezone
@@ -9,6 +10,7 @@ import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
 import application.persistence.configuration.ConfigurationRepository
 import application.scheduler.Create
+import application.scheduler.ScheduleSearch
 import application.scheduler.filters.Criterion
 import application.scheduler.filters.DateTimeValidation
 import application.scheduler.filters.FilterExpression
@@ -49,11 +51,19 @@ class SchedulerController(
         @RequestParam(required = false) endDate: String?,
         @RequestParam(required = false) filter: String?,
         @RequestParam(required = false) orderBy: String?,
+        searchRequest: ScheduleSearchRequest,
     ): List<ScheduledItemResponse> {
         val filters = buildFilters(startDate, endDate, filter)
         val order = orderBy?.let { OrderExpression.parse(it) ?: invalid("order-by") }
         val items = schedulerRepository.findAll(filters)
-        val ordered = order?.apply(items) ?: items
+        val criteria =
+            ScheduleSearch.from(
+                text = searchRequest.search.orEmpty(),
+                postIds = searchRequest.ids.orEmpty(),
+                socialMedia = searchRequest.socialMedia,
+            )
+        val searched = ArrayList(criteria.filter(items))
+        val ordered = order?.apply(searched) ?: searched
 
         return ordered.map {
             ScheduledItemResponse(

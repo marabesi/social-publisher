@@ -32,10 +32,24 @@ class PostSearchTest {
     }
 
     @Test
-    fun `matches text as a fuzzy subsequence`() {
-        val result = PostSearch(text = "hlo dsk").filter(posts)
+    fun `matches the start of a word`() {
+        val result = PostSearch(text = "hello desk").filter(posts)
 
         assertEquals(listOf("1"), result.map { it.id })
+    }
+
+    @Test
+    fun `matches a term anywhere it starts a word`() {
+        val sample = listOf(SocialPosts(id = "1", text = "deploying to AWS"))
+
+        assertEquals(listOf("1"), PostSearch(text = "aws").filter(sample).map { it.id })
+    }
+
+    @Test
+    fun `does not match a term hidden inside another word`() {
+        val sample = listOf(SocialPosts(id = "1", text = "these are the laws"))
+
+        assertTrue(PostSearch(text = "aws").filter(sample).isEmpty())
     }
 
     @Test
@@ -66,8 +80,8 @@ class PostSearchTest {
 
     @Test
     fun `parses post ids separated by commas spaces or semicolons`() {
-        assertEquals(listOf("1", "2", "3"), parsePostIds("1, 2;3\n"))
-        assertTrue(parsePostIds(" , ; ").isEmpty())
+        assertEquals(listOf("1", "2", "3"), PostSearch.from(ids = "1, 2;3\n").ids)
+        assertTrue(PostSearch.from(ids = " , ; ").ids.isEmpty())
     }
 
     @Test

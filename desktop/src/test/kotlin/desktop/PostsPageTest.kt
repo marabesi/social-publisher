@@ -94,7 +94,7 @@ class PostsPageTest {
 
             setContent { postsPage(store) }
 
-            onNodeWithTag(POSTS_SEARCH_TEXT_TAG).performTextInput("hlo dsk")
+            onNodeWithTag(POSTS_SEARCH_TEXT_TAG).performTextInput("hello desk")
 
             onNodeWithText("hello desktop").assertIsDisplayed()
             onNodeWithText("second post").assertDoesNotExist()

@@ -60,7 +60,7 @@ Create or list posts.
 | --- | --- |
 | `-c <text>` | Create a post with the given text. |
 | `-l` | List created posts. |
-| `--search <text>` | Only posts matching the fuzzy, case-insensitive text search. |
+| `--search <text>` | Only posts matching the case-insensitive text search (matches word starts). |
 | `--ids <ids>` | Only posts whose id is in the comma separated list, e.g. `1,3`. |
 | `--social-media <network>` | Only posts scheduled for the given network (`TWITTER` or `LINKEDIN`). |
 
@@ -85,6 +85,9 @@ List schedules, optionally filtered.
 | `--start-date <instant>` | Only schedules on or after this instant. |
 | `--end-date <instant>` | Only schedules on or before this instant. |
 | `-f`, `--filter <criteria>` | Filter by any property, e.g. `post.text=draft` or `day=10&month=07&year=2022`. |
+| `--search <text>` | Only schedules whose post matches the case-insensitive text search (matches word starts). |
+| `--ids <ids>` | Only schedules for posts whose id is in the comma separated list, e.g. `1,3`. |
+| `--social-media <network>` | Only schedules targeting the given network (`TWITTER` or `LINKEDIN`). |
 | `--group-by <criterion>` | Group the output. The only accepted value is `post`. |
 | `-o`, `--order-by <criterion>` | Order the output. Accepts `publish_date=asc` or `publish_date=desc`. |
 

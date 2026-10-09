@@ -11,11 +11,13 @@ class List(
     private val filters: ArrayList<Criterion>,
     private val groupBy: String,
     private val order: Order? = null,
+    private val search: ScheduleSearch = ScheduleSearch(),
 ) {
     fun invoke(): String {
         var result = ""
         val filtered = scheduleRepository.findAll(filters)
-        val findAll = order?.apply(filtered) ?: filtered
+        val searched = ArrayList(search.filter(filtered))
+        val findAll = order?.apply(searched) ?: searched
         var index = 1
 
         for (scheduledItem in findAll) {

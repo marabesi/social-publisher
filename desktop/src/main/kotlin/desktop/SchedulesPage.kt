@@ -10,7 +10,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -28,6 +32,8 @@ import androidx.compose.ui.unit.dp
 import application.entities.ScheduledItem
 import application.entities.SocialMedia
 import application.scheduler.ScheduleSearch
+import application.scheduler.order.Direction
+import application.scheduler.order.PublishDateOrder
 import java.time.LocalDate
 
 internal const val SCHEDULE_POST_ID_TAG = "schedulePostId"
@@ -40,6 +46,10 @@ internal const val SCHEDULE_RANDOM_TAG = "scheduleRandom"
 internal const val SCHEDULE_SEARCH_TEXT_TAG = "scheduleSearchText"
 internal const val SCHEDULE_SEARCH_IDS_TAG = "scheduleSearchIds"
 internal const val SCHEDULE_SEARCH_SOCIAL_MEDIA_TAG = "scheduleSearchSocialMedia"
+internal const val SCHEDULE_SORT_TAG = "scheduleSort"
+internal const val SCHEDULE_SORT_DEFAULT_LABEL = "Default order"
+internal const val SCHEDULE_SORT_ASC_LABEL = "Date ascending"
+internal const val SCHEDULE_SORT_DESC_LABEL = "Date descending"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Suppress("LongMethod", "MaxLineLength")
@@ -59,11 +69,14 @@ fun schedulesPage(store: SocialPublisherStore) {
     var searchText by remember { mutableStateOf("") }
     var searchIds by remember { mutableStateOf("") }
     var searchSocialMedia by remember { mutableStateOf<SocialMedia?>(null) }
+    var sortDirection by remember { mutableStateOf<Direction?>(null) }
 
-    val visibleSchedules =
+    val filteredSchedules =
         ScheduleSearch
             .from(text = searchText, postIds = searchIds, socialMedia = searchSocialMedia)
             .filter(schedules)
+    val visibleSchedules =
+        sortDirection?.let { PublishDateOrder(it).apply(ArrayList(filteredSchedules)) } ?: filteredSchedules
 
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -75,8 +88,17 @@ fun schedulesPage(store: SocialPublisherStore) {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text("Schedules", style = MaterialTheme.typography.titleLarge)
-            Button(onClick = { schedules = errorReporter.reporting(schedules) { store.schedules() } }) {
-                Text("Refresh")
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                scheduleSortSelect(
+                    selected = sortDirection,
+                    onSelect = { sortDirection = it },
+                )
+                Button(onClick = { schedules = errorReporter.reporting(schedules) { store.schedules() } }) {
+                    Text("Refresh")
+                }
             }
         }
 
@@ -224,4 +246,64 @@ fun schedulesPage(store: SocialPublisherStore) {
                 }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun scheduleSortSelect(
+    selected: Direction?,
+    onSelect: (Direction?) -> Unit,
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val label =
+        when (selected) {
+            null -> SCHEDULE_SORT_DEFAULT_LABEL
+            Direction.ASC -> SCHEDULE_SORT_ASC_LABEL
+            Direction.DESC -> SCHEDULE_SORT_DESC_LABEL
+        }
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+        modifier = Modifier.width(200.dp).testTag(SCHEDULE_SORT_TAG),
+    ) {
+        OutlinedTextField(
+            value = label,
+            onValueChange = {},
+            readOnly = true,
+            label = { Text("Sort by date") },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            modifier = Modifier.fillMaxWidth().menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+        )
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+        ) {
+            sortOption(SCHEDULE_SORT_DEFAULT_LABEL, "$SCHEDULE_SORT_TAG-DEFAULT") {
+                onSelect(null)
+                expanded = false
+            }
+            sortOption(SCHEDULE_SORT_ASC_LABEL, "$SCHEDULE_SORT_TAG-ASC") {
+                onSelect(Direction.ASC)
+                expanded = false
+            }
+            sortOption(SCHEDULE_SORT_DESC_LABEL, "$SCHEDULE_SORT_TAG-DESC") {
+                onSelect(Direction.DESC)
+                expanded = false
+            }
+        }
+    }
+}
+
+@Composable
+private fun sortOption(
+    label: String,
+    testTag: String,
+    onClick: () -> Unit,
+) {
+    DropdownMenuItem(
+        text = { Text(label) },
+        onClick = onClick,
+        modifier = Modifier.testTag(testTag),
+    )
 }

@@ -36,7 +36,7 @@ class FileSystemSchedulerRepository(
 
         val nextId =
             if (scheduledItem.id.isNullOrEmpty()) {
-                (findAll().size + PUBLISH_DATE_INDEX).toString()
+                nextScheduleId().toString()
             } else {
                 scheduledItem.id
             }
@@ -112,6 +112,8 @@ class FileSystemSchedulerRepository(
 
         return storePath.file("scheduler-${DataFileSuffix(configurationRepository).value()}.csv")
     }
+
+    private fun nextScheduleId(): Int = (findAll().mapNotNull { it.id?.toIntOrNull() }.maxOrNull() ?: 0) + 1
 
     private fun buildPostFromCsvRecord(record: CSVRecord): ScheduledItem {
         val postId = record[POST_ID_INDEX]

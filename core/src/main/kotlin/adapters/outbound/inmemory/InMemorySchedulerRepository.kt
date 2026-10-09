@@ -8,12 +8,17 @@ class InMemorySchedulerRepository : SchedulerRepository {
     private var storedScheduler: ArrayList<ScheduledItem> = arrayListOf()
 
     override fun save(scheduledItem: ScheduledItem): Boolean {
-        val id = findAll().size + 1
+        val id =
+            if (scheduledItem.id.isNullOrEmpty()) {
+                nextScheduleId().toString()
+            } else {
+                scheduledItem.id
+            }
         return storedScheduler.add(
             ScheduledItem(
                 scheduledItem.post,
                 scheduledItem.publishDate,
-                id.toString(),
+                id,
                 scheduledItem.published,
                 scheduledItem.socialMedia,
             ),
@@ -31,9 +36,9 @@ class InMemorySchedulerRepository : SchedulerRepository {
     }
 
     override fun deleteById(id: String): ScheduledItem? {
-        val toBeDeleted = findAll().find { it.id == id }
+        val toBeDeleted = storedScheduler.find { it.id == id }
         storedScheduler.removeIf {
-            it.post.id == id
+            it.id == id
         }
         return toBeDeleted
     }
@@ -44,4 +49,6 @@ class InMemorySchedulerRepository : SchedulerRepository {
 
         return toBeMarkedAsPublished
     }
+
+    private fun nextScheduleId(): Int = (storedScheduler.mapNotNull { it.id?.toIntOrNull() }.maxOrNull() ?: 0) + 1
 }

@@ -44,7 +44,9 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun socialPublisherApp() {
-    desktopAppShell(store = rememberDesktopStore())
+    provideUiScale {
+        desktopAppShell(store = rememberDesktopStore())
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

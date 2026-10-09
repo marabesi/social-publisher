@@ -85,6 +85,23 @@ class SchedulerControllerTest {
     }
 
     @Test
+    fun `should order schedules by publish date ascending`() {
+        postsRepository.save(
+            arrayListOf(
+                SocialPosts(text = "release notes"),
+                SocialPosts(text = "draft"),
+            ),
+        )
+        controller.create(SchedulePostRequest("1", "2023-01-10T09:00:00Z"))
+        controller.create(SchedulePostRequest("2", "2022-07-10T09:00:00Z"))
+
+        val ordered = controller.list(null, null, null, "publish_date=asc", ScheduleSearchRequest())
+
+        assertEquals("2", ordered[0].postId)
+        assertEquals("1", ordered[1].postId)
+    }
+
+    @Test
     fun `should search schedules by fuzzy post text`() {
         postsRepository.save(
             arrayListOf(

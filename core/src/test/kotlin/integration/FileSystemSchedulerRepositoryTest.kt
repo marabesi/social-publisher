@@ -176,6 +176,27 @@ class FileSystemSchedulerRepositoryTest {
     }
 
     @Test
+    fun keepsScheduleIdsUniqueAndIncrementingAfterDeletion() {
+        val post = SocialPosts(text = "another post")
+        val postsRepository = InMemoryPostRepository()
+        postsRepository.save(arrayListOf(post))
+
+        val repository = FileSystemSchedulerRepository(filePath, postsRepository)
+
+        repository.save(ScheduledItem(post, Instant.parse("2021-11-25T11:00:00Z")))
+        repository.save(ScheduledItem(post, Instant.parse("2021-11-25T12:00:00Z")))
+        repository.save(ScheduledItem(post, Instant.parse("2021-11-25T13:00:00Z")))
+
+        repository.deleteById("2")
+        repository.save(ScheduledItem(post, Instant.parse("2021-11-25T14:00:00Z")))
+
+        val ids = repository.findAll().map { it.id }
+        assertEquals(3, ids.size)
+        assertEquals(ids.size, ids.toSet().size)
+        assertEquals(setOf("1", "3", "4"), ids.toSet())
+    }
+
+    @Test
     fun markScheduledItemAsPublished() {
         val post = SocialPosts(text = "random post")
         val postsRepository = InMemoryPostRepository()

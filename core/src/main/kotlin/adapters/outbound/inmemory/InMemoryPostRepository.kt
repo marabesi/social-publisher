@@ -7,10 +7,11 @@ class InMemoryPostRepository : PostsRepository {
     private var storedPosts: ArrayList<SocialPosts> = arrayListOf()
 
     override fun save(posts: ArrayList<SocialPosts>): Boolean {
+        var nextId = nextId()
         for (post in posts) {
-            val id = storedPosts.size + 1
-            post.id = id.toString()
+            post.id = nextId.toString()
             storedPosts.add(post)
+            ++nextId
         }
         return true
     }
@@ -41,4 +42,6 @@ class InMemoryPostRepository : PostsRepository {
         storedPosts[index] = post
         return true
     }
+
+    private fun nextId(): Int = (storedPosts.mapNotNull { it.id?.toIntOrNull() }.maxOrNull() ?: 0) + 1
 }

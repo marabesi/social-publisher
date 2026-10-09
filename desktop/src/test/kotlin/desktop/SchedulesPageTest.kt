@@ -6,9 +6,11 @@ import adapters.outbound.inmemory.InMemoryPostRepository
 import adapters.outbound.inmemory.InMemorySchedulerRepository
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -174,6 +176,44 @@ class SchedulesPageTest {
 
             assertTrue(store.schedules().isNotEmpty())
             onNodeWithText("Post 1 has been randomly scheduled for", substring = true).assertIsDisplayed()
+        }
+
+    @Test
+    fun `sorts schedules by publish date ascending`() =
+        runComposeUiTest {
+            val store = storeWith(posts = listOf("first", "second", "third"))
+            store.schedule("1", "2022-10-03T09:00:00Z")
+            store.schedule("2", "2022-10-01T09:00:00Z")
+            store.schedule("3", "2022-10-02T09:00:00Z")
+
+            setContent { schedulesPage(store) }
+
+            onNodeWithTag(SCHEDULE_SORT_TAG).performClick()
+            onNodeWithTag("$SCHEDULE_SORT_TAG-ASC").performClick()
+
+            val items = onAllNodesWithText(". Post ", substring = true)
+            items[0].assertTextContains("Post 2 on", substring = true)
+            items[1].assertTextContains("Post 3 on", substring = true)
+            items[2].assertTextContains("Post 1 on", substring = true)
+        }
+
+    @Test
+    fun `sorts schedules by publish date descending`() =
+        runComposeUiTest {
+            val store = storeWith(posts = listOf("first", "second", "third"))
+            store.schedule("1", "2022-10-03T09:00:00Z")
+            store.schedule("2", "2022-10-01T09:00:00Z")
+            store.schedule("3", "2022-10-02T09:00:00Z")
+
+            setContent { schedulesPage(store) }
+
+            onNodeWithTag(SCHEDULE_SORT_TAG).performClick()
+            onNodeWithTag("$SCHEDULE_SORT_TAG-DESC").performClick()
+
+            val items = onAllNodesWithText(". Post ", substring = true)
+            items[0].assertTextContains("Post 1 on", substring = true)
+            items[1].assertTextContains("Post 3 on", substring = true)
+            items[2].assertTextContains("Post 2 on", substring = true)
         }
 
     private fun storeWith(

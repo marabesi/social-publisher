@@ -76,6 +76,20 @@ Schedule a post for a publish date.
 | `-d <instant>` | Publish date as an ISO-8601 instant, e.g. `2026-10-02T09:00:00Z`. |
 | `-s <network>` | Target network. Accepts `TWITTER` or `LINKEDIN`. Defaults to `TWITTER`. |
 
+## `social scheduler random`
+
+Pick a random post and schedule it for a given day.
+
+| Option | Description |
+| --- | --- |
+| `-d <day>` | Day to schedule within. Accepts `yyyy-MM-dd` or a full ISO-8601 date time; the day is taken in the [configured timezone](/guide/configuration). |
+| `-s <network>` | Target network. Accepts `TWITTER` or `LINKEDIN`. Defaults to `TWITTER`. |
+
+The publish time is chosen randomly inside the day and is never earlier than 30
+minutes from now. Posts already scheduled for the same network in that week are
+skipped so the same content does not repeat. See
+[Pick a random post](/guide/scheduling#pick-a-random-post-for-a-day).
+
 ## `social scheduler list`
 
 List schedules, optionally filtered.

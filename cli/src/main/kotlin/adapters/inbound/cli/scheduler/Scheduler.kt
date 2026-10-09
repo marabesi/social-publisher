@@ -12,6 +12,7 @@ import java.util.concurrent.Callable
     subcommands = [
         SchedulerList::class,
         SchedulerCreate::class,
+        SchedulerRandom::class,
         SchedulerDelete::class,
     ],
 )

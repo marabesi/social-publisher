@@ -1,6 +1,7 @@
 package adapters.inbound.rest
 
 import adapters.inbound.rest.dto.MessageResponse
+import adapters.inbound.rest.dto.RandomScheduleRequest
 import adapters.inbound.rest.dto.SchedulePostRequest
 import adapters.inbound.rest.dto.ScheduleSearchRequest
 import adapters.inbound.rest.dto.ScheduledItemResponse
@@ -10,6 +11,7 @@ import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
 import application.persistence.configuration.ConfigurationRepository
 import application.scheduler.Create
+import application.scheduler.PickRandom
 import application.scheduler.ScheduleSearch
 import application.scheduler.filters.Criterion
 import application.scheduler.filters.DateTimeValidation
@@ -43,6 +45,15 @@ class SchedulerController(
         MessageResponse(
             Create(postsRepository, schedulerRepository, configurationRepository, output)
                 .invoke(request.postId, request.publishDate, request.socialMedia),
+        )
+
+    @PostMapping("/random")
+    fun random(
+        @RequestBody request: RandomScheduleRequest,
+    ): MessageResponse =
+        MessageResponse(
+            PickRandom(postsRepository, schedulerRepository, configurationRepository, output)
+                .invoke(request.publishDate, request.socialMedia),
         )
 
     @GetMapping

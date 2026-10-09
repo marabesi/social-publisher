@@ -28,9 +28,15 @@ import androidx.compose.ui.unit.dp
 import application.entities.ScheduledItem
 import application.entities.SocialMedia
 import application.scheduler.ScheduleSearch
+import java.time.LocalDate
 
 internal const val SCHEDULE_POST_ID_TAG = "schedulePostId"
 internal const val SCHEDULE_SOCIAL_MEDIA_TAG = "scheduleSocialMedia"
+internal const val SCHEDULE_PUBLISH_DATE_TAG = "schedulePublishDate"
+internal const val SCHEDULE_CREATE_TAG = "scheduleCreate"
+internal const val SCHEDULE_RANDOM_DAY_TAG = "scheduleRandomDay"
+internal const val SCHEDULE_RANDOM_SOCIAL_MEDIA_TAG = "scheduleRandomSocialMedia"
+internal const val SCHEDULE_RANDOM_TAG = "scheduleRandom"
 internal const val SCHEDULE_SEARCH_TEXT_TAG = "scheduleSearchText"
 internal const val SCHEDULE_SEARCH_IDS_TAG = "scheduleSearchIds"
 internal const val SCHEDULE_SEARCH_SOCIAL_MEDIA_TAG = "scheduleSearchSocialMedia"
@@ -47,6 +53,9 @@ fun schedulesPage(store: SocialPublisherStore) {
     var publishDate by remember { mutableStateOf("") }
     var socialMedia by remember { mutableStateOf(SocialMedia.TWITTER) }
     var message by remember { mutableStateOf("") }
+    var randomDay by remember { mutableStateOf(LocalDate.now().toString()) }
+    var randomSocialMedia by remember { mutableStateOf(SocialMedia.TWITTER) }
+    var randomMessage by remember { mutableStateOf("") }
     var searchText by remember { mutableStateOf("") }
     var searchIds by remember { mutableStateOf("") }
     var searchSocialMedia by remember { mutableStateOf<SocialMedia?>(null) }
@@ -60,13 +69,30 @@ fun schedulesPage(store: SocialPublisherStore) {
         modifier = Modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Text("Schedules", style = MaterialTheme.typography.titleLarge)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text("Schedules", style = MaterialTheme.typography.titleLarge)
+            Button(onClick = { schedules = errorReporter.reporting(schedules) { store.schedules() } }) {
+                Text("Refresh")
+            }
+        }
 
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        HorizontalDivider()
+
+        Text("New schedule", style = MaterialTheme.typography.titleMedium)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
             OutlinedTextField(
                 value = postId,
                 onValueChange = { postId = it },
                 label = { Text("Post id") },
+                singleLine = true,
                 modifier = Modifier.width(120.dp).testTag(SCHEDULE_POST_ID_TAG),
             )
             socialMediaSelect(
@@ -79,11 +105,9 @@ fun schedulesPage(store: SocialPublisherStore) {
                 label = "Publish date",
                 value = publishDate,
                 onValueChange = { publishDate = it },
-                modifier = Modifier.weight(1f),
+                pickDescription = "Pick publish date",
+                modifier = Modifier.weight(1f).testTag(SCHEDULE_PUBLISH_DATE_TAG),
             )
-        }
-
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Button(
                 onClick = {
                     errorReporter.reporting {
@@ -91,22 +115,59 @@ fun schedulesPage(store: SocialPublisherStore) {
                         schedules = store.schedules()
                     }
                 },
+                modifier = Modifier.testTag(SCHEDULE_CREATE_TAG),
             ) {
                 Text("Schedule")
             }
-            Button(onClick = { schedules = errorReporter.reporting(schedules) { store.schedules() } }) {
-                Text("Refresh")
-            }
+        }
+        if (message.isNotBlank()) {
+            Text(message, color = MaterialTheme.colorScheme.primary)
         }
 
-        if (message.isNotBlank()) {
-            Text(message)
+        HorizontalDivider()
+
+        Text("Random", style = MaterialTheme.typography.titleMedium)
+        Text(
+            "Picks a post not scheduled in that week, at least 30 minutes from now.",
+            style = MaterialTheme.typography.bodySmall,
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            dateTimePicker(
+                label = "Day",
+                value = randomDay,
+                onValueChange = { randomDay = it },
+                pickDescription = "Pick random day",
+                modifier = Modifier.weight(1f).testTag(SCHEDULE_RANDOM_DAY_TAG),
+            )
+            socialMediaSelect(
+                selected = randomSocialMedia,
+                onSelect = { selected -> selected?.let { randomSocialMedia = it } },
+                testTag = SCHEDULE_RANDOM_SOCIAL_MEDIA_TAG,
+                modifier = Modifier.weight(1f),
+            )
+            Button(
+                onClick = {
+                    errorReporter.reporting {
+                        randomMessage = store.randomSchedule(randomDay, randomSocialMedia)
+                        schedules = store.schedules()
+                    }
+                },
+                modifier = Modifier.testTag(SCHEDULE_RANDOM_TAG),
+            ) {
+                Text("Random")
+            }
+        }
+        if (randomMessage.isNotBlank()) {
+            Text(randomMessage, color = MaterialTheme.colorScheme.primary)
         }
 
         HorizontalDivider()
 
         Text("Search", style = MaterialTheme.typography.titleMedium)
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),

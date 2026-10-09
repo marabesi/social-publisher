@@ -1,6 +1,7 @@
 package adapters.inbound.rest
 
 import MockedOutput
+import adapters.inbound.rest.dto.RandomScheduleRequest
 import adapters.inbound.rest.dto.SchedulePostRequest
 import adapters.inbound.rest.dto.ScheduleSearchRequest
 import adapters.outbound.inmemory.ConfigurationInMemoryRepository
@@ -10,8 +11,10 @@ import application.entities.SocialConfiguration
 import application.entities.SocialMedia
 import application.entities.SocialPosts
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.time.ZoneOffset
 
 class SchedulerControllerTest {
     private val postsRepository = InMemoryPostRepository()
@@ -139,5 +142,24 @@ class SchedulerControllerTest {
         val message = controller.delete("1")
 
         assertEquals("Schedule 1 has been removed from post 1", message.message)
+    }
+
+    @Test
+    fun `should randomly schedule a post for a given day`() {
+        postsRepository.save(arrayListOf(SocialPosts(text = "release notes")))
+
+        val message = controller.random(RandomScheduleRequest("2099-01-02"))
+
+        assertTrue(message.message.startsWith("Post 1 has been randomly scheduled for "), message.message)
+        assertEquals(1, schedulerRepository.findAll().size)
+        val publishDate = schedulerRepository.findAll()[0].publishDate
+        assertEquals("2099-01-02", publishDate.atZone(ZoneOffset.UTC).toLocalDate().toString())
+    }
+
+    @Test
+    fun `should reject an invalid day when randomly scheduling`() {
+        val message = controller.random(RandomScheduleRequest("2022"))
+
+        assertEquals("Invalid date time to schedule post", message.message)
     }
 }

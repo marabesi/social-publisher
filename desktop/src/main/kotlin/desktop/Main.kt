@@ -12,18 +12,21 @@ import androidx.compose.ui.window.rememberWindowState
 import java.awt.Toolkit
 import java.awt.event.InputEvent
 
+const val APP_NAME = "Social Publisher"
+
 @OptIn(ExperimentalComposeUiApi::class)
 fun main(args: Array<String>) {
+    System.setProperty("apple.awt.application.name", APP_NAME)
     configureSwingGlobalsForCompose()
     application {
         val windowState = rememberWindowState(placement = WindowPlacement.Maximized)
         Window(
             onCloseRequest = ::exitApplication,
             state = windowState,
-            title = "Social Publisher",
+            title = APP_NAME,
         ) {
             MenuBar {
-                Menu(text = "Social Publisher", mnemonic = 'S') {
+                Menu(text = APP_NAME, mnemonic = 'S') {
                     Item(
                         text = "Quit",
                         shortcut = menuShortcut(Key.Q),

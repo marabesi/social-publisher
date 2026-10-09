@@ -48,6 +48,7 @@ with `--server.port`, use that port in the URLs above.
 | `POST` | `/api/posts` | Create a post. Body: `{"text": "..."}`. |
 | `GET` | `/api/posts` | List posts. Each entry includes `characterCount` and `characterLimit`. Query: `search`, `ids`, `socialMedia`. |
 | `POST` | `/api/schedules` | Schedule a post. Body: `{"postId": "1", "publishDate": "2099-01-02T09:00:00Z", "socialMedia": "TWITTER"}`. `socialMedia` accepts `TWITTER` or `LINKEDIN`. |
+| `POST` | `/api/schedules/random` | Pick a random post and schedule it for a day. Body: `{"publishDate": "2099-01-02", "socialMedia": "TWITTER"}`. |
 | `GET` | `/api/schedules` | List schedules (each entry includes `socialMedia`). Query: `startDate`, `endDate`, `filter`, `orderBy`, `search`, `ids`, `socialMedia`. |
 | `DELETE` | `/api/schedules/{id}` | Delete a schedule. |
 | `POST` | `/api/poster/run` | Publish every due schedule. |
@@ -110,6 +111,10 @@ curl -X POST localhost:8080/api/schedules \
 curl -X POST localhost:8080/api/schedules \
   -H 'Content-Type: application/json' \
   -d '{"postId":"1","publishDate":"2099-01-03T09:00:00Z","socialMedia":"LINKEDIN"}'
+
+curl -X POST localhost:8080/api/schedules/random \
+  -H 'Content-Type: application/json' \
+  -d '{"publishDate":"2099-01-04","socialMedia":"TWITTER"}'
 
 curl localhost:8080/api/schedules
 ```

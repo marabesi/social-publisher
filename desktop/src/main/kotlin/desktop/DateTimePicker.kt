@@ -61,6 +61,7 @@ fun dateTimePicker(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    pickDescription: String = "Pick date",
 ) {
     var dialogOpen by remember { mutableStateOf(false) }
     val dateState = rememberDatePickerState()
@@ -74,7 +75,7 @@ fun dateTimePicker(
         modifier = modifier.clickable { dialogOpen = true },
         trailingIcon = {
             IconButton(onClick = { dialogOpen = true }) {
-                Icon(Icons.Default.DateRange, contentDescription = "Pick date")
+                Icon(Icons.Default.DateRange, contentDescription = pickDescription)
             }
         },
     )

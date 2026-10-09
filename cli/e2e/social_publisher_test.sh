@@ -166,3 +166,19 @@ function test_search_scheduled_posts_by_social_media() {
     local expected="Post with id 2 will be published on 2090-10-02T09:00:00Z"
     assert_contains "${expected}" "${output}"
 }
+
+###############################################
+## random scheduling
+###############################################
+function test_pick_a_random_post_for_a_day() {
+    sh ./social/bin/social configuration -c '{"storage":"csv","fileName":"random-e2e","timezone":"UTC"}' > /dev/null
+    sh ./social/bin/social post -c "random pick" > /dev/null
+
+    output=$(sh ./social/bin/social scheduler random -d "2090-10-10" -s "TWITTER")
+    local expected="Post 1 has been randomly scheduled for"
+    assert_contains "${expected}" "${output}"
+
+    output=$(sh ./social/bin/social scheduler list)
+    local expected="Post with id 1 will be published on 2090-10-10"
+    assert_contains "${expected}" "${output}"
+}

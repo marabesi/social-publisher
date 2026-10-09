@@ -46,6 +46,21 @@ class SocialPublisherStore(
         return create.invoke(postId, publishDate, socialMedia)
     }
 
+    fun randomSchedule(
+        publishDate: String,
+        socialMedia: SocialMedia = SocialMedia.TWITTER,
+    ): String {
+        val pickRandom =
+            application.scheduler.PickRandom(
+                postsRepository,
+                schedulerRepository,
+                configurationRepository,
+                output,
+                now = currentDate,
+            )
+        return pickRandom.invoke(publishDate, socialMedia)
+    }
+
     fun schedules(): ArrayList<ScheduledItem> = schedulerRepository.findAll()
 
     fun deleteSchedule(id: String) {

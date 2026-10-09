@@ -32,6 +32,9 @@ schedules and configuration as the terminal and the REST API.
 - Pick a publish date and time with a calendar and clock picker when scheduling.
 - Schedule a post for a publish date — pick the target social network from a
   dropdown — and delete schedules.
+- Pick a **random** post for the chosen day (the day defaults to today): the
+  publish time is randomized inside the day (at least 30 minutes from now) and
+  posts already scheduled that week are skipped.
 - Run the poster automatically every minute (or on a cadence you choose) and see
   when it will run next.
 

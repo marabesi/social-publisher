@@ -44,6 +44,7 @@ class SchedulerTest {
             Commands:
               list
               create
+              random  Pick a random post and schedule it for a given day
               delete
 
             """.trimIndent(),

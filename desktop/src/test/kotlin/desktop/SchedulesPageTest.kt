@@ -34,7 +34,7 @@ class SchedulesPageTest {
             setContent { schedulesPage(store) }
 
             onNodeWithText("Publish date").assertIsDisplayed()
-            onNodeWithContentDescription("Pick date").performClick()
+            onNodeWithContentDescription("Pick publish date").performClick()
 
             onNodeWithText("Ok").assertIsDisplayed()
             onNodeWithText("Cancel").assertIsDisplayed()
@@ -50,14 +50,14 @@ class SchedulesPageTest {
 
             onNodeWithTag(SCHEDULE_POST_ID_TAG).performTextInput("1")
 
-            onNodeWithContentDescription("Pick date").performClick()
+            onNodeWithContentDescription("Pick publish date").performClick()
             onAllNodes(
                 hasText(",", substring = true) and hasAnyAncestor(hasTestTag(DATE_PICKER_TAG)),
                 useUnmergedTree = true,
             )[0].performClick()
             onNodeWithText("Ok").performClick()
 
-            onNodeWithText("Schedule").performClick()
+            onNodeWithTag(SCHEDULE_CREATE_TAG).performClick()
 
             assertTrue(store.schedules().isNotEmpty())
         }
@@ -71,18 +71,18 @@ class SchedulesPageTest {
             setContent { schedulesPage(store) }
 
             onNodeWithTag(SCHEDULE_POST_ID_TAG).performTextInput("1")
-            onNodeWithText("Twitter").performClick()
+            onNodeWithTag(SCHEDULE_SOCIAL_MEDIA_TAG).performClick()
 
             onNodeWithTag("$SCHEDULE_SOCIAL_MEDIA_TAG-${SocialMedia.TWITTER.name}").performClick()
 
-            onNodeWithContentDescription("Pick date").performClick()
+            onNodeWithContentDescription("Pick publish date").performClick()
             onAllNodes(
                 hasText(",", substring = true) and hasAnyAncestor(hasTestTag(DATE_PICKER_TAG)),
                 useUnmergedTree = true,
             )[0].performClick()
             onNodeWithText("Ok").performClick()
 
-            onNodeWithText("Schedule").performClick()
+            onNodeWithTag(SCHEDULE_CREATE_TAG).performClick()
 
             assertTrue(store.schedules().isNotEmpty())
             assertEquals(SocialMedia.TWITTER, store.schedules()[0].socialMedia)
@@ -162,9 +162,24 @@ class SchedulesPageTest {
             onNodeWithText("No schedules match your search").assertIsDisplayed()
         }
 
+    @Test
+    fun `picks a random post for the default day`() =
+        runComposeUiTest {
+            val store = storeWith(currentDate = { Instant.parse("2020-01-01T00:00:00Z") })
+            store.createPost("release notes")
+
+            setContent { schedulesPage(store) }
+
+            onNodeWithTag(SCHEDULE_RANDOM_TAG).performClick()
+
+            assertTrue(store.schedules().isNotEmpty())
+            onNodeWithText("Post 1 has been randomly scheduled for", substring = true).assertIsDisplayed()
+        }
+
     private fun storeWith(
         posts: List<String> = emptyList(),
         schedules: List<Pair<Int, SocialMedia>> = emptyList(),
+        currentDate: () -> Instant = { Instant.now() },
     ): SocialPublisherStore {
         val postsRepository = InMemoryPostRepository()
         postsRepository.save(posts.map { SocialPosts(text = it) }.toCollection(arrayListOf()))
@@ -188,6 +203,7 @@ class SchedulesPageTest {
                     .apply { save(SocialConfiguration(timezone = "UTC")) },
             output = MockedOutput(),
             socialNetworks = MockedSocialThirdParty(),
+            currentDate = currentDate,
         )
     }
 }

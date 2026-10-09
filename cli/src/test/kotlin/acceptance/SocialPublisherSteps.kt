@@ -136,6 +136,13 @@ class SocialPublisherSteps : En {
             assertEquals(0, exitCode)
         }
 
+        When(
+            "I pick a random post to be scheduled on {string}",
+        ) { day: String ->
+            exitCode = cmd.execute("scheduler", "random", "-d", day)
+            assertEquals(0, exitCode)
+        }
+
         Then(
             "I set the post {string} to {string}",
         ) { postId: String, socialMedia: String ->

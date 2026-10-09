@@ -41,6 +41,36 @@ Common failures:
 | `Invalid date time to schedule post` | The date is not a valid ISO-8601 date time. |
 | `Post is already scheduled for <date>` | The same post is already scheduled at that exact time for the same social network. |
 
+## Pick a random post for a day
+
+Instead of choosing the post and the exact time yourself, you can let Social
+Publisher do it:
+
+```sh
+social scheduler random -d "2026-10-07" -s "TWITTER"
+```
+
+```text
+Post 3 has been randomly scheduled for 2026-10-07T14:23:11Z using UTC timezone
+```
+
+`-d` is the day to schedule within. It accepts a plain `yyyy-MM-dd` date or a
+full ISO-8601 date time; the day is interpreted in the
+[configured timezone](/guide/configuration). The publish time is picked at
+random inside that day, but never earlier than 30 minutes from now, so a slot
+requested for today always stays in the future.
+
+The random pick uses the list of already scheduled posts: a post that is already
+scheduled for the same social network in the same week is skipped, so the same
+content does not repeat within a week.
+
+| Output | Cause |
+| --- | --- |
+| `Missing required fields` | `-d` was omitted. |
+| `Invalid date time to schedule post` | The day is not a valid date. |
+| `No available time to schedule a post on <day>` | The day has no slot left (for example, today with less than 30 minutes remaining). |
+| `No post available to schedule on the week of <day>` | Every post is already scheduled in that week. |
+
 ## List schedules
 
 ```sh

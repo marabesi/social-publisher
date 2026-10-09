@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Instant
+import java.time.ZoneOffset
 
 class SocialPublisherStoreTest {
     private val postsRepository = InMemoryPostRepository()
@@ -41,6 +42,29 @@ class SocialPublisherStoreTest {
         assertEquals("Post has been scheduled using UTC timezone", store.schedule("1", "2099-01-02T09:00:00Z"))
         assertEquals(1, store.schedules().size)
         assertEquals("2099-01-02T09:00:00Z", store.schedules()[0].publishDate.toString())
+    }
+
+    @Test
+    fun `should randomly schedule a post for the given day`() {
+        val randomStore =
+            SocialPublisherStore(
+                postsRepository = InMemoryPostRepository(),
+                schedulerRepository = InMemorySchedulerRepository(),
+                configurationRepository =
+                    ConfigurationInMemoryRepository()
+                        .apply { save(SocialConfiguration(timezone = "UTC")) },
+                output = MockedOutput(),
+                socialNetworks = MockedSocialThirdParty(),
+                currentDate = { Instant.parse("2026-10-05T10:00:00Z") },
+            )
+        randomStore.createPost("release notes")
+
+        val message = randomStore.randomSchedule("2026-10-07")
+
+        assertTrue(message.startsWith("Post 1 has been randomly scheduled for "), message)
+        assertEquals(1, randomStore.schedules().size)
+        val publishDate = randomStore.schedules()[0].publishDate
+        assertEquals("2026-10-07", publishDate.atZone(ZoneOffset.UTC).toLocalDate().toString())
     }
 
     @Test

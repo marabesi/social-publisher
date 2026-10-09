@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,73 +50,81 @@ fun desktopAppShell(store: SocialPublisherStore) {
     val scope = rememberCoroutineScope()
     var selectedPage by remember { mutableStateOf(AppPage.POSTS) }
     var postToEdit by remember { mutableStateOf<SocialPosts?>(null) }
+    var error by remember { mutableStateOf<Throwable?>(null) }
+    val errorReporter = remember { ErrorReporter { error = it } }
     val posterState = remember { PosterState(runPoster = store::runPoster) }
 
     LaunchedEffect(posterState.enabled) {
         while (posterState.enabled) {
-            posterState.runNow()
+            errorReporter.reporting { posterState.runNow() }
             delay(posterState.cadenceMinutes * 60_000L)
         }
     }
 
-    MaterialTheme {
-        ModalNavigationDrawer(
-            drawerState = drawerState,
-            drawerContent = {
-                ModalDrawerSheet {
-                    AppPage.entries.forEach { page ->
-                        NavigationDrawerItem(
-                            label = { Text(page.title) },
-                            selected = selectedPage == page,
-                            onClick = {
-                                postToEdit = null
-                                selectedPage = page
-                                scope.launch { drawerState.close() }
-                            },
-                            icon = { Icon(page.icon, contentDescription = page.title) },
-                        )
-                    }
-                }
-            },
-        ) {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = { Text(selectedPage.title) },
-                        navigationIcon = {
-                            IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                                Icon(Icons.Default.Menu, contentDescription = "Menu")
-                            }
-                        },
-                    )
-                },
-            ) { padding ->
-                Box(
-                    modifier = Modifier.fillMaxSize().padding(padding),
-                ) {
-                    when (selectedPage) {
-                        AppPage.POSTS ->
-                            postsPage(
-                                store = store,
-                                onEdit = {
-                                    postToEdit = it
-                                    selectedPage = AppPage.COMPOSE
-                                },
-                            )
-                        AppPage.SCHEDULES -> schedulesPage(store)
-                        AppPage.COMPOSE ->
-                            composePostPage(
-                                store = store,
-                                postToEdit = postToEdit,
-                                onFinish = {
+    CompositionLocalProvider(LocalErrorReporter provides errorReporter) {
+        MaterialTheme {
+            ModalNavigationDrawer(
+                drawerState = drawerState,
+                drawerContent = {
+                    ModalDrawerSheet {
+                        AppPage.entries.forEach { page ->
+                            NavigationDrawerItem(
+                                label = { Text(page.title) },
+                                selected = selectedPage == page,
+                                onClick = {
                                     postToEdit = null
-                                    selectedPage = AppPage.POSTS
+                                    selectedPage = page
+                                    scope.launch { drawerState.close() }
                                 },
+                                icon = { Icon(page.icon, contentDescription = page.title) },
                             )
-                        AppPage.POSTER -> posterPage(posterState)
-                        AppPage.CONFIGURATION -> configurationPage(store)
+                        }
+                    }
+                },
+            ) {
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = { Text(selectedPage.title) },
+                            navigationIcon = {
+                                IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                                    Icon(Icons.Default.Menu, contentDescription = "Menu")
+                                }
+                            },
+                        )
+                    },
+                ) { padding ->
+                    Box(
+                        modifier = Modifier.fillMaxSize().padding(padding),
+                    ) {
+                        when (selectedPage) {
+                            AppPage.POSTS ->
+                                postsPage(
+                                    store = store,
+                                    onEdit = {
+                                        postToEdit = it
+                                        selectedPage = AppPage.COMPOSE
+                                    },
+                                )
+                            AppPage.SCHEDULES -> schedulesPage(store)
+                            AppPage.COMPOSE ->
+                                composePostPage(
+                                    store = store,
+                                    postToEdit = postToEdit,
+                                    onFinish = {
+                                        postToEdit = null
+                                        selectedPage = AppPage.POSTS
+                                    },
+                                )
+                            AppPage.POSTER -> posterPage(posterState)
+                            AppPage.CONFIGURATION -> configurationPage(store)
+                        }
                     }
                 }
+            }
+
+            error?.let { currentError ->
+                errorDialog(error = currentError, onDismiss = { error = null })
             }
         }
     }

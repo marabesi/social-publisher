@@ -2,10 +2,12 @@ package adapters.cli.scheduler
 
 import MockedOutput
 import adapters.inbound.cli.scheduler.SchedulerList
+import adapters.outbound.inmemory.ConfigurationInMemoryRepository
 import adapters.outbound.inmemory.InMemoryPostRepository
 import adapters.outbound.inmemory.InMemorySchedulerRepository
 import application.Messages
 import application.entities.ScheduledItem
+import application.entities.SocialConfiguration
 import application.entities.SocialPosts
 import buildCommandLine
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -21,10 +23,12 @@ class SchedulerListTest {
     private lateinit var cmd: CommandLine
     private val scheduleRepository = InMemorySchedulerRepository()
     private val postsRepository = InMemoryPostRepository()
+    private val configurationRepository = ConfigurationInMemoryRepository()
 
     @BeforeEach
     fun setUp() {
-        app = SchedulerList(scheduleRepository, MockedOutput())
+        configurationRepository.save(SocialConfiguration(timezone = "UTC"))
+        app = SchedulerList(scheduleRepository, configurationRepository, MockedOutput())
         cmd = CommandLine(app)
     }
 
@@ -621,6 +625,53 @@ class SchedulerListTest {
         )
 
         cmd.execute("-f", "post.text=missing")
+
+        assertEquals("No posts scheduled", cmd.getExecutionResult())
+    }
+
+    @Test
+    fun `should interpret date filters using the configured timezone`() {
+        configurationRepository.save(SocialConfiguration(timezone = "Europe/Madrid"))
+        val post = SocialPosts(text = "anything")
+        postsRepository.save(
+            arrayListOf(
+                post,
+            ),
+        )
+        scheduleRepository.save(
+            ScheduledItem(
+                post,
+                Instant.parse("2022-10-02T09:00:00Z"),
+            ),
+        )
+
+        cmd.execute("--start-date", "2022-10-02T08:30:00")
+
+        assertEquals(
+            """
+            1. Post with id 1 will be published on 2022-10-02T09:00:00Z
+            """.trimIndent(),
+            cmd.getExecutionResult(),
+        )
+    }
+
+    @Test
+    fun `should exclude posts before the local end date using the configured timezone`() {
+        configurationRepository.save(SocialConfiguration(timezone = "Europe/Madrid"))
+        val post = SocialPosts(text = "anything")
+        postsRepository.save(
+            arrayListOf(
+                post,
+            ),
+        )
+        scheduleRepository.save(
+            ScheduledItem(
+                post,
+                Instant.parse("2022-10-02T09:00:00Z"),
+            ),
+        )
+
+        cmd.execute("--end-date", "2022-10-02T08:30:00")
 
         assertEquals("No posts scheduled", cmd.getExecutionResult())
     }

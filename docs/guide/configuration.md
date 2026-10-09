@@ -41,7 +41,7 @@ directory you run the CLI from. The document accepts the following keys:
 | `twitter.accessToken` | yes | — | Access token for your X account. |
 | `twitter.accessTokenSecret` | yes | — | Access token secret for your X account. |
 | `storage` | no | `csv` | Storage adapter. Only `csv` is currently wired. |
-| `timezone` | no | `UTC` | Timezone reported when a post is scheduled. |
+| `timezone` | no | `UTC` | Timezone used to interpret local publish dates and reported when a post is scheduled. |
 | `fileName` | no | `production` | Suffix for the data files: `posts-<fileName>.csv` and `scheduler-<fileName>.csv`. |
 
 Only these keys are accepted. Any other key makes the command fail with

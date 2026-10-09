@@ -23,7 +23,7 @@ schedules and configuration as the terminal and the REST API.
 ## What you can do
 
 - Store your JSON configuration and credentials.
-- Create new posts with a rich text editor (bold, italic and underline).
+- Create new posts with a plain text editor and a live character count.
 - Browse every post in a table and **edit** or **remove** any of them.
 - Pick a publish date and time with a calendar and clock picker when scheduling.
 - Schedule a post for a publish date and delete schedules.

@@ -38,6 +38,17 @@ class SchedulerControllerTest {
     }
 
     @Test
+    fun `should convert a local publish date to utc using the configured timezone`() {
+        configurationRepository.save(SocialConfiguration(timezone = "Europe/Madrid"))
+        postsRepository.save(arrayListOf(SocialPosts(text = "release notes")))
+
+        val message = controller.create(SchedulePostRequest("1", "2022-10-02T09:00:00"))
+
+        assertEquals("Post has been scheduled using Europe/Madrid timezone", message.message)
+        assertEquals("2022-10-02T07:00:00Z", schedulerRepository.findAll()[0].publishDate.toString())
+    }
+
+    @Test
     fun `should filter and order schedules by query parameters`() {
         postsRepository.save(
             arrayListOf(

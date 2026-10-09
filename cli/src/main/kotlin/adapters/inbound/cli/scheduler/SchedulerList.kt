@@ -2,7 +2,9 @@ package adapters.inbound.cli.scheduler
 
 import application.Messages
 import application.Output
+import application.Timezone
 import application.persistence.SchedulerRepository
+import application.persistence.configuration.ConfigurationRepository
 import application.scheduler.List
 import application.scheduler.filters.Criterion
 import application.scheduler.filters.DateTimeValidation
@@ -19,6 +21,7 @@ open class SchedulerList
     @Inject
     constructor(
         private val scheduleRepository: SchedulerRepository,
+        private val configurationRepository: ConfigurationRepository,
         private val cliOutput: Output,
     ) : Callable<String> {
         @CommandLine.Option(
@@ -56,13 +59,14 @@ open class SchedulerList
 
         override fun call(): String {
             val filters: ArrayList<Criterion> = arrayListOf()
+            val zoneId = Timezone.zoneId(configurationRepository)
 
             if (groupBy.isNotEmpty() && groupBy != "post") {
                 return cliOutput.write(Messages.INVALID_GROUP_BY_PARAMETER)
             }
 
             if (startDate.isNotEmpty()) {
-                val validStartDate = DateTimeValidation(startDate)
+                val validStartDate = DateTimeValidation(startDate, zoneId)
                 if (!validStartDate.isDateTimeValid()) {
                     return cliOutput.write(Messages.INVALID_START_DATE)
                 }
@@ -71,7 +75,7 @@ open class SchedulerList
             }
 
             if (endDate.isNotEmpty()) {
-                val validEndDate = DateTimeValidation(endDate)
+                val validEndDate = DateTimeValidation(endDate, zoneId)
                 if (!validEndDate.isDateTimeValid()) {
                     return cliOutput.write(Messages.INVALID_END_DATE)
                 }

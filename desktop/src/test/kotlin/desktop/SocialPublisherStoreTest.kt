@@ -40,6 +40,15 @@ class SocialPublisherStoreTest {
     }
 
     @Test
+    fun `should convert a local publish date to utc using the configured timezone`() {
+        configurationRepository.save(SocialConfiguration(timezone = "Europe/Madrid"))
+        store.createPost("release notes")
+
+        assertEquals("Post has been scheduled using Europe/Madrid timezone", store.schedule("1", "2022-10-02T09:00:00"))
+        assertEquals("2022-10-02T07:00:00Z", store.schedules()[0].publishDate.toString())
+    }
+
+    @Test
     fun `should delete a post`() {
         store.createPost("release notes")
 

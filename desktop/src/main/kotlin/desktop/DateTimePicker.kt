@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -48,9 +48,11 @@ internal const val TIME_PICKER_TAG = "timePicker"
 
 private val dialogPadding = 16.dp
 private val dialogSpacing = 16.dp
-private val datePickerWidth = 360.dp
-private val timePickerWidth = 256.dp
-private val dialogWidth = dialogPadding * 2 + datePickerWidth + dialogSpacing + timePickerWidth
+private val timePickerWidth = 200.dp
+
+// BasicAlertDialog clamps its content to DialogMaxWidth (560.dp); the surface has to stay
+// within that bound or the right edge (including the Ok button) is clipped out of the window.
+private val dialogMaxWidth = 560.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -107,7 +109,7 @@ private fun dateTimePickerDialog(
         Surface(
             shape = MaterialTheme.shapes.extraLarge,
             tonalElevation = 6.dp,
-            modifier = Modifier.requiredWidth(dialogWidth).testTag(DATE_TIME_DIALOG_TAG),
+            modifier = Modifier.widthIn(max = dialogMaxWidth).testTag(DATE_TIME_DIALOG_TAG),
         ) {
             Column(
                 modifier = Modifier.padding(horizontal = dialogPadding, vertical = 12.dp),
@@ -120,7 +122,7 @@ private fun dateTimePickerDialog(
                 ) {
                     DatePicker(
                         state = dateState,
-                        modifier = Modifier.width(datePickerWidth).testTag(DATE_PICKER_TAG),
+                        modifier = Modifier.weight(1f).testTag(DATE_PICKER_TAG),
                     )
                     TimePicker(
                         state = timeState,

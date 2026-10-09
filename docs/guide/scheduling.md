@@ -12,7 +12,7 @@ social scheduler create -p "1" -d "2026-10-02T09:00:00Z" -s "TWITTER"
 | Option | Description |
 | --- | --- |
 | `-p` | Id of the post to schedule (from `social post -l`). |
-| `-d` | Publish date as an ISO-8601 instant, e.g. `2026-10-02T09:00:00Z`. |
+| `-d` | Publish date as an ISO-8601 instant (e.g. `2026-10-02T09:00:00Z`) or as a local date-time interpreted in the [configured timezone](/guide/configuration), e.g. `2026-10-02T09:00:00`. |
 | `-s` | Social network. Defaults to `TWITTER`. |
 
 On success:
@@ -21,8 +21,15 @@ On success:
 Post has been scheduled using UTC timezone
 ```
 
-The date must be a valid ISO-8601 instant in UTC (ending in `Z`). The timezone
-shown in the message comes from your [configuration](/guide/configuration).
+The date is stored as a UTC instant. A value with an explicit offset (such as
+`Z` or `+02:00`) is kept as-is; a local date-time without an offset is
+interpreted using the [configured timezone](/guide/configuration) and converted
+to UTC before being stored. The timezone shown in the message comes from your
+[configuration](/guide/configuration).
+
+For example, with `"timezone": "Europe/Madrid"` in the configuration, the local
+date time `2026-10-02T09:00:00` is stored and listed as `2026-10-02T07:00:00Z`
+because Madrid is two hours ahead of UTC on that date.
 
 Common failures:
 
@@ -30,7 +37,7 @@ Common failures:
 | --- | --- |
 | `Missing required fields` | `-d` was omitted. |
 | `Couldn't find post with id <id>` | No post exists with that id. |
-| `Invalid date time to schedule post` | The date is not a valid ISO-8601 instant. |
+| `Invalid date time to schedule post` | The date is not a valid ISO-8601 date time. |
 | `Post is already scheduled for <date>` | The same post is already scheduled at that exact time. |
 
 ## List schedules
@@ -76,7 +83,8 @@ unknown property or a malformed expression returns
 social scheduler list --start-date "2026-10-01T00:00:00Z" --end-date "2026-12-31T23:59:59Z"
 ```
 
-Both bounds accept ISO-8601 instants. Invalid values are reported as
+Both bounds accept ISO-8601 instants or a local date-time interpreted in the
+[configured timezone](/guide/configuration). Invalid values are reported as
 `Invalid start date` or `Invalid end date`. When nothing matches you get
 `No posts scheduled`.
 

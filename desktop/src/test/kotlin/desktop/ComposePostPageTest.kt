@@ -20,14 +20,14 @@ import org.junit.jupiter.api.Test
 @OptIn(ExperimentalTestApi::class)
 class ComposePostPageTest {
     @Test
-    fun `creates a new post from an empty rich text editor`() =
+    fun `creates a new post from an empty editor`() =
         runComposeUiTest {
             val store = storeWith()
 
             setContent { composePostPage(store) }
 
             onNodeWithText("Compose a new post").assertIsDisplayed()
-            onNodeWithText("Bold").assertIsDisplayed()
+            onNodeWithText("0 / 280").assertIsDisplayed()
             onNode(hasSetTextAction()).performTextReplacement("brand new post")
             onNodeWithText("Create post").performClick()
 

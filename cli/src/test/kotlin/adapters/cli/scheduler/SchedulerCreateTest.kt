@@ -98,6 +98,21 @@ class SchedulerCreateTest {
     }
 
     @Test
+    fun `should convert a local date time to utc using the configured timezone`() {
+        buildApplication(SocialConfiguration(timezone = "Europe/Madrid"))
+        postsRepository.save(
+            arrayListOf(
+                SocialPosts(text = "anything"),
+            ),
+        )
+
+        cmd.execute("-p", "1", "-d", "2022-10-02T09:00:00")
+
+        assertEquals("Post has been scheduled using Europe/Madrid timezone", cmd.getExecutionResult())
+        assertEquals("2022-10-02T07:00:00Z", scheduleRepository.findAll()[0].publishDate.toString())
+    }
+
+    @Test
     fun `should warn when invalid date is given to be published`() {
         postsRepository.save(
             arrayListOf(

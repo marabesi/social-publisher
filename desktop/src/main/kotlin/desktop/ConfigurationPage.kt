@@ -27,7 +27,8 @@ private const val DEFAULT_TIMEZONE = "UTC"
 
 @Composable
 fun configurationPage(store: SocialPublisherStore) {
-    val existing = remember { store.configuration() }
+    val errorReporter = LocalErrorReporter.current
+    val existing = remember { errorReporter.reporting(null) { store.configuration() } }
     var storage by remember { mutableStateOf(existing?.storage?.ifBlank { DEFAULT_STORAGE } ?: DEFAULT_STORAGE) }
     var timezone by remember { mutableStateOf(existing?.timezone?.ifBlank { DEFAULT_TIMEZONE } ?: DEFAULT_TIMEZONE) }
     var consumerKey by remember { mutableStateOf(existing?.twitter?.consumerKey.orEmpty()) }
@@ -44,21 +45,23 @@ fun configurationPage(store: SocialPublisherStore) {
             Text("Configuration", style = MaterialTheme.typography.titleLarge)
             Button(
                 onClick = {
-                    message =
-                        store.storeConfiguration(
-                            configurationFrom(
-                                fileName = existing?.fileName.orEmpty(),
-                                storage = storage,
-                                timezone = timezone,
-                                twitter =
-                                    TwitterCredentials(
-                                        consumerKey = consumerKey,
-                                        consumerSecret = consumerSecret,
-                                        accessToken = accessToken,
-                                        accessTokenSecret = accessTokenSecret,
-                                    ),
-                            ),
-                        )
+                    errorReporter.reporting {
+                        message =
+                            store.storeConfiguration(
+                                configurationFrom(
+                                    fileName = existing?.fileName.orEmpty(),
+                                    storage = storage,
+                                    timezone = timezone,
+                                    twitter =
+                                        TwitterCredentials(
+                                            consumerKey = consumerKey,
+                                            consumerSecret = consumerSecret,
+                                            accessToken = accessToken,
+                                            accessTokenSecret = accessTokenSecret,
+                                        ),
+                                ),
+                            )
+                    }
                 },
             ) {
                 Text("Store configuration")

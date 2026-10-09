@@ -68,6 +68,7 @@ class PosterState(
 
 @Composable
 fun posterPage(state: PosterState) {
+    val errorReporter = LocalErrorReporter.current
     var cadenceMenuOpen by remember { mutableStateOf(false) }
 
     Column(
@@ -117,7 +118,7 @@ fun posterPage(state: PosterState) {
             }
         }
 
-        Button(onClick = { state.runNow() }) {
+        Button(onClick = { errorReporter.reporting { state.runNow() } }) {
             Text("Run now")
         }
 

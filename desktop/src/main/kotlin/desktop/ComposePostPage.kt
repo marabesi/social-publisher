@@ -27,7 +27,8 @@ fun composePostPage(
 ) {
     val editingPost = postToEdit
     val isEditing = editingPost != null
-    val editorState = rememberRichTextEditorState(editingPost?.text ?: "")
+    val editorState = rememberPostEditorState(editingPost?.text ?: "")
+    val errorReporter = LocalErrorReporter.current
     var message by remember { mutableStateOf("") }
 
     Column(
@@ -39,17 +40,19 @@ fun composePostPage(
             style = MaterialTheme.typography.titleLarge,
         )
 
-        richTextEditor(state = editorState, modifier = Modifier.fillMaxWidth())
+        postEditor(state = editorState, modifier = Modifier.fillMaxWidth())
 
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Button(
                 onClick = {
-                    if (isEditing) {
-                        message = store.updatePost(editingPost.id ?: "", editorState.text())
-                        onFinish()
-                    } else {
-                        message = store.createPost(editorState.text())
-                        editorState.clear()
+                    errorReporter.reporting {
+                        if (isEditing) {
+                            message = store.updatePost(editingPost.id ?: "", editorState.text)
+                            onFinish()
+                        } else {
+                            message = store.createPost(editorState.text)
+                            editorState.clear()
+                        }
                     }
                 },
             ) {

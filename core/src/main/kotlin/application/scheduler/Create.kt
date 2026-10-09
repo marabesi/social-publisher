@@ -2,6 +2,7 @@ package application.scheduler
 
 import application.Messages
 import application.Output
+import application.Timezone
 import application.entities.ScheduledItem
 import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
@@ -21,14 +22,15 @@ class Create(
         if (postId.isNotEmpty() && targetDate.isNotEmpty()) {
             val post = postsRepository.findById(postId) ?: return cliOutput.write("Couldn't find post with id $postId")
 
-            val validTargetDate = DateTimeValidation(targetDate)
+            val timezone = Timezone.configured(configurationRepository)
+            val validTargetDate = DateTimeValidation(targetDate, Timezone.zoneId(timezone))
 
             if (!validTargetDate.isDateTimeValid()) {
                 return cliOutput.write("Invalid date time to schedule post")
             }
 
             scheduleRepository.findAll().forEach {
-                if (it.publishDate.toString() == targetDate && it.post.id == postId) {
+                if (it.publishDate == validTargetDate.value() && it.post.id == postId) {
                     return cliOutput.write("Post is already scheduled for $targetDate")
                 }
             }
@@ -39,8 +41,7 @@ class Create(
                     validTargetDate.value(),
                 ),
             )
-            val configuration = configurationRepository.find()
-            return cliOutput.write("Post has been scheduled using ${configuration.timezone} timezone")
+            return cliOutput.write("Post has been scheduled using $timezone timezone")
         }
 
         return cliOutput.write(Messages.MISSING_REQUIRED_FIELDS)

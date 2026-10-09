@@ -23,7 +23,10 @@ class SchedulerCreate
         @CommandLine.Option(names = ["-p"], description = ["Post id"])
         var postId: String = ""
 
-        @CommandLine.Option(names = ["-d"], description = ["Target date"])
+        @CommandLine.Option(
+            names = ["-d"],
+            description = ["Target date as an ISO-8601 instant or a local date time using the configured timezone"],
+        )
         var targetDate: String = ""
 
         @CommandLine.Option(names = ["-s"], description = ["Social media"])

@@ -1,8 +1,14 @@
 package desktop
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.getUnclippedBoundsInRoot
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -54,5 +60,25 @@ class DateTimePickerTest {
             assertTrue(clock.left >= calendar.right)
             assertTrue(clock.right <= dialog.right)
             assertTrue(clock.right - clock.left >= 200.dp)
+        }
+
+    @Test
+    fun `picking a date and pressing ok fills the value`() =
+        runComposeUiTest {
+            var chosen by mutableStateOf("")
+            setContent {
+                dateTimePicker(label = "Publish date", value = chosen, onValueChange = { chosen = it })
+            }
+
+            onNodeWithContentDescription("Pick date").performClick()
+
+            onAllNodes(
+                hasText(",", substring = true) and hasAnyAncestor(hasTestTag(DATE_PICKER_TAG)),
+                useUnmergedTree = true,
+            )[0].performClick()
+
+            onNodeWithText("Ok").performClick()
+
+            assertTrue(chosen.isNotBlank())
         }
 }

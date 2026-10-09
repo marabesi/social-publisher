@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.ValueSource
+import java.time.Instant
 
 class SchedulerCreateTest {
     private lateinit var configurationRepository: ConfigurationInMemoryRepository
@@ -88,6 +89,53 @@ class SchedulerCreateTest {
         val result = app.invoke("1", "2022-10-02T09:00:00Z")
 
         assertEquals("Post is already scheduled for 2022-10-02T09:00:00Z", result)
+    }
+
+    @Test
+    fun `should convert a local date time to utc using the configured timezone`() {
+        buildApplication(SocialConfiguration(timezone = "Europe/Madrid"))
+        postsRepository.save(
+            arrayListOf(
+                SocialPosts(text = "anything"),
+            ),
+        )
+
+        val result = app.invoke("1", "2022-10-02T09:00:00")
+
+        assertEquals("Post has been scheduled using Europe/Madrid timezone", result)
+        assertEquals(Instant.parse("2022-10-02T07:00:00Z"), scheduleRepository.findAll()[0].publishDate)
+    }
+
+    @Test
+    fun `should keep an explicit utc instant untouched regardless of the configured timezone`() {
+        postsRepository.save(
+            arrayListOf(
+                SocialPosts(text = "anything"),
+            ),
+        )
+
+        val result = app.invoke("1", "2022-10-02T09:00:00Z")
+
+        assertEquals("Post has been scheduled using UTC timezone", result)
+        assertEquals(Instant.parse("2022-10-02T09:00:00Z"), scheduleRepository.findAll()[0].publishDate)
+    }
+
+    @Test
+    fun `should schedule using utc when there is no configuration stored`() {
+        postsRepository = InMemoryPostRepository()
+        scheduleRepository = InMemorySchedulerRepository()
+        configurationRepository = ConfigurationInMemoryRepository()
+        app = Create(postsRepository, scheduleRepository, configurationRepository, MockedOutput())
+        postsRepository.save(
+            arrayListOf(
+                SocialPosts(text = "anything"),
+            ),
+        )
+
+        val result = app.invoke("1", "2022-10-02T09:00:00")
+
+        assertEquals("Post has been scheduled using UTC timezone", result)
+        assertEquals(Instant.parse("2022-10-02T09:00:00Z"), scheduleRepository.findAll()[0].publishDate)
     }
 
     @Test

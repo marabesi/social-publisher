@@ -4,6 +4,7 @@ import adapters.inbound.rest.dto.MessageResponse
 import adapters.inbound.rest.dto.SchedulePostRequest
 import adapters.inbound.rest.dto.ScheduledItemResponse
 import application.Output
+import application.Timezone
 import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
 import application.persistence.configuration.ConfigurationRepository
@@ -82,9 +83,10 @@ class SchedulerController(
         filter: String?,
     ): ArrayList<Criterion> {
         val filters = arrayListOf<Criterion>()
+        val zoneId = Timezone.zoneId(configurationRepository)
 
         startDate?.let {
-            val validation = DateTimeValidation(it)
+            val validation = DateTimeValidation(it, zoneId)
             if (!validation.isDateTimeValid()) {
                 invalid("start-date")
             }
@@ -92,7 +94,7 @@ class SchedulerController(
         }
 
         endDate?.let {
-            val validation = DateTimeValidation(it)
+            val validation = DateTimeValidation(it, zoneId)
             if (!validation.isDateTimeValid()) {
                 invalid("end-date")
             }

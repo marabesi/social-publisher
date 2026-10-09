@@ -21,11 +21,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import application.entities.ScheduledItem
 
 @Suppress("LongMethod")
 @Composable
 fun schedulesPage(store: SocialPublisherStore) {
-    var schedules by remember { mutableStateOf(store.schedules()) }
+    val errorReporter = LocalErrorReporter.current
+    var schedules by remember {
+        mutableStateOf(errorReporter.reporting(arrayListOf<ScheduledItem>()) { store.schedules() })
+    }
     var postId by remember { mutableStateOf("") }
     var publishDate by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("") }
@@ -54,13 +58,15 @@ fun schedulesPage(store: SocialPublisherStore) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Button(
                 onClick = {
-                    message = store.schedule(postId, publishDate)
-                    schedules = store.schedules()
+                    errorReporter.reporting {
+                        message = store.schedule(postId, publishDate)
+                        schedules = store.schedules()
+                    }
                 },
             ) {
                 Text("Schedule")
             }
-            Button(onClick = { schedules = store.schedules() }) {
+            Button(onClick = { schedules = errorReporter.reporting(schedules) { store.schedules() } }) {
                 Text("Refresh")
             }
         }
@@ -81,8 +87,10 @@ fun schedulesPage(store: SocialPublisherStore) {
                         )
                         TextButton(
                             onClick = {
-                                store.deleteSchedule(item.id ?: "")
-                                schedules = store.schedules()
+                                errorReporter.reporting {
+                                    store.deleteSchedule(item.id ?: "")
+                                    schedules = store.schedules()
+                                }
                             },
                         ) {
                             Text("Delete")

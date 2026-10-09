@@ -34,7 +34,10 @@ fun postsPage(
     store: SocialPublisherStore,
     onEdit: (SocialPosts) -> Unit = {},
 ) {
-    var posts by remember { mutableStateOf(store.posts().toList()) }
+    val errorReporter = LocalErrorReporter.current
+    var posts by remember {
+        mutableStateOf(errorReporter.reporting(emptyList<SocialPosts>()) { store.posts().toList() })
+    }
     var message by remember { mutableStateOf("") }
 
     Column(
@@ -46,7 +49,7 @@ fun postsPage(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text("Posts", style = MaterialTheme.typography.titleLarge)
-            Button(onClick = { posts = store.posts().toList() }) {
+            Button(onClick = { posts = errorReporter.reporting(posts) { store.posts().toList() } }) {
                 Text("Refresh")
             }
         }
@@ -62,8 +65,10 @@ fun postsPage(
                 posts = posts,
                 onEdit = onEdit,
                 onRemove = {
-                    message = store.deletePost(it.id ?: "")
-                    posts = store.posts().toList()
+                    errorReporter.reporting {
+                        message = store.deletePost(it.id ?: "")
+                        posts = store.posts().toList()
+                    }
                 },
             )
         }

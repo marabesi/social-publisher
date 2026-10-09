@@ -100,3 +100,19 @@ function test_delete_scheduled_post_by_its_id() {
     assert_contains "${expected}" "${output}"
 
 }
+
+###############################################
+## timezone aware scheduling
+###############################################
+function test_schedule_with_local_time_converted_to_utc_using_configured_timezone() {
+    sh ./social/bin/social configuration -c '{"storage":"csv","fileName":"tz-e2e","timezone":"Europe/Madrid"}' > /dev/null
+    sh ./social/bin/social post -c "tz post" > /dev/null
+
+    output=$(sh ./social/bin/social scheduler create -p "1" -d "2022-10-02T09:00:00" -s "TWITTER")
+    local expected="Post has been scheduled using Europe/Madrid timezone"
+    assert_contains "${expected}" "${output}"
+
+    output=$(sh ./social/bin/social scheduler list)
+    local expected="1. Post with id 1 will be published on 2022-10-02T07:00:00Z"
+    assert_contains "${expected}" "${output}"
+}

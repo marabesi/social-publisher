@@ -2,11 +2,15 @@ package desktop
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.getUnclippedBoundsInRoot
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.unit.dp
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.time.Instant
 
@@ -32,5 +36,23 @@ class DateTimePickerTest {
 
             onNodeWithText("Ok").assertIsDisplayed()
             onNodeWithText("Cancel").assertIsDisplayed()
+        }
+
+    @Test
+    fun `lays the clock beside the calendar without overlapping`() =
+        runComposeUiTest {
+            setContent {
+                dateTimePicker(label = "Publish date", value = "", onValueChange = {})
+            }
+
+            onNodeWithContentDescription("Pick date").performClick()
+
+            val dialog = onNodeWithTag(DATE_TIME_DIALOG_TAG).getUnclippedBoundsInRoot()
+            val calendar = onNodeWithTag(DATE_PICKER_TAG).getUnclippedBoundsInRoot()
+            val clock = onNodeWithTag(TIME_PICKER_TAG).getUnclippedBoundsInRoot()
+
+            assertTrue(clock.left >= calendar.right)
+            assertTrue(clock.right <= dialog.right)
+            assertTrue(clock.right - clock.left >= 200.dp)
         }
 }

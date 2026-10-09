@@ -55,5 +55,8 @@ class SocialPublisherStore(
     fun storeConfiguration(configuration: SocialConfiguration): String =
         application.configuration.Create(output, configurationRepository).invoke(configuration)
 
-    fun runPoster(): String = application.poster.Executor(schedulerRepository, output, currentDate(), twitterClient).invoke()
+    fun runPoster(): String {
+        val executor = application.poster.Executor(schedulerRepository, output, currentDate(), twitterClient)
+        return executor.invoke()
+    }
 }

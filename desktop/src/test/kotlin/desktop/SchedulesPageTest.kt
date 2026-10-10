@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.time.Instant
+import java.time.ZoneOffset
 
 @OptIn(ExperimentalTestApi::class)
 class SchedulesPageTest {
@@ -176,6 +177,21 @@ class SchedulesPageTest {
 
             assertTrue(store.schedules().isNotEmpty())
             onNodeWithText("Post 1 has been randomly scheduled for", substring = true).assertIsDisplayed()
+        }
+
+    @Test
+    fun `picks a random post for the day of the app clock`() =
+        runComposeUiTest {
+            val store = storeWith(currentDate = { Instant.parse("2026-10-05T10:00:00Z") })
+            store.createPost("release notes")
+
+            setContent { schedulesPage(store) }
+
+            onNodeWithTag(SCHEDULE_RANDOM_TAG).performClick()
+
+            assertTrue(store.schedules().isNotEmpty())
+            val publishDate = store.schedules()[0].publishDate
+            assertEquals("2026-10-05", publishDate.atZone(ZoneOffset.UTC).toLocalDate().toString())
         }
 
     @Test

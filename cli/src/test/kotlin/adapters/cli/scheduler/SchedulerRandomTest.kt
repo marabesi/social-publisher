@@ -60,6 +60,18 @@ class SchedulerRandomTest {
     }
 
     @Test
+    fun `should not create a random post in the past when the day already passed`() {
+        postsRepository.save(arrayListOf(SocialPosts(text = "anything")))
+
+        cmd.execute("-d", "2026-10-01")
+
+        val result = cmd.getExecutionResult<String>()
+        assertTrue(result.startsWith("Post 1 has been randomly scheduled for "), result)
+        val publishDate = scheduleRepository.findAll()[0].publishDate
+        assertTrue(!publishDate.isBefore(Instant.parse("2026-10-05T10:30:00Z")), publishDate.toString())
+    }
+
+    @Test
     fun `should skip posts already scheduled in the same week`() {
         postsRepository.save(
             arrayListOf(

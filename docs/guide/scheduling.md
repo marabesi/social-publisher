@@ -58,7 +58,9 @@ Post 3 has been randomly scheduled for 2026-10-07T14:23:11Z using UTC timezone
 full ISO-8601 date time; the day is interpreted in the
 [configured timezone](/guide/configuration). The publish time is picked at
 random inside that day, but never earlier than 30 minutes from now, so a slot
-requested for today always stays in the future.
+requested for today always stays in the future. If the day is already in the
+past, today is used instead, so a randomly created post is never scheduled in
+the past.
 
 The random pick uses the list of already scheduled posts: a post that is already
 scheduled for the same social network in the same week is skipped, so the same

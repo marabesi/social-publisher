@@ -36,7 +36,9 @@ class PickRandom(
 
         val timezone = Timezone.configured(configurationRepository)
         val zone = Timezone.zoneId(timezone)
-        val day = parseDay(targetDate, zone) ?: return cliOutput.write(INVALID_DATE)
+        val requestedDay = parseDay(targetDate, zone) ?: return cliOutput.write(INVALID_DATE)
+
+        val day = maxOf(requestedDay, now().atZone(zone).toLocalDate())
 
         val publishDate =
             randomInstant(day, zone) ?: return cliOutput.write("No available time to schedule a post on $targetDate")

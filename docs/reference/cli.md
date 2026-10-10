@@ -86,8 +86,9 @@ Pick a random post and schedule it for a given day.
 | `-s <network>` | Target network. Accepts `TWITTER` or `LINKEDIN`. Defaults to `TWITTER`. |
 
 The publish time is chosen randomly inside the day and is never earlier than 30
-minutes from now. Posts already scheduled for the same network in that week are
-skipped so the same content does not repeat. See
+minutes from now. A day already in the past is treated as today, so the created
+post is never in the past. Posts already scheduled for the same network in that
+week are skipped so the same content does not repeat. See
 [Pick a random post](/guide/scheduling#pick-a-random-post-for-a-day).
 
 ## `social scheduler list`

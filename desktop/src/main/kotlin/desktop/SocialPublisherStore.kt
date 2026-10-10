@@ -1,6 +1,7 @@
 package desktop
 
 import application.Output
+import application.Timezone
 import application.entities.ScheduledItem
 import application.entities.SocialConfiguration
 import application.entities.SocialMedia
@@ -15,6 +16,7 @@ import application.socialnetwork.ConnectLinkedIn
 import application.socialnetwork.ExchangeLinkedInAuthorization
 import application.socialnetwork.SocialThirdPartyProvider
 import java.time.Instant
+import java.time.LocalDate
 
 class SocialPublisherStore(
     private val postsRepository: PostsRepository,
@@ -60,6 +62,8 @@ class SocialPublisherStore(
             )
         return pickRandom.invoke(publishDate, socialMedia)
     }
+
+    fun today(): LocalDate = currentDate().atZone(Timezone.zoneId(configurationRepository)).toLocalDate()
 
     fun schedules(): ArrayList<ScheduledItem> = schedulerRepository.findAll()
 

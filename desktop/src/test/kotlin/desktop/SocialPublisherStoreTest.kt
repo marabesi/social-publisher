@@ -68,6 +68,22 @@ class SocialPublisherStoreTest {
     }
 
     @Test
+    fun `should report today using the configured timezone and clock`() {
+        configurationRepository.save(SocialConfiguration(timezone = "Europe/Madrid"))
+        val zonedStore =
+            SocialPublisherStore(
+                postsRepository = InMemoryPostRepository(),
+                schedulerRepository = InMemorySchedulerRepository(),
+                configurationRepository = configurationRepository,
+                output = MockedOutput(),
+                socialNetworks = MockedSocialThirdParty(),
+                currentDate = { Instant.parse("2026-10-05T22:30:00Z") },
+            )
+
+        assertEquals("2026-10-06", zonedStore.today().toString())
+    }
+
+    @Test
     fun `should convert a local publish date to utc using the configured timezone`() {
         configurationRepository.save(SocialConfiguration(timezone = "Europe/Madrid"))
         store.createPost("release notes")

@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Instant
+import java.time.ZoneId
 import kotlin.random.Random
 
 class PickRandomTest {
@@ -65,6 +66,18 @@ class PickRandomTest {
 
         val publishDate = scheduleRepository.findAll()[0].publishDate
         assertTrue(!publishDate.isBefore(NOW.plusSeconds(30 * 60)), publishDate.toString())
+    }
+
+    @Test
+    fun `should never schedule a random post in the past when the day already passed`() {
+        postsRepository.save(arrayListOf(SocialPosts(text = "anything")))
+
+        val result = app(now = NOW).invoke("2026-10-01")
+
+        assertTrue(result.startsWith("Post 1 has been randomly scheduled for "), result)
+        val publishDate = scheduleRepository.findAll()[0].publishDate
+        assertTrue(!publishDate.isBefore(NOW.plusSeconds(30 * 60)), publishDate.toString())
+        assertEquals("2026-10-05", publishDate.atZone(ZoneId.of("UTC")).toLocalDate().toString())
     }
 
     @Test

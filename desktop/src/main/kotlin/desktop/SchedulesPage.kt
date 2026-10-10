@@ -34,7 +34,6 @@ import application.entities.SocialMedia
 import application.scheduler.ScheduleSearch
 import application.scheduler.order.Direction
 import application.scheduler.order.PublishDateOrder
-import java.time.LocalDate
 
 internal const val SCHEDULE_POST_ID_TAG = "schedulePostId"
 internal const val SCHEDULE_SOCIAL_MEDIA_TAG = "scheduleSocialMedia"
@@ -63,7 +62,7 @@ fun schedulesPage(store: SocialPublisherStore) {
     var publishDate by remember { mutableStateOf("") }
     var socialMedia by remember { mutableStateOf(SocialMedia.TWITTER) }
     var message by remember { mutableStateOf("") }
-    var randomDay by remember { mutableStateOf(LocalDate.now().toString()) }
+    var randomDay by remember { mutableStateOf(store.today().toString()) }
     var randomSocialMedia by remember { mutableStateOf(SocialMedia.TWITTER) }
     var randomMessage by remember { mutableStateOf("") }
     var searchText by remember { mutableStateOf("") }

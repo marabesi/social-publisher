@@ -23,6 +23,7 @@ dependencies {
     implementation("org.apache.commons:commons-csv:1.9.0")
     implementation("oauth.signpost:signpost-core:2.0.0")
     implementation("oauth.signpost:signpost-commonshttp4:2.0.0")
+    implementation("org.apache.httpcomponents:httpmime:4.5.13")
     implementation("aopalliance:aopalliance:1.0")
     implementation("io.github.cdimascio:dotenv-kotlin:6.3.1")
     implementation("jakarta.inject:jakarta.inject-api:2.0.1")

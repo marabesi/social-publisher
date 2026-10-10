@@ -46,7 +46,10 @@ directory you run the CLI from. The document accepts the following keys:
 | `linkedin.redirectUri` | to connect | — | Redirect URL registered in your LinkedIn app. |
 | `linkedin.accessToken` | yes | — | Access token for your LinkedIn account. |
 | `linkedin.authorUrn` | yes | — | Author of the post, e.g. `urn:li:person:123`. |
-| `storage` | no | `csv` | Storage adapter. Only `csv` is currently wired. |
+| `storage` | no | `csv` | Storage adapter. `csv` stores locally; `notion` also uploads the data files to Notion on every change. |
+| `notion` | for notional storage | — | Notion credentials used when `storage` is `notion`. |
+| `notion.apiKey` | yes | — | Notion integration token (`ntn_...`). |
+| `notion.pageId` | to persist | — | Page the uploaded files are attached to. Without it files expire after an hour. |
 | `timezone` | no | `UTC` | Timezone used to interpret local publish dates and reported when a post is scheduled. |
 | `fileName` | no | `production` | Suffix for the data files: `posts-<fileName>.csv` and `scheduler-<fileName>.csv`. |
 
@@ -121,6 +124,31 @@ about 60 days; run `linkedin connect` + `linkedin token` again when it expires.
 LinkedIn's self-serve apps do not get a refresh token, so reconnect before the
 ~60-day expiry to avoid a failed publish.
 :::
+
+## Use Notion as storage
+
+Set `"storage": "notion"` and provide the Notion credentials block:
+
+```sh
+social configuration -c '{
+  "storage": "notion",
+  "notion": {
+    "apiKey": "ntn_your-integration-token",
+    "pageId": "your-page-id"
+  }
+}'
+```
+
+With `notion` selected, every change (creating, updating or deleting a post or a
+schedule) uploads the `posts-<fileName>.csv` and `scheduler-<fileName>.csv`
+files to Notion using the [file upload API](https://developers.notion.com/reference/file-upload).
+The uploads are attached to the page in `notion.pageId` as file blocks so they
+stay in the workspace. Providing a `pageId` is required for the files to persist;
+uploads that are never attached expire after one hour.
+
+The files are still written to the local store directory first, so reads keep
+working exactly as with `csv`. Notion is an extra remote copy of the data files,
+not a replacement for the local store.
 
 ## Create the configuration
 

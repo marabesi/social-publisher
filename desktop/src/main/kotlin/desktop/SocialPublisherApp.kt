@@ -3,6 +3,9 @@ package desktop
 import adapters.outbound.csv.FileSystemConfigurationRepository
 import adapters.outbound.csv.FileSystemPostRepository
 import adapters.outbound.csv.FileSystemSchedulerRepository
+import adapters.outbound.notion.NotionFileSync
+import adapters.outbound.notion.NotionPostsRepository
+import adapters.outbound.notion.NotionSchedulerRepository
 import adapters.outbound.social.LinkedInOAuthClient
 import adapters.outbound.social.Linkedin
 import adapters.outbound.social.LinkedinCredentialsValidator
@@ -148,11 +151,16 @@ fun desktopAppShell(store: SocialPublisherStore) {
 private fun rememberDesktopStore(): SocialPublisherStore =
     remember {
         val configurationRepository = FileSystemConfigurationRepository()
-        val postsRepository = FileSystemPostRepository(configurationRepository = configurationRepository)
+        val notionSync = NotionFileSync(configurationRepository)
+        val filePostsRepository = FileSystemPostRepository(configurationRepository = configurationRepository)
+        val postsRepository = NotionPostsRepository(filePostsRepository, notionSync)
         val schedulerRepository =
-            FileSystemSchedulerRepository(
-                postsRepository = postsRepository,
-                configurationRepository = configurationRepository,
+            NotionSchedulerRepository(
+                FileSystemSchedulerRepository(
+                    postsRepository = filePostsRepository,
+                    configurationRepository = configurationRepository,
+                ),
+                notionSync,
             )
         val socialNetworks =
             SocialThirdPartyRouting(

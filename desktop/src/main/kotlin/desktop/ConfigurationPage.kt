@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import application.entities.LinkedInCredentials
+import application.entities.NotionCredentials
 import application.entities.SocialConfiguration
 import application.entities.TwitterCredentials
 
@@ -41,6 +42,8 @@ fun configurationPage(store: SocialPublisherStore) {
     var linkedinRedirectUri by remember { mutableStateOf(existing?.linkedin?.redirectUri.orEmpty()) }
     var linkedinAccessToken by remember { mutableStateOf(existing?.linkedin?.accessToken.orEmpty()) }
     var linkedinAuthorUrn by remember { mutableStateOf(existing?.linkedin?.authorUrn.orEmpty()) }
+    var notionApiKey by remember { mutableStateOf(existing?.notion?.apiKey.orEmpty()) }
+    var notionPageId by remember { mutableStateOf(existing?.notion?.pageId.orEmpty()) }
     var linkedinUrl by remember { mutableStateOf("") }
     var linkedinCode by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("") }
@@ -75,6 +78,11 @@ fun configurationPage(store: SocialPublisherStore) {
                                             accessToken = linkedinAccessToken,
                                             authorUrn = linkedinAuthorUrn,
                                         ),
+                                    notion =
+                                        NotionCredentials(
+                                            apiKey = notionApiKey,
+                                            pageId = notionPageId,
+                                        ),
                                 ),
                             )
                     }
@@ -101,7 +109,7 @@ fun configurationPage(store: SocialPublisherStore) {
                 value = storage,
                 onValueChange = { storage = it },
                 label = { Text("Storage") },
-                supportingText = { Text("Only csv is currently supported.") },
+                supportingText = { Text("Use csv, or notion to upload the data files on every change.") },
                 modifier = Modifier.fillMaxWidth(),
             )
             OutlinedTextField(
@@ -169,6 +177,21 @@ fun configurationPage(store: SocialPublisherStore) {
                 value = linkedinAuthorUrn,
                 onValueChange = { linkedinAuthorUrn = it },
                 label = { Text("LinkedIn author urn") },
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            Text("Notion storage", style = MaterialTheme.typography.titleMedium)
+
+            OutlinedTextField(
+                value = notionApiKey,
+                onValueChange = { notionApiKey = it },
+                label = { Text("Notion API key") },
+                modifier = Modifier.fillMaxWidth(),
+            )
+            OutlinedTextField(
+                value = notionPageId,
+                onValueChange = { notionPageId = it },
+                label = { Text("Notion page id") },
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -242,6 +265,7 @@ internal fun configurationFrom(
     timezone: String,
     twitter: TwitterCredentials?,
     linkedin: LinkedInCredentials? = null,
+    notion: NotionCredentials? = null,
 ): SocialConfiguration {
     val credentials =
         twitter?.takeIf {
@@ -260,11 +284,18 @@ internal fun configurationFrom(
                 it.authorUrn.isNotBlank()
         }
 
+    val notionCredentials =
+        notion?.takeIf {
+            it.apiKey.isNotBlank() ||
+                it.pageId.isNotBlank()
+        }
+
     return SocialConfiguration(
         fileName = fileName,
         storage = storage,
         twitter = credentials,
         linkedin = linkedinCredentials,
+        notion = notionCredentials,
         timezone = timezone,
     )
 }

@@ -4,6 +4,10 @@ import Main
 import adapters.outbound.csv.FileSystemConfigurationRepository
 import adapters.outbound.csv.FileSystemPostRepository
 import adapters.outbound.csv.FileSystemSchedulerRepository
+import adapters.outbound.notion.NotionFileSync
+import adapters.outbound.notion.NotionPostsRepository
+import adapters.outbound.notion.NotionSchedulerRepository
+import adapters.outbound.notion.NotionSync
 import adapters.outbound.social.LinkedInOAuthClient
 import adapters.outbound.social.LinkedinCredentialsValidator
 import adapters.outbound.social.SocialThirdPartyRouting
@@ -47,10 +51,19 @@ class TweetCreatedModule(
 
         bind(ConfigurationRepository::class.java).toInstance(configuration)
 
-        val postRepository = FileSystemPostRepository(configurationRepository = configuration)
+        val notionSync: NotionSync = NotionFileSync(configuration)
+        val filePostsRepository = FileSystemPostRepository(configurationRepository = configuration)
+        val postRepository = NotionPostsRepository(filePostsRepository, notionSync)
         bind(PostsRepository::class.java).toInstance(postRepository)
 
-        val scheduler = FileSystemSchedulerRepository(postsRepository = postRepository, configurationRepository = configuration)
+        val scheduler =
+            NotionSchedulerRepository(
+                FileSystemSchedulerRepository(
+                    postsRepository = filePostsRepository,
+                    configurationRepository = configuration,
+                ),
+                notionSync,
+            )
         bind(SchedulerRepository::class.java).toInstance(scheduler)
 
         bind(PublishPost::class.java).to(Twitter::class.java)

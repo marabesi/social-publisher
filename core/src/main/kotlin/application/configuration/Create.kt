@@ -10,7 +10,7 @@ import kotlinx.serialization.json.jsonObject
 
 private const val DEFAULT_STORAGE_FORMAT = "csv"
 private const val DEFAULT_TIMEZONE = "UTC"
-private val AVAILABLE_CONFIGURATION = listOf("fileName", "storage", "twitter", "linkedin", "timezone")
+private val AVAILABLE_CONFIGURATION = listOf("fileName", "storage", "twitter", "linkedin", "notion", "timezone")
 
 class Create(
     private val cliOutput: Output,

@@ -6,6 +6,7 @@ data class SocialConfiguration(
     var storage: String = "",
     var twitter: TwitterCredentials? = null,
     var linkedin: LinkedInCredentials? = null,
+    var notion: NotionCredentials? = null,
     var timezone: String = "",
 )
 
@@ -24,4 +25,10 @@ data class LinkedInCredentials(
     val redirectUri: String = "",
     val accessToken: String = "",
     val authorUrn: String = "",
+)
+
+@kotlinx.serialization.Serializable
+data class NotionCredentials(
+    val apiKey: String = "",
+    val pageId: String = "",
 )

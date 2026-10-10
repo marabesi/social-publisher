@@ -4,6 +4,10 @@ import adapters.inbound.rest.RestOutput
 import adapters.outbound.csv.FileSystemConfigurationRepository
 import adapters.outbound.csv.FileSystemPostRepository
 import adapters.outbound.csv.FileSystemSchedulerRepository
+import adapters.outbound.notion.NotionFileSync
+import adapters.outbound.notion.NotionPostsRepository
+import adapters.outbound.notion.NotionSchedulerRepository
+import adapters.outbound.notion.NotionSync
 import adapters.outbound.social.LinkedInOAuthClient
 import adapters.outbound.social.Linkedin
 import adapters.outbound.social.LinkedinCredentialsValidator
@@ -30,17 +34,29 @@ class CoreConfiguration {
     fun configurationRepository(): ConfigurationRepository = FileSystemConfigurationRepository()
 
     @Bean
-    fun postsRepository(configurationRepository: ConfigurationRepository): PostsRepository =
-        FileSystemPostRepository(configurationRepository = configurationRepository)
+    fun notionSync(configurationRepository: ConfigurationRepository): NotionSync = NotionFileSync(configurationRepository)
+
+    @Bean
+    fun postsRepository(
+        configurationRepository: ConfigurationRepository,
+        notionSync: NotionSync,
+    ): PostsRepository =
+        NotionPostsRepository(
+            FileSystemPostRepository(configurationRepository = configurationRepository),
+            notionSync,
+        )
 
     @Bean
     fun schedulerRepository(
-        postsRepository: PostsRepository,
         configurationRepository: ConfigurationRepository,
+        notionSync: NotionSync,
     ): SchedulerRepository =
-        FileSystemSchedulerRepository(
-            postsRepository = postsRepository,
-            configurationRepository = configurationRepository,
+        NotionSchedulerRepository(
+            FileSystemSchedulerRepository(
+                postsRepository = FileSystemPostRepository(configurationRepository = configurationRepository),
+                configurationRepository = configurationRepository,
+            ),
+            notionSync,
         )
 
     @Bean

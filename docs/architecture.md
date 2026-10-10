@@ -53,7 +53,7 @@ others.
 | --- | --- | --- |
 | Core | `core/src/main/kotlin/application` | Entities, use cases and ports. No framework or I/O imports. |
 | Inbound adapters | `cli/.../adapters/inbound/cli`, `rest-api/.../adapters/inbound/rest`, `desktop/` | picocli commands, REST controllers, and a Compose UI that drive the use cases. |
-| Outbound adapters | `core/src/main/kotlin/adapters/outbound` | Port implementations: CSV persistence, Twitter, LinkedIn, in-memory (tests). |
+| Outbound adapters | `core/src/main/kotlin/adapters/outbound` | Port implementations: CSV persistence, Notion storage, Twitter, LinkedIn, in-memory (tests). |
 
 Persistence ports live under `application/persistence`, output under
 `application/Output.kt`, and social network integrations under
@@ -84,6 +84,9 @@ back to `production`):
 
 The same store is shared by the CLI, the REST API and the desktop app. See
 [Configuration](/guide/configuration#where-data-lives) for how to change it.
+When `storage` is set to `notion`, the `posts-<fileName>.csv` and
+`scheduler-<fileName>.csv` files are additionally uploaded to a Notion workspace
+after every change (see [Notion storage](/guide/configuration#use-notion-as-storage)).
 
 ## Extending it
 

@@ -11,6 +11,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.runComposeUiTest
 import application.entities.LinkedInCredentials
+import application.entities.NotionCredentials
 import application.entities.SocialConfiguration
 import application.entities.TwitterCredentials
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -36,6 +37,8 @@ class ConfigurationPageTest {
             onNodeWithText("LinkedIn redirect uri").assertExists()
             onNodeWithText("LinkedIn access token").assertExists()
             onNodeWithText("LinkedIn author urn").assertExists()
+            onNodeWithText("Notion API key").assertExists()
+            onNodeWithText("Notion page id").assertExists()
             onNodeWithText("Connect LinkedIn").assertExists()
         }
 
@@ -71,6 +74,11 @@ class ConfigurationPageTest {
                                 accessToken = "linkedin-access-token",
                                 authorUrn = "urn:li:person:123",
                             ),
+                        notion =
+                            NotionCredentials(
+                                apiKey = "notion-api-key",
+                                pageId = "notion-page-id",
+                            ),
                     ),
                 )
 
@@ -83,6 +91,8 @@ class ConfigurationPageTest {
             onNodeWithText("access-token-secret").assertExists()
             onNodeWithText("linkedin-access-token").assertExists()
             onNodeWithText("urn:li:person:123").assertExists()
+            onNodeWithText("notion-api-key").assertExists()
+            onNodeWithText("notion-page-id").assertExists()
         }
 
     @Test

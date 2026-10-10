@@ -1,6 +1,7 @@
 package desktop
 
 import application.entities.LinkedInCredentials
+import application.entities.NotionCredentials
 import application.entities.TwitterCredentials
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
@@ -75,5 +76,34 @@ class ConfigurationFromTest {
             )
 
         assertNull(configuration.linkedin)
+    }
+
+    @Test
+    fun `keeps the notion credentials when at least one field is set`() {
+        val configuration =
+            configurationFrom(
+                fileName = "prod",
+                storage = "notion",
+                timezone = "UTC",
+                twitter = null,
+                notion = NotionCredentials(apiKey = "notion-api-key", pageId = "page-id"),
+            )
+
+        assertEquals("notion-api-key", configuration.notion?.apiKey)
+        assertEquals("page-id", configuration.notion?.pageId)
+    }
+
+    @Test
+    fun `drops empty notion credentials`() {
+        val configuration =
+            configurationFrom(
+                fileName = "prod",
+                storage = "notion",
+                timezone = "UTC",
+                twitter = null,
+                notion = NotionCredentials(),
+            )
+
+        assertNull(configuration.notion)
     }
 }

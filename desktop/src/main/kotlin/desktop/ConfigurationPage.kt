@@ -30,6 +30,7 @@ private const val DEFAULT_TIMEZONE = "UTC"
 @Composable
 fun configurationPage(store: SocialPublisherStore) {
     val errorReporter = LocalErrorReporter.current
+    val loading = rememberLoadingState()
     val existing = remember { errorReporter.reporting(null) { store.configuration() } }
     var storage by remember { mutableStateOf(existing?.storage?.ifBlank { DEFAULT_STORAGE } ?: DEFAULT_STORAGE) }
     var timezone by remember { mutableStateOf(existing?.timezone?.ifBlank { DEFAULT_TIMEZONE } ?: DEFAULT_TIMEZONE) }
@@ -53,39 +54,40 @@ fun configurationPage(store: SocialPublisherStore) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text("Configuration", style = MaterialTheme.typography.titleLarge)
+            pageTitle(title = "Configuration", loading = loading.isLoading)
             Button(
+                enabled = !loading.isLoading,
                 onClick = {
-                    errorReporter.reporting {
-                        message =
-                            store.storeConfiguration(
-                                configurationFrom(
-                                    fileName = existing?.fileName.orEmpty(),
-                                    storage = storage,
-                                    timezone = timezone,
-                                    twitter =
-                                        TwitterCredentials(
-                                            consumerKey = consumerKey,
-                                            consumerSecret = consumerSecret,
-                                            accessToken = accessToken,
-                                            accessTokenSecret = accessTokenSecret,
-                                        ),
-                                    linkedin =
-                                        LinkedInCredentials(
-                                            clientId = linkedinClientId,
-                                            clientSecret = linkedinClientSecret,
-                                            redirectUri = linkedinRedirectUri,
-                                            accessToken = linkedinAccessToken,
-                                            authorUrn = linkedinAuthorUrn,
-                                        ),
-                                    notion =
-                                        NotionCredentials(
-                                            apiKey = notionApiKey,
-                                            pageId = notionPageId,
-                                        ),
+                    val configuration =
+                        configurationFrom(
+                            fileName = existing?.fileName.orEmpty(),
+                            storage = storage,
+                            timezone = timezone,
+                            twitter =
+                                TwitterCredentials(
+                                    consumerKey = consumerKey,
+                                    consumerSecret = consumerSecret,
+                                    accessToken = accessToken,
+                                    accessTokenSecret = accessTokenSecret,
                                 ),
-                            )
-                    }
+                            linkedin =
+                                LinkedInCredentials(
+                                    clientId = linkedinClientId,
+                                    clientSecret = linkedinClientSecret,
+                                    redirectUri = linkedinRedirectUri,
+                                    accessToken = linkedinAccessToken,
+                                    authorUrn = linkedinAuthorUrn,
+                                ),
+                            notion =
+                                NotionCredentials(
+                                    apiKey = notionApiKey,
+                                    pageId = notionPageId,
+                                ),
+                        )
+                    loading.run(
+                        block = { store.storeConfiguration(configuration) },
+                        onSuccess = { message = it },
+                    )
                 },
             ) {
                 Text("Store configuration")
@@ -203,8 +205,12 @@ fun configurationPage(store: SocialPublisherStore) {
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(
+                    enabled = !loading.isLoading,
                     onClick = {
-                        linkedinUrl = errorReporter.reporting("") { store.linkedInAuthorizationUrl() }
+                        loading.run(
+                            block = { store.linkedInAuthorizationUrl() },
+                            onSuccess = { linkedinUrl = it },
+                        )
                     },
                 ) {
                     Text("Generate authorization URL")
@@ -234,14 +240,21 @@ fun configurationPage(store: SocialPublisherStore) {
                 modifier = Modifier.fillMaxWidth(),
             )
             Button(
+                enabled = !loading.isLoading,
                 onClick = {
-                    errorReporter.reporting {
-                        message = store.connectLinkedIn(linkedinCode)
-                        linkedinCode = ""
-                        val connected = store.configuration()?.linkedin
-                        linkedinAccessToken = connected?.accessToken.orEmpty()
-                        linkedinAuthorUrn = connected?.authorUrn.orEmpty()
-                    }
+                    val code = linkedinCode
+                    loading.run(
+                        block = {
+                            val response = store.connectLinkedIn(code)
+                            response to store.configuration()?.linkedin
+                        },
+                        onSuccess = { (response, linkedin) ->
+                            message = response
+                            linkedinCode = ""
+                            linkedinAccessToken = linkedin?.accessToken.orEmpty()
+                            linkedinAuthorUrn = linkedin?.authorUrn.orEmpty()
+                        },
+                    )
                 },
             ) {
                 Text("Store token")

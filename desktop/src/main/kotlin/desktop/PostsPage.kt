@@ -45,6 +45,7 @@ fun postsPage(
     onEdit: (SocialPosts) -> Unit = {},
 ) {
     val errorReporter = LocalErrorReporter.current
+    val loading = rememberLoadingState()
     var posts by remember {
         mutableStateOf(errorReporter.reporting(emptyList<SocialPosts>()) { store.posts().toList() })
     }
@@ -67,11 +68,17 @@ fun postsPage(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text("Posts", style = MaterialTheme.typography.titleLarge)
+            pageTitle(title = "Posts", loading = loading.isLoading)
             Button(
+                enabled = !loading.isLoading,
                 onClick = {
-                    posts = errorReporter.reporting(posts) { store.posts().toList() }
-                    schedules = errorReporter.reporting(schedules) { store.schedules().toList() }
+                    loading.run(
+                        block = { store.posts().toList() to store.schedules().toList() },
+                        onSuccess = { (refreshedPosts, refreshedSchedules) ->
+                            posts = refreshedPosts
+                            schedules = refreshedSchedules
+                        },
+                    )
                 },
             ) {
                 Text("Refresh")
@@ -97,13 +104,20 @@ fun postsPage(
             else ->
                 postsTable(
                     posts = visiblePosts,
+                    loading = loading.isLoading,
                     onEdit = onEdit,
-                    onRemove = {
-                        errorReporter.reporting {
-                            message = store.deletePost(it.id ?: "")
-                            posts = store.posts().toList()
-                            schedules = store.schedules().toList()
-                        }
+                    onRemove = { post ->
+                        loading.run(
+                            block = {
+                                val response = store.deletePost(post.id ?: "")
+                                Triple(response, store.posts().toList(), store.schedules().toList())
+                            },
+                            onSuccess = { (response, refreshedPosts, refreshedSchedules) ->
+                                message = response
+                                posts = refreshedPosts
+                                schedules = refreshedSchedules
+                            },
+                        )
                     },
                 )
         }
@@ -151,6 +165,7 @@ private fun postsSearch(
 @Composable
 private fun postsTable(
     posts: List<SocialPosts>,
+    loading: Boolean,
     onEdit: (SocialPosts) -> Unit,
     onRemove: (SocialPosts) -> Unit,
 ) {
@@ -182,7 +197,10 @@ private fun postsTable(
                         TextButton(onClick = { onEdit(post) }) {
                             Text("Edit")
                         }
-                        TextButton(onClick = { onRemove(post) }) {
+                        TextButton(
+                            enabled = !loading,
+                            onClick = { onRemove(post) },
+                        ) {
                             Text("Remove")
                         }
                     }

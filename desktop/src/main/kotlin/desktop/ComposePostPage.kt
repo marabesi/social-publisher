@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -28,32 +27,41 @@ fun composePostPage(
     val editingPost = postToEdit
     val isEditing = editingPost != null
     val editorState = rememberPostEditorState(editingPost?.text ?: "")
-    val errorReporter = LocalErrorReporter.current
+    val loading = rememberLoadingState()
     var message by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Text(
-            text = if (isEditing) "Edit post" else "Compose a new post",
-            style = MaterialTheme.typography.titleLarge,
+        pageTitle(
+            title = if (isEditing) "Edit post" else "Compose a new post",
+            loading = loading.isLoading,
         )
 
         postEditor(state = editorState, modifier = Modifier.fillMaxWidth())
 
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Button(
+                enabled = !loading.isLoading,
                 onClick = {
-                    errorReporter.reporting {
-                        if (isEditing) {
-                            message = store.updatePost(editingPost.id ?: "", editorState.text)
-                            onFinish()
-                        } else {
-                            message = store.createPost(editorState.text)
-                            editorState.clear()
-                        }
-                    }
+                    loading.run(
+                        block = {
+                            if (isEditing) {
+                                store.updatePost(editingPost.id ?: "", editorState.text)
+                            } else {
+                                store.createPost(editorState.text)
+                            }
+                        },
+                        onSuccess = { result ->
+                            message = result
+                            if (isEditing) {
+                                onFinish()
+                            } else {
+                                editorState.clear()
+                            }
+                        },
+                    )
                 },
             ) {
                 Text(if (isEditing) "Save" else "Create post")

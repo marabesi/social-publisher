@@ -7,6 +7,7 @@ import adapters.outbound.inmemory.InMemorySchedulerRepository
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -30,6 +31,9 @@ class ErrorHandlingTest {
             onNodeWithTag(homeNavigationTag(AppPage.POSTS)).performClick()
             onNodeWithText("Remove").performClick()
 
+            waitUntil {
+                onAllNodesWithText("Cause: The store file is locked").fetchSemanticsNodes().isNotEmpty()
+            }
             onNodeWithText("Something went wrong").assertIsDisplayed()
             onNodeWithText("Could not remove the post").assertIsDisplayed()
             onNodeWithText("Cause: The store file is locked").assertIsDisplayed()
@@ -77,6 +81,7 @@ class ErrorHandlingTest {
 
             onNodeWithText("Run now").performClick()
 
+            waitUntil { captured != null }
             assertEquals("Twitter is unavailable", captured?.message)
             assertEquals("connection refused", captured?.cause?.message)
         }

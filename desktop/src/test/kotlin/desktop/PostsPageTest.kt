@@ -7,6 +7,7 @@ import adapters.outbound.inmemory.InMemorySchedulerRepository
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -17,9 +18,11 @@ import application.entities.ScheduledItem
 import application.entities.SocialConfiguration
 import application.entities.SocialMedia
 import application.entities.SocialPosts
+import application.persistence.PostsRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.Instant
+import java.util.concurrent.CountDownLatch
 
 @OptIn(ExperimentalTestApi::class)
 class PostsPageTest {
@@ -59,6 +62,7 @@ class PostsPageTest {
 
             onAllNodesWithText("Remove")[0].performClick()
 
+            waitUntil { store.posts().size == 1 }
             onNodeWithText("hello desktop").assertDoesNotExist()
             onNodeWithText("second post").assertIsDisplayed()
         }
@@ -144,11 +148,37 @@ class PostsPageTest {
             onNodeWithText("No posts match your search").assertIsDisplayed()
         }
 
+    @Test
+    fun `shows a loading indicator while refreshing the posts`() =
+        runComposeUiTest {
+            val postsRepository = BlockingFindAllPostsRepository()
+            val store = storeWith(posts = listOf("hello desktop"), postsRepository = postsRepository)
+
+            setContent { postsPage(store) }
+
+            onNodeWithText("hello desktop").assertIsDisplayed()
+
+            postsRepository.block = true
+            onNodeWithText("Refresh").performClick()
+
+            waitUntil {
+                onAllNodesWithTag(LOADING_INDICATOR_TAG).fetchSemanticsNodes().isNotEmpty()
+            }
+            onNodeWithTag(LOADING_INDICATOR_TAG).assertIsDisplayed()
+
+            postsRepository.release()
+
+            waitUntil {
+                onAllNodesWithTag(LOADING_INDICATOR_TAG).fetchSemanticsNodes().isEmpty()
+            }
+            onNodeWithText("hello desktop").assertIsDisplayed()
+        }
+
     private fun storeWith(
         posts: List<String>,
         schedules: List<Pair<Int, SocialMedia>> = emptyList(),
+        postsRepository: PostsRepository = InMemoryPostRepository(),
     ): SocialPublisherStore {
-        val postsRepository = InMemoryPostRepository()
         postsRepository.save(posts.map { SocialPosts(text = it) }.toCollection(arrayListOf()))
 
         val schedulerRepository = InMemorySchedulerRepository()
@@ -171,5 +201,25 @@ class PostsPageTest {
             output = MockedOutput(),
             socialNetworks = MockedSocialThirdParty(),
         )
+    }
+}
+
+private class BlockingFindAllPostsRepository(
+    private val delegate: PostsRepository = InMemoryPostRepository(),
+) : PostsRepository by delegate {
+    @Volatile
+    var block: Boolean = false
+
+    private val gate = CountDownLatch(1)
+
+    override fun findAll(): ArrayList<SocialPosts> {
+        if (block) {
+            gate.await()
+        }
+        return delegate.findAll()
+    }
+
+    fun release() {
+        gate.countDown()
     }
 }

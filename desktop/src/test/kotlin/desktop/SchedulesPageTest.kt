@@ -10,6 +10,7 @@ import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
@@ -21,11 +22,13 @@ import application.entities.ScheduledItem
 import application.entities.SocialConfiguration
 import application.entities.SocialMedia
 import application.entities.SocialPosts
+import application.persistence.SchedulerRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.time.Instant
 import java.time.ZoneOffset
+import java.util.concurrent.CountDownLatch
 
 @OptIn(ExperimentalTestApi::class)
 class SchedulesPageTest {
@@ -62,6 +65,7 @@ class SchedulesPageTest {
 
             onNodeWithTag(SCHEDULE_CREATE_TAG).performClick()
 
+            waitUntil { store.schedules().isNotEmpty() }
             assertTrue(store.schedules().isNotEmpty())
         }
 
@@ -87,6 +91,7 @@ class SchedulesPageTest {
 
             onNodeWithTag(SCHEDULE_CREATE_TAG).performClick()
 
+            waitUntil { store.schedules().isNotEmpty() }
             assertTrue(store.schedules().isNotEmpty())
             assertEquals(SocialMedia.TWITTER, store.schedules()[0].socialMedia)
         }
@@ -175,6 +180,7 @@ class SchedulesPageTest {
 
             onNodeWithTag(SCHEDULE_RANDOM_TAG).performClick()
 
+            waitUntil { store.schedules().isNotEmpty() }
             assertTrue(store.schedules().isNotEmpty())
             onNodeWithText("Post 1 has been randomly scheduled for", substring = true).assertIsDisplayed()
         }
@@ -189,6 +195,7 @@ class SchedulesPageTest {
 
             onNodeWithTag(SCHEDULE_RANDOM_TAG).performClick()
 
+            waitUntil { store.schedules().isNotEmpty() }
             assertTrue(store.schedules().isNotEmpty())
             val publishDate = store.schedules()[0].publishDate
             assertEquals("2026-10-05", publishDate.atZone(ZoneOffset.UTC).toLocalDate().toString())
@@ -232,15 +239,48 @@ class SchedulesPageTest {
             items[2].assertTextContains("Post 2 on", substring = true)
         }
 
+    @Test
+    fun `shows a loading indicator while scheduling a post`() =
+        runComposeUiTest {
+            val schedulerRepository = BlockingSaveSchedulerRepository()
+            val store = storeWith(schedulerRepository = schedulerRepository)
+            store.createPost("release notes")
+
+            setContent { schedulesPage(store) }
+
+            onNodeWithTag(SCHEDULE_POST_ID_TAG).performTextInput("1")
+
+            onNodeWithContentDescription("Pick publish date").performClick()
+            onAllNodes(
+                hasText(",", substring = true) and hasAnyAncestor(hasTestTag(DATE_PICKER_TAG)),
+                useUnmergedTree = true,
+            )[0].performClick()
+            onNodeWithText("Ok").performClick()
+
+            onNodeWithTag(SCHEDULE_CREATE_TAG).performClick()
+
+            waitUntil {
+                onAllNodesWithTag(LOADING_INDICATOR_TAG).fetchSemanticsNodes().isNotEmpty()
+            }
+            onNodeWithTag(LOADING_INDICATOR_TAG).assertIsDisplayed()
+
+            schedulerRepository.release()
+
+            waitUntil {
+                onAllNodesWithTag(LOADING_INDICATOR_TAG).fetchSemanticsNodes().isEmpty()
+            }
+            assertTrue(store.schedules().isNotEmpty())
+        }
+
     private fun storeWith(
         posts: List<String> = emptyList(),
         schedules: List<Pair<Int, SocialMedia>> = emptyList(),
         currentDate: () -> Instant = { Instant.now() },
+        schedulerRepository: SchedulerRepository = InMemorySchedulerRepository(),
     ): SocialPublisherStore {
         val postsRepository = InMemoryPostRepository()
         postsRepository.save(posts.map { SocialPosts(text = it) }.toCollection(arrayListOf()))
 
-        val schedulerRepository = InMemorySchedulerRepository()
         schedules.forEachIndexed { position, (index, media) ->
             schedulerRepository.save(
                 ScheduledItem(
@@ -261,5 +301,20 @@ class SchedulesPageTest {
             socialNetworks = MockedSocialThirdParty(),
             currentDate = currentDate,
         )
+    }
+}
+
+private class BlockingSaveSchedulerRepository(
+    private val delegate: SchedulerRepository = InMemorySchedulerRepository(),
+) : SchedulerRepository by delegate {
+    private val gate = CountDownLatch(1)
+
+    override fun save(scheduledItem: ScheduledItem): Boolean {
+        gate.await()
+        return delegate.save(scheduledItem)
+    }
+
+    fun release() {
+        gate.countDown()
     }
 }

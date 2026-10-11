@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -60,22 +59,27 @@ class PosterState(
 
     fun runNow(): String {
         val output = runPoster()
+        record(output)
+        return output
+    }
+
+    fun record(output: String) {
         lastRunAt = clock()
         lastOutput = output
-        return output
     }
 }
 
+@Suppress("LongMethod")
 @Composable
 fun posterPage(state: PosterState) {
-    val errorReporter = LocalErrorReporter.current
+    val loading = rememberLoadingState()
     var cadenceMenuOpen by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Text("Poster", style = MaterialTheme.typography.titleLarge)
+        pageTitle(title = "Poster", loading = loading.isLoading)
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -118,7 +122,15 @@ fun posterPage(state: PosterState) {
             }
         }
 
-        Button(onClick = { errorReporter.reporting { state.runNow() } }) {
+        Button(
+            enabled = !loading.isLoading,
+            onClick = {
+                loading.run(
+                    block = { state.runPoster() },
+                    onSuccess = { state.record(it) },
+                )
+            },
+        ) {
             Text("Run now")
         }
 

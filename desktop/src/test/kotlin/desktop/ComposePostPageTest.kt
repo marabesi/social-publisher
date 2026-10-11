@@ -7,15 +7,19 @@ import adapters.outbound.inmemory.InMemorySchedulerRepository
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasSetTextAction
+import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.runComposeUiTest
 import application.entities.SocialConfiguration
 import application.entities.SocialPosts
+import application.persistence.PostsRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import java.util.concurrent.CountDownLatch
 
 @OptIn(ExperimentalTestApi::class)
 class ComposePostPageTest {
@@ -31,6 +35,7 @@ class ComposePostPageTest {
             onNode(hasSetTextAction()).performTextReplacement("brand new post")
             onNodeWithText("Create post").performClick()
 
+            waitUntil { store.posts().size == 1 }
             assertEquals(1, store.posts().size)
             assertEquals("brand new post", store.posts().first().text)
         }
@@ -54,6 +59,7 @@ class ComposePostPageTest {
             onNode(hasSetTextAction()).performTextReplacement("edited text")
             onNodeWithText("Save").performClick()
 
+            waitUntil { finished }
             assertTrue(finished)
             assertEquals("edited text", store.posts().first().text)
         }
@@ -78,9 +84,38 @@ class ComposePostPageTest {
             assertEquals("hello desktop", store.posts().first().text)
         }
 
-    private fun storeWith(posts: List<String> = emptyList()): SocialPublisherStore {
-        val postsRepository = InMemoryPostRepository()
-        postsRepository.save(posts.map { SocialPosts(text = it) }.toCollection(arrayListOf()))
+    @Test
+    fun `shows a loading indicator while the post is being created`() =
+        runComposeUiTest {
+            val postsRepository = BlockingSavePostRepository()
+            val store = storeWith(postsRepository = postsRepository)
+
+            setContent { composePostPage(store) }
+
+            onNode(hasSetTextAction()).performTextReplacement("slow post")
+            onNodeWithText("Create post").performClick()
+
+            waitUntil {
+                onAllNodesWithTag(LOADING_INDICATOR_TAG).fetchSemanticsNodes().isNotEmpty()
+            }
+            onNodeWithTag(LOADING_INDICATOR_TAG).assertIsDisplayed()
+            assertTrue(store.posts().isEmpty())
+
+            postsRepository.release()
+
+            waitUntil {
+                onAllNodesWithTag(LOADING_INDICATOR_TAG).fetchSemanticsNodes().isEmpty()
+            }
+            assertEquals(1, store.posts().size)
+        }
+
+    private fun storeWith(
+        posts: List<String> = emptyList(),
+        postsRepository: PostsRepository = InMemoryPostRepository(),
+    ): SocialPublisherStore {
+        if (posts.isNotEmpty()) {
+            postsRepository.save(posts.map { SocialPosts(text = it) }.toCollection(arrayListOf()))
+        }
 
         return SocialPublisherStore(
             postsRepository = postsRepository,
@@ -91,5 +126,20 @@ class ComposePostPageTest {
             output = MockedOutput(),
             socialNetworks = MockedSocialThirdParty(),
         )
+    }
+}
+
+private class BlockingSavePostRepository(
+    private val delegate: PostsRepository = InMemoryPostRepository(),
+) : PostsRepository by delegate {
+    private val gate = CountDownLatch(1)
+
+    override fun save(posts: ArrayList<SocialPosts>): Boolean {
+        gate.await()
+        return delegate.save(posts)
+    }
+
+    fun release() {
+        gate.countDown()
     }
 }

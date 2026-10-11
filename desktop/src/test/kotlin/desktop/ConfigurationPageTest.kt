@@ -105,6 +105,7 @@ class ConfigurationPageTest {
             onNodeWithText("UTC").performTextReplacement("Europe/Madrid")
             onNodeWithText("Store configuration").performClick()
 
+            waitUntil { store.configuration()?.timezone == "Europe/Madrid" }
             assertEquals("Europe/Madrid", store.configuration()?.timezone)
             assertEquals("prod", store.configuration()?.fileName)
         }
@@ -119,6 +120,7 @@ class ConfigurationPageTest {
             onNodeWithText("Store configuration").assertIsDisplayed()
             onNodeWithText("Store configuration").performClick()
 
+            waitUntil { store.configuration()?.storage == "csv" }
             assertEquals("csv", store.configuration()?.storage)
             assertEquals("UTC", store.configuration()?.timezone)
         }

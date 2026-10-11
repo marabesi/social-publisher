@@ -55,6 +55,7 @@ internal const val SCHEDULE_SORT_DESC_LABEL = "Date descending"
 @Composable
 fun schedulesPage(store: SocialPublisherStore) {
     val errorReporter = LocalErrorReporter.current
+    val loading = rememberLoadingState()
     var schedules by remember {
         mutableStateOf(errorReporter.reporting(arrayListOf<ScheduledItem>()) { store.schedules() })
     }
@@ -86,7 +87,7 @@ fun schedulesPage(store: SocialPublisherStore) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text("Schedules", style = MaterialTheme.typography.titleLarge)
+            pageTitle(title = "Schedules", loading = loading.isLoading)
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -95,7 +96,15 @@ fun schedulesPage(store: SocialPublisherStore) {
                     selected = sortDirection,
                     onSelect = { sortDirection = it },
                 )
-                Button(onClick = { schedules = errorReporter.reporting(schedules) { store.schedules() } }) {
+                Button(
+                    enabled = !loading.isLoading,
+                    onClick = {
+                        loading.run(
+                            block = { store.schedules() },
+                            onSuccess = { schedules = it },
+                        )
+                    },
+                ) {
                     Text("Refresh")
                 }
             }
@@ -130,11 +139,18 @@ fun schedulesPage(store: SocialPublisherStore) {
                 modifier = Modifier.weight(1f).testTag(SCHEDULE_PUBLISH_DATE_TAG),
             )
             Button(
+                enabled = !loading.isLoading,
                 onClick = {
-                    errorReporter.reporting {
-                        message = store.schedule(postId, publishDate, socialMedia)
-                        schedules = store.schedules()
-                    }
+                    loading.run(
+                        block = {
+                            val response = store.schedule(postId, publishDate, socialMedia)
+                            response to store.schedules()
+                        },
+                        onSuccess = { (response, refreshedSchedules) ->
+                            message = response
+                            schedules = refreshedSchedules
+                        },
+                    )
                 },
                 modifier = Modifier.testTag(SCHEDULE_CREATE_TAG),
             ) {
@@ -171,11 +187,18 @@ fun schedulesPage(store: SocialPublisherStore) {
                 modifier = Modifier.weight(1f),
             )
             Button(
+                enabled = !loading.isLoading,
                 onClick = {
-                    errorReporter.reporting {
-                        randomMessage = store.randomSchedule(randomDay, randomSocialMedia)
-                        schedules = store.schedules()
-                    }
+                    loading.run(
+                        block = {
+                            val response = store.randomSchedule(randomDay, randomSocialMedia)
+                            response to store.schedules()
+                        },
+                        onSuccess = { (response, refreshedSchedules) ->
+                            randomMessage = response
+                            schedules = refreshedSchedules
+                        },
+                    )
                 },
                 modifier = Modifier.testTag(SCHEDULE_RANDOM_TAG),
             ) {
@@ -231,11 +254,15 @@ fun schedulesPage(store: SocialPublisherStore) {
                                 modifier = Modifier.weight(1f),
                             )
                             TextButton(
+                                enabled = !loading.isLoading,
                                 onClick = {
-                                    errorReporter.reporting {
-                                        store.deleteSchedule(item.id ?: "")
-                                        schedules = store.schedules()
-                                    }
+                                    loading.run(
+                                        block = {
+                                            store.deleteSchedule(item.id ?: "")
+                                            store.schedules()
+                                        },
+                                        onSuccess = { refreshedSchedules -> schedules = refreshedSchedules },
+                                    )
                                 },
                             ) {
                                 Text("Delete")

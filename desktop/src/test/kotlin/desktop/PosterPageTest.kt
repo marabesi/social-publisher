@@ -58,6 +58,7 @@ class PosterPageTest {
 
             onNodeWithText("Run now").performClick()
 
+            waitUntil { state.lastOutput.isNotBlank() }
             onNodeWithText("Post 1 sent to twitter").assertIsDisplayed()
         }
 }

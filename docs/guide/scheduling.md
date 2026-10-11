@@ -3,6 +3,9 @@
 Scheduling links a post to a publish date. Schedules are stored in
 `scheduler-<fileName>.csv` in the [store directory](/guide/configuration#where-data-lives).
 
+With [Notion storage](/guide/notion-storage) enabled, every schedule created or
+deleted here is also mirrored to the configured Notion page.
+
 ## Create a schedule
 
 ```sh

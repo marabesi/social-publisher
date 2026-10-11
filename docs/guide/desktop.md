@@ -70,7 +70,10 @@ when it will run next. You can also trigger it manually with **Run now**.
 
 Store your JSON configuration, including X (Twitter) and LinkedIn credentials.
 From here you can also connect LinkedIn: generate the authorization URL, open it
-in your browser and paste the returned code back to store the token.
+in your browser and paste the returned code back to store the token. The
+**Storage** field accepts `csv` or `notion` — with `notion` the data files are
+also uploaded to your Notion page on every change (see
+[Notion storage](/guide/notion-storage)).
 
 ![Configuration page of the desktop app](/screenshots/configuration.png)
 

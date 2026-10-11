@@ -140,15 +140,20 @@ social configuration -c '{
 ```
 
 With `notion` selected, every change (creating, updating or deleting a post or a
-schedule) uploads the `posts-<fileName>.csv` and `scheduler-<fileName>.csv`
-files to Notion using the [file upload API](https://developers.notion.com/reference/file-upload).
-The uploads are attached to the page in `notion.pageId` as file blocks so they
-stay in the workspace. Providing a `pageId` is required for the files to persist;
-uploads that are never attached expire after one hour.
+schedule, and publishing one) uploads the `posts-<fileName>.csv` and
+`scheduler-<fileName>.csv` files to Notion using the
+[file upload API](https://developers.notion.com/reference/file-upload). The
+files are attached to the page in `notion.pageId` as file blocks **under a fixed
+name, so an existing block is replaced with the new contents instead of piling
+up duplicate copies**. Providing a `pageId` is required for the files to
+persist; an upload that is never attached to a page expires after one hour.
 
 The files are still written to the local store directory first, so reads keep
 working exactly as with `csv`. Notion is an extra remote copy of the data files,
 not a replacement for the local store.
+
+See [Notion storage](/guide/notion-storage) for a full walkthrough of how the
+integration is handled.
 
 ## Create the configuration
 

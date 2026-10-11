@@ -86,7 +86,10 @@ The same store is shared by the CLI, the REST API and the desktop app. See
 [Configuration](/guide/configuration#where-data-lives) for how to change it.
 When `storage` is set to `notion`, the `posts-<fileName>.csv` and
 `scheduler-<fileName>.csv` files are additionally uploaded to a Notion workspace
-after every change (see [Notion storage](/guide/configuration#use-notion-as-storage)).
+after every change (see [Notion storage](/guide/notion-storage)). Each data file
+is attached to the configured page as a `file` block with a fixed name; an
+existing same-named block is updated in place, so repeated uploads replace the
+file instead of creating duplicate copies.
 
 ## Extending it
 

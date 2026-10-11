@@ -12,6 +12,12 @@ social poster -r
 | --- | --- |
 | `-r` | Run the routine that publishes all due posts. |
 
+::: tip Notion storage
+When your configuration uses [Notion storage](/guide/notion-storage),
+publishing also refreshes the copies of the data files on the configured Notion
+page, since published schedules are marked as sent.
+:::
+
 ## What happens
 
 For each unpublished schedule the CLI compares the publish date with the current

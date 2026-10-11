@@ -30,6 +30,7 @@ export default defineConfig({
           { text: 'Introduction', link: '/' },
           { text: 'Installation', link: '/guide/installation' },
           { text: 'Configuration', link: '/guide/configuration' },
+          { text: 'Notion storage', link: '/guide/notion-storage' },
           { text: 'Managing posts', link: '/guide/posts' },
           { text: 'Scheduling posts', link: '/guide/scheduling' },
           { text: 'Publishing posts', link: '/guide/publishing' },

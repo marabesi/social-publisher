@@ -1,4 +1,4 @@
-package application.scheduler.order
+package application.order
 
 enum class Direction {
     ASC,

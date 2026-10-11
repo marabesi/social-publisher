@@ -144,6 +144,16 @@ function test_search_posts_by_social_media() {
     assert_contains "${expected}" "${output}"
 }
 
+function test_order_posts_by_id_desc() {
+    local first=$(sh ./social/bin/social post -l --order-by "id=desc" | head -n 1)
+    assert_equals "2. release notes (13/280)" "${first}"
+}
+
+function test_order_posts_by_id_asc() {
+    local first=$(sh ./social/bin/social post -l --order-by "id=asc" | head -n 1)
+    assert_equals "1. hello desktop (13/280)" "${first}"
+}
+
 ###############################################
 ## searching scheduled posts
 ###############################################

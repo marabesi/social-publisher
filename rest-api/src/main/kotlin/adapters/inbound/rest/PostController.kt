@@ -5,18 +5,22 @@ import adapters.inbound.rest.dto.MessageResponse
 import adapters.inbound.rest.dto.PostResponse
 import application.Output
 import application.entities.SocialMedia
+import application.order.OrderExpression
 import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
 import application.post.Create
 import application.post.PostLimits
 import application.post.PostSearch
 import application.post.Search
+import application.post.order.PostIdOrder
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/posts")
@@ -35,10 +39,15 @@ class PostController(
         @RequestParam(required = false) search: String?,
         @RequestParam(required = false) ids: String?,
         @RequestParam(required = false) socialMedia: SocialMedia?,
+        @RequestParam(required = false) orderBy: String? = null,
     ): List<PostResponse> {
         val criteria = PostSearch.from(text = search.orEmpty(), ids = ids.orEmpty(), socialMedia = socialMedia)
+        val order =
+            orderBy?.let { OrderExpression.parse(it, "id") { direction -> PostIdOrder(direction) } ?: invalid() }
+        val posts = Search(postsRepository, schedulerRepository).invoke(criteria)
+        val ordered = order?.apply(ArrayList(posts)) ?: posts
 
-        return Search(postsRepository, schedulerRepository).invoke(criteria).map {
+        return ordered.map {
             PostResponse(
                 id = it.id ?: "",
                 text = it.text,
@@ -47,4 +56,6 @@ class PostController(
             )
         }
     }
+
+    private fun invalid(): Nothing = throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid order-by")
 }

@@ -8,7 +8,10 @@ import application.entities.ScheduledItem
 import application.entities.SocialMedia
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 import java.time.Instant
+import kotlin.test.assertFailsWith
 
 class PostControllerTest {
     private val postsRepository = InMemoryPostRepository()
@@ -69,5 +72,39 @@ class PostControllerTest {
         val posts = controller.list(search = null, ids = null, socialMedia = SocialMedia.LINKEDIN)
 
         assertEquals(listOf("second"), posts.map { it.text })
+    }
+
+    @Test
+    fun `should order posts by id ascending`() {
+        controller.create(CreatePostRequest("first"))
+        controller.create(CreatePostRequest("second"))
+        controller.create(CreatePostRequest("third"))
+
+        val posts = controller.list(search = null, ids = null, socialMedia = null, orderBy = "id=asc")
+
+        assertEquals(listOf("first", "second", "third"), posts.map { it.text })
+    }
+
+    @Test
+    fun `should order posts by id descending`() {
+        controller.create(CreatePostRequest("first"))
+        controller.create(CreatePostRequest("second"))
+        controller.create(CreatePostRequest("third"))
+
+        val posts = controller.list(search = null, ids = null, socialMedia = null, orderBy = "id=desc")
+
+        assertEquals(listOf("third", "second", "first"), posts.map { it.text })
+    }
+
+    @Test
+    fun `should reject an invalid order by`() {
+        controller.create(CreatePostRequest("first"))
+
+        val error =
+            assertFailsWith<ResponseStatusException> {
+                controller.list(search = null, ids = null, socialMedia = null, orderBy = "text=asc")
+            }
+
+        assertEquals(HttpStatus.BAD_REQUEST, error.statusCode)
     }
 }

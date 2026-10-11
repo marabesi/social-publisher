@@ -28,7 +28,9 @@ import androidx.compose.ui.unit.dp
 import application.entities.ScheduledItem
 import application.entities.SocialMedia
 import application.entities.SocialPosts
+import application.order.Direction
 import application.post.PostSearch
+import application.post.order.PostIdOrder
 
 private const val ID_COLUMN_WEIGHT = 0.12f
 private const val TEXT_COLUMN_WEIGHT = 0.58f
@@ -37,6 +39,9 @@ private const val ACTIONS_COLUMN_WEIGHT = 0.3f
 internal const val POSTS_SEARCH_TEXT_TAG = "postsSearchText"
 internal const val POSTS_SEARCH_IDS_TAG = "postsSearchIds"
 internal const val POSTS_SOCIAL_MEDIA_TAG = "postsSocialMedia"
+internal const val POSTS_SORT_TAG = "postsSort"
+internal const val POSTS_SORT_ASC_LABEL = "Id ascending"
+internal const val POSTS_SORT_DESC_LABEL = "Id descending"
 
 @Suppress("LongMethod")
 @Composable
@@ -56,9 +61,11 @@ fun postsPage(
     var idsQuery by remember { mutableStateOf("") }
     var socialMedia by remember { mutableStateOf<SocialMedia?>(null) }
     var message by remember { mutableStateOf("") }
+    var sortDirection by remember { mutableStateOf(Direction.DESC) }
 
     val filters = PostSearch.from(text = textQuery, ids = idsQuery, socialMedia = socialMedia)
-    val visiblePosts = filters.filter(posts, schedules)
+    val filteredPosts = filters.filter(posts, schedules)
+    val visiblePosts = PostIdOrder(sortDirection).apply(ArrayList(filteredPosts))
 
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -67,21 +74,35 @@ fun postsPage(
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             pageTitle(title = "Posts", loading = loading.isLoading)
-            Button(
-                enabled = !loading.isLoading,
-                onClick = {
-                    loading.run(
-                        block = { store.posts().toList() to store.schedules().toList() },
-                        onSuccess = { (refreshedPosts, refreshedSchedules) ->
-                            posts = refreshedPosts
-                            schedules = refreshedSchedules
-                        },
-                    )
-                },
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text("Refresh")
+                sortSelect(
+                    optionLabel = "Sort by id",
+                    selected = sortDirection,
+                    ascendingLabel = POSTS_SORT_ASC_LABEL,
+                    descendingLabel = POSTS_SORT_DESC_LABEL,
+                    testTag = POSTS_SORT_TAG,
+                    onSelect = { sortDirection = it },
+                )
+                Button(
+                    enabled = !loading.isLoading,
+                    onClick = {
+                        loading.run(
+                            block = { store.posts().toList() to store.schedules().toList() },
+                            onSuccess = { (refreshedPosts, refreshedSchedules) ->
+                                posts = refreshedPosts
+                                schedules = refreshedSchedules
+                            },
+                        )
+                    },
+                ) {
+                    Text("Refresh")
+                }
             }
         }
 

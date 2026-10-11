@@ -1,12 +1,15 @@
 package adapters.inbound.cli
 
+import application.Messages
 import application.Output
 import application.entities.SocialMedia
+import application.order.OrderExpression
 import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
 import application.post.Create
 import application.post.List
 import application.post.PostSearch
+import application.post.order.PostIdOrder
 import com.google.inject.Inject
 import picocli.CommandLine
 import java.util.concurrent.Callable
@@ -40,10 +43,21 @@ class Post
         )
         var socialMedia: SocialMedia? = null
 
+        @CommandLine.Option(
+            names = ["-o", "--order-by"],
+            description = ["Orders the posts by id asc or desc"],
+        )
+        var orderBy: String = ""
+
         override fun call(): String {
             if (list == true) {
                 val criteria = PostSearch.from(text = search, ids = ids, socialMedia = socialMedia)
-                return List(postsRepository, schedulerRepository, cliOutput, criteria).invoke()
+                val order = OrderExpression.parse(orderBy, "id") { PostIdOrder(it) }
+                if (orderBy.isNotEmpty() && order == null) {
+                    return cliOutput.write(Messages.INVALID_ORDER_BY_PARAMETER)
+                }
+
+                return List(postsRepository, schedulerRepository, cliOutput, criteria, order).invoke()
             }
 
             return Create(postsRepository, cliOutput).invoke(text)

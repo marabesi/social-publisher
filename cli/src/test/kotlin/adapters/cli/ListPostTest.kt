@@ -6,6 +6,7 @@ import adapters.outbound.inmemory.InMemoryPostRepository
 import adapters.outbound.inmemory.InMemorySchedulerRepository
 import application.entities.ScheduledItem
 import application.entities.SocialMedia
+import application.entities.SocialPosts
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -114,5 +115,65 @@ class ListPostTest {
         cmd.execute("-l", "--social-media", "LINKEDIN")
 
         assertEquals("2. release notes (13/280)", cmd.getExecutionResult<String>())
+    }
+
+    @Test
+    fun `should order posts by id ascending`() {
+        cmd.execute("-c", "hello desktop")
+        cmd.execute("-c", "release notes")
+        cmd.execute("-c", "third post")
+
+        cmd.execute("-l", "-o", "id=asc")
+
+        assertEquals(
+            """
+            1. hello desktop (13/280)
+            2. release notes (13/280)
+            3. third post (10/280)
+            """.trimIndent(),
+            cmd.getExecutionResult<String>(),
+        )
+    }
+
+    @Test
+    fun `should order posts by id descending`() {
+        cmd.execute("-c", "hello desktop")
+        cmd.execute("-c", "release notes")
+        cmd.execute("-c", "third post")
+
+        cmd.execute("-l", "-o", "id=desc")
+
+        assertEquals(
+            """
+            3. third post (10/280)
+            2. release notes (13/280)
+            1. hello desktop (13/280)
+            """.trimIndent(),
+            cmd.getExecutionResult<String>(),
+        )
+    }
+
+    @Test
+    fun `should order posts by their numeric id value`() {
+        val posts = (1..30).map { SocialPosts(text = "post $it") }
+        postsRepository.save(posts.toCollection(arrayListOf()))
+
+        cmd.execute("-l", "--order-by", "id=asc")
+
+        val result = cmd.getExecutionResult<String>()
+
+        assertEquals("1. post 1 (6/280)", result.split("\n")[0])
+        assertEquals("2. post 2 (6/280)", result.split("\n")[1])
+        assertEquals("29. post 29 (7/280)", result.split("\n")[28])
+        assertEquals("30. post 30 (7/280)", result.split("\n")[29])
+    }
+
+    @Test
+    fun `should reject an invalid order by`() {
+        cmd.execute("-c", "hello desktop")
+
+        cmd.execute("-l", "--order-by", "text=asc")
+
+        assertEquals("Value for order-by is not valid", cmd.getExecutionResult<String>())
     }
 }

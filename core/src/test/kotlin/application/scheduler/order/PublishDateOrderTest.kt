@@ -2,6 +2,7 @@ package application.scheduler.order
 
 import application.entities.ScheduledItem
 import application.entities.SocialPosts
+import application.order.Direction
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.Instant

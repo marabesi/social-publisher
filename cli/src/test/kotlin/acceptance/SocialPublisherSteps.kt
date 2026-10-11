@@ -176,6 +176,10 @@ class SocialPublisherSteps : En {
             exitCode = cmd.execute("post", "-l")
         }
 
+        When("I list the posts ordering by {string}") { orderBy: String ->
+            exitCode = cmd.execute("post", "-l", "--order-by", orderBy)
+        }
+
         Then("Poster should execute routine to send posts") {
             exitCode = cmd.execute("poster", "-r")
         }

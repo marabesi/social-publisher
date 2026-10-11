@@ -52,6 +52,9 @@ compose.desktop {
 // docs/public/ from the site root, so the files end up at /screenshots/*.png.
 val docsScreenshotsDir = rootProject.layout.projectDirectory.dir("docs/public/screenshots")
 
+// The app icon is bundled with the desktop app, so it lives in its resources.
+val desktopResourcesDir = layout.projectDirectory.dir("src/main/resources")
+
 // Renders the desktop app screens and writes them to docs/public/screenshots.
 // Reproducible: static fixture, fixed window size and a single command.
 val generateScreenshots =
@@ -69,10 +72,29 @@ val generateScreenshots =
         outputs.upToDateWhen { false }
     }
 
+// Renders the desktop app icon and writes it to desktop/src/main/resources.
+// Reproducible: the icon is drawn from Compose primitives, not hand-authored.
+val generateIcon =
+    tasks.register<Test>("generateIcon") {
+        val testSourceSet = sourceSets.test.get()
+        group = "documentation"
+        description = "Renders the desktop app icon to desktop/src/main/resources."
+        testClassesDirs = testSourceSet.output.classesDirs
+        classpath = testSourceSet.runtimeClasspath
+        useJUnitPlatform()
+        filter {
+            includeTestsMatching("desktop.AppIconGeneratorTest")
+        }
+        systemProperty("icon.dir", desktopResourcesDir.asFile.absolutePath)
+        outputs.upToDateWhen { false }
+    }
+
 tasks.test {
     useJUnitPlatform()
-    // The gallery is documentation tooling: run it through :desktop:generateScreenshots.
+    // The gallery and the icon generator are documentation/build tooling: run
+    // them through :desktop:generateScreenshots and :desktop:generateIcon.
     filter {
         excludeTestsMatching("desktop.ScreenshotGalleryTest")
+        excludeTestsMatching("desktop.AppIconGeneratorTest")
     }
 }

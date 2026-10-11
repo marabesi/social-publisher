@@ -1,6 +1,8 @@
 package application.post
 
 import application.Output
+import application.entities.SocialPosts
+import application.order.Order
 import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
 
@@ -11,9 +13,11 @@ class List(
     private val schedulerRepository: SchedulerRepository,
     private val cliOutput: Output,
     private val search: PostSearch = PostSearch(),
+    private val order: Order<SocialPosts>? = null,
 ) {
     fun invoke(): String {
-        val findAll = Search(postsRepository, schedulerRepository).invoke(search)
+        val found = Search(postsRepository, schedulerRepository).invoke(search)
+        val findAll = order?.apply(ArrayList(found)) ?: found
         if (findAll.isEmpty()) {
             return cliOutput.write("No post found")
         }

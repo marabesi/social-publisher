@@ -7,6 +7,7 @@ import adapters.inbound.rest.dto.ScheduleSearchRequest
 import adapters.inbound.rest.dto.ScheduledItemResponse
 import application.Output
 import application.Timezone
+import application.order.OrderExpression
 import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
 import application.persistence.configuration.ConfigurationRepository
@@ -18,7 +19,7 @@ import application.scheduler.filters.DateTimeValidation
 import application.scheduler.filters.FilterExpression
 import application.scheduler.filters.StartDate
 import application.scheduler.filters.UntilDate
-import application.scheduler.order.OrderExpression
+import application.scheduler.order.PublishDateOrder
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -65,7 +66,7 @@ class SchedulerController(
         searchRequest: ScheduleSearchRequest,
     ): List<ScheduledItemResponse> {
         val filters = buildFilters(startDate, endDate, filter)
-        val order = orderBy?.let { OrderExpression.parse(it) ?: invalid("order-by") }
+        val order = orderBy?.let { OrderExpression.parse(it, "publish_date") { d -> PublishDateOrder(d) } ?: invalid("order-by") }
         val items = schedulerRepository.findAll(filters)
         val criteria =
             ScheduleSearch.from(

@@ -1,16 +1,17 @@
 package application.scheduler
 
 import application.Output
+import application.entities.ScheduledItem
+import application.order.Order
 import application.persistence.SchedulerRepository
 import application.scheduler.filters.Criterion
-import application.scheduler.order.Order
 
 class List(
     private val scheduleRepository: SchedulerRepository,
     private val cliOutput: Output,
     private val filters: ArrayList<Criterion>,
     private val groupBy: String,
-    private val order: Order? = null,
+    private val order: Order<ScheduledItem>? = null,
     private val search: ScheduleSearch = ScheduleSearch(),
 ) {
     fun invoke(): String {

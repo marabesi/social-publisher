@@ -20,6 +20,7 @@ import application.entities.SocialMedia
 import application.entities.SocialPosts
 import application.persistence.PostsRepository
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.time.Instant
 import java.util.concurrent.CountDownLatch
@@ -63,8 +64,8 @@ class PostsPageTest {
             onAllNodesWithText("Remove")[0].performClick()
 
             waitUntil { store.posts().size == 1 }
-            onNodeWithText("hello desktop").assertDoesNotExist()
-            onNodeWithText("second post").assertIsDisplayed()
+            onNodeWithText("second post").assertDoesNotExist()
+            onNodeWithText("hello desktop").assertIsDisplayed()
         }
 
     @Test
@@ -146,6 +147,40 @@ class PostsPageTest {
             onNodeWithTag(POSTS_SEARCH_TEXT_TAG).performTextInput("zzz")
 
             onNodeWithText("No posts match your search").assertIsDisplayed()
+        }
+
+    @Test
+    fun `sorts posts by id ascending`() =
+        runComposeUiTest {
+            val store = storeWith(posts = listOf("first", "second", "third"))
+
+            setContent { postsPage(store) }
+
+            onNodeWithTag(POSTS_SORT_TAG).performClick()
+            onNodeWithTag("$POSTS_SORT_TAG-ASC").performClick()
+
+            val first = onNodeWithText("first").fetchSemanticsNode().boundsInRoot.top
+            val second = onNodeWithText("second").fetchSemanticsNode().boundsInRoot.top
+            val third = onNodeWithText("third").fetchSemanticsNode().boundsInRoot.top
+            assertTrue(first < second)
+            assertTrue(second < third)
+        }
+
+    @Test
+    fun `sorts posts by id descending`() =
+        runComposeUiTest {
+            val store = storeWith(posts = listOf("first", "second", "third"))
+
+            setContent { postsPage(store) }
+
+            onNodeWithTag(POSTS_SORT_TAG).performClick()
+            onNodeWithTag("$POSTS_SORT_TAG-DESC").performClick()
+
+            val first = onNodeWithText("first").fetchSemanticsNode().boundsInRoot.top
+            val second = onNodeWithText("second").fetchSemanticsNode().boundsInRoot.top
+            val third = onNodeWithText("third").fetchSemanticsNode().boundsInRoot.top
+            assertTrue(third < second)
+            assertTrue(second < first)
         }
 
     @Test

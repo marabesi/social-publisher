@@ -49,3 +49,31 @@ Feature: Create a post with a title
     Then Show the created post "1. banana"
     Then Show the created post "2. whatever"
     Then Show the created post "3. random"
+
+  Scenario: Order posts by id descending
+    Given A new cli
+    When I create a post with the text "first"
+    When I create a post with the text "second"
+    When I create a post with the text "third"
+    Then I clean the output
+    When I list the posts ordering by "id=desc"
+    Then Show successfully message
+      """
+      3. third (5/280)
+      2. second (6/280)
+      1. first (5/280)
+      """
+
+  Scenario: Order posts by id ascending
+    Given A new cli
+    When I create a post with the text "first"
+    When I create a post with the text "second"
+    When I create a post with the text "third"
+    Then I clean the output
+    When I list the posts ordering by "id=asc"
+    Then Show successfully message
+      """
+      1. first (5/280)
+      2. second (6/280)
+      3. third (5/280)
+      """

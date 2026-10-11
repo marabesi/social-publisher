@@ -4,6 +4,7 @@ import application.Messages
 import application.Output
 import application.Timezone
 import application.entities.SocialMedia
+import application.order.OrderExpression
 import application.persistence.SchedulerRepository
 import application.persistence.configuration.ConfigurationRepository
 import application.scheduler.List
@@ -13,7 +14,7 @@ import application.scheduler.filters.DateTimeValidation
 import application.scheduler.filters.FilterExpression
 import application.scheduler.filters.StartDate
 import application.scheduler.filters.UntilDate
-import application.scheduler.order.OrderExpression
+import application.scheduler.order.PublishDateOrder
 import com.google.inject.Inject
 import picocli.CommandLine
 import java.util.concurrent.Callable
@@ -112,7 +113,7 @@ open class SchedulerList
                 filters.addAll(filterCriteria)
             }
 
-            val order = OrderExpression.parse(orderBy)
+            val order = OrderExpression.parse(orderBy, "publish_date") { PublishDateOrder(it) }
             if (orderBy.isNotEmpty() && order == null) {
                 return cliOutput.write(Messages.INVALID_ORDER_BY_PARAMETER)
             }

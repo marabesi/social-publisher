@@ -53,7 +53,7 @@ others.
 | --- | --- | --- |
 | Core | `core/src/main/kotlin/application` | Entities, use cases and ports. No framework or I/O imports. |
 | Inbound adapters | `cli/.../adapters/inbound/cli`, `rest-api/.../adapters/inbound/rest`, `desktop/` | picocli commands, REST controllers, and a Compose UI that drive the use cases. |
-| Outbound adapters | `core/src/main/kotlin/adapters/outbound` | Port implementations: CSV persistence, Notion storage, Twitter, LinkedIn, in-memory (tests). |
+| Outbound adapters | `core/src/main/kotlin/adapters/outbound` | Port implementations: CSV persistence, Notion and Google Drive storage, Twitter, LinkedIn, in-memory (tests). |
 
 Persistence ports live under `application/persistence`, output under
 `application/Output.kt`, and social network integrations under
@@ -89,7 +89,10 @@ When `storage` is set to `notion`, the `posts-<fileName>.csv` and
 after every change (see [Notion storage](/guide/notion-storage)). Each data file
 is attached to the configured page as a `file` block with a fixed name; an
 existing same-named block is updated in place, so repeated uploads replace the
-file instead of creating duplicate copies.
+file instead of creating duplicate copies. Setting `storage` to `google_drive`
+does the same against [Google Drive](/guide/google-drive-storage): each data file
+is uploaded to the configured folder, replacing an existing file with the same
+name.
 
 ## Extending it
 

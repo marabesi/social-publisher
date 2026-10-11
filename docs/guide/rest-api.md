@@ -1,7 +1,8 @@
 # REST API
 
 The `rest-api` module exposes the same application layer over HTTP with Spring
-Boot. It reuses the `core` use cases and the shared `csv`/`notion`/`social` outbound
+Boot. It reuses the `core` use cases and the shared
+`csv`/`notion`/`google_drive`/`social` outbound
 adapters, so posts, schedules and configuration are the same data the CLI uses.
 
 ## Start it

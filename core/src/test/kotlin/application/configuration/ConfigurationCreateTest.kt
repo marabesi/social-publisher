@@ -54,6 +54,9 @@ class ConfigurationCreateTest {
             Stream.of(
                 Arguments.of("{}"),
                 Arguments.of("""{"fileName":"aaa","timezone":""}"""),
+                Arguments.of(
+                    """{"storage":"google_drive","googleDrive":{"accessToken":"token","folderId":"folder"}}""",
+                ),
             )
 
         @JvmStatic

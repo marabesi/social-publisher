@@ -12,10 +12,11 @@ social poster -r
 | --- | --- |
 | `-r` | Run the routine that publishes all due posts. |
 
-::: tip Notion storage
-When your configuration uses [Notion storage](/guide/notion-storage),
-publishing also refreshes the copies of the data files on the configured Notion
-page, since published schedules are marked as sent.
+::: tip Notion and Google Drive storage
+When your configuration uses [Notion storage](/guide/notion-storage) or
+[Google Drive storage](/guide/google-drive-storage), publishing also refreshes
+the copies of the data files in the configured remote storage, since published
+schedules are marked as sent.
 :::
 
 ## What happens

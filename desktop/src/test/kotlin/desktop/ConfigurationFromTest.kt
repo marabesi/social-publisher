@@ -1,5 +1,6 @@
 package desktop
 
+import application.entities.GoogleDriveCredentials
 import application.entities.LinkedInCredentials
 import application.entities.NotionCredentials
 import application.entities.TwitterCredentials
@@ -105,5 +106,34 @@ class ConfigurationFromTest {
             )
 
         assertNull(configuration.notion)
+    }
+
+    @Test
+    fun `keeps the google drive credentials when at least one field is set`() {
+        val configuration =
+            configurationFrom(
+                fileName = "prod",
+                storage = "google_drive",
+                timezone = "UTC",
+                twitter = null,
+                googleDrive = GoogleDriveCredentials(accessToken = "drive-token", folderId = "folder-id"),
+            )
+
+        assertEquals("drive-token", configuration.googleDrive?.accessToken)
+        assertEquals("folder-id", configuration.googleDrive?.folderId)
+    }
+
+    @Test
+    fun `drops empty google drive credentials`() {
+        val configuration =
+            configurationFrom(
+                fileName = "prod",
+                storage = "google_drive",
+                timezone = "UTC",
+                twitter = null,
+                googleDrive = GoogleDriveCredentials(),
+            )
+
+        assertNull(configuration.googleDrive)
     }
 }

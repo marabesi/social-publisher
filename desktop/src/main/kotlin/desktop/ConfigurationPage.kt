@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import application.entities.GoogleDriveCredentials
 import application.entities.LinkedInCredentials
 import application.entities.NotionCredentials
 import application.entities.SocialConfiguration
@@ -45,6 +46,8 @@ fun configurationPage(store: SocialPublisherStore) {
     var linkedinAuthorUrn by remember { mutableStateOf(existing?.linkedin?.authorUrn.orEmpty()) }
     var notionApiKey by remember { mutableStateOf(existing?.notion?.apiKey.orEmpty()) }
     var notionPageId by remember { mutableStateOf(existing?.notion?.pageId.orEmpty()) }
+    var googleDriveAccessToken by remember { mutableStateOf(existing?.googleDrive?.accessToken.orEmpty()) }
+    var googleDriveFolderId by remember { mutableStateOf(existing?.googleDrive?.folderId.orEmpty()) }
     var linkedinUrl by remember { mutableStateOf("") }
     var linkedinCode by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("") }
@@ -83,6 +86,11 @@ fun configurationPage(store: SocialPublisherStore) {
                                     apiKey = notionApiKey,
                                     pageId = notionPageId,
                                 ),
+                            googleDrive =
+                                GoogleDriveCredentials(
+                                    accessToken = googleDriveAccessToken,
+                                    folderId = googleDriveFolderId,
+                                ),
                         )
                     loading.run(
                         block = { store.storeConfiguration(configuration) },
@@ -111,7 +119,7 @@ fun configurationPage(store: SocialPublisherStore) {
                 value = storage,
                 onValueChange = { storage = it },
                 label = { Text("Storage") },
-                supportingText = { Text("Use csv, or notion to upload the data files on every change.") },
+                supportingText = { Text("Use csv, notion or google_drive to upload the data files on every change.") },
                 modifier = Modifier.fillMaxWidth(),
             )
             OutlinedTextField(
@@ -197,6 +205,21 @@ fun configurationPage(store: SocialPublisherStore) {
                 modifier = Modifier.fillMaxWidth(),
             )
 
+            Text("Google Drive storage", style = MaterialTheme.typography.titleMedium)
+
+            OutlinedTextField(
+                value = googleDriveAccessToken,
+                onValueChange = { googleDriveAccessToken = it },
+                label = { Text("Google Drive access token") },
+                modifier = Modifier.fillMaxWidth(),
+            )
+            OutlinedTextField(
+                value = googleDriveFolderId,
+                onValueChange = { googleDriveFolderId = it },
+                label = { Text("Google Drive folder id") },
+                modifier = Modifier.fillMaxWidth(),
+            )
+
             Text("Connect LinkedIn", style = MaterialTheme.typography.titleMedium)
             Text(
                 "Store the configuration first, then generate the URL, approve it in your browser and paste the code back.",
@@ -279,6 +302,7 @@ internal fun configurationFrom(
     twitter: TwitterCredentials?,
     linkedin: LinkedInCredentials? = null,
     notion: NotionCredentials? = null,
+    googleDrive: GoogleDriveCredentials? = null,
 ): SocialConfiguration {
     val credentials =
         twitter?.takeIf {
@@ -303,12 +327,19 @@ internal fun configurationFrom(
                 it.pageId.isNotBlank()
         }
 
+    val googleDriveCredentials =
+        googleDrive?.takeIf {
+            it.accessToken.isNotBlank() ||
+                it.folderId.isNotBlank()
+        }
+
     return SocialConfiguration(
         fileName = fileName,
         storage = storage,
         twitter = credentials,
         linkedin = linkedinCredentials,
         notion = notionCredentials,
+        googleDrive = googleDriveCredentials,
         timezone = timezone,
     )
 }

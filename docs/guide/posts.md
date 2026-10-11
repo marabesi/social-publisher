@@ -3,8 +3,9 @@
 Posts are the text you want to publish. Each post gets an incrementing numeric
 id and is appended to `posts-<fileName>.csv` in the [store directory](/guide/configuration#where-data-lives).
 
-When your configuration uses [Notion storage](/guide/notion-storage), every
-change made here is also uploaded to the configured Notion page.
+When your configuration uses [Notion storage](/guide/notion-storage) or
+[Google Drive storage](/guide/google-drive-storage), every change made here is
+also uploaded to the configured remote storage.
 
 ## Create a post
 

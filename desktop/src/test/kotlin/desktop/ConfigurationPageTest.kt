@@ -10,6 +10,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.runComposeUiTest
+import application.entities.GoogleDriveCredentials
 import application.entities.LinkedInCredentials
 import application.entities.NotionCredentials
 import application.entities.SocialConfiguration
@@ -39,6 +40,8 @@ class ConfigurationPageTest {
             onNodeWithText("LinkedIn author urn").assertExists()
             onNodeWithText("Notion API key").assertExists()
             onNodeWithText("Notion page id").assertExists()
+            onNodeWithText("Google Drive access token").assertExists()
+            onNodeWithText("Google Drive folder id").assertExists()
             onNodeWithText("Connect LinkedIn").assertExists()
         }
 
@@ -79,6 +82,11 @@ class ConfigurationPageTest {
                                 apiKey = "notion-api-key",
                                 pageId = "notion-page-id",
                             ),
+                        googleDrive =
+                            GoogleDriveCredentials(
+                                accessToken = "drive-access-token",
+                                folderId = "drive-folder-id",
+                            ),
                     ),
                 )
 
@@ -93,6 +101,8 @@ class ConfigurationPageTest {
             onNodeWithText("urn:li:person:123").assertExists()
             onNodeWithText("notion-api-key").assertExists()
             onNodeWithText("notion-page-id").assertExists()
+            onNodeWithText("drive-access-token").assertExists()
+            onNodeWithText("drive-folder-id").assertExists()
         }
 
     @Test

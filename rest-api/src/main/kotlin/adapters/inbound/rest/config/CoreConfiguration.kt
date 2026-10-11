@@ -4,6 +4,10 @@ import adapters.inbound.rest.RestOutput
 import adapters.outbound.csv.FileSystemConfigurationRepository
 import adapters.outbound.csv.FileSystemPostRepository
 import adapters.outbound.csv.FileSystemSchedulerRepository
+import adapters.outbound.googledrive.GoogleDriveFileSync
+import adapters.outbound.googledrive.GoogleDrivePostsRepository
+import adapters.outbound.googledrive.GoogleDriveSchedulerRepository
+import adapters.outbound.googledrive.GoogleDriveSync
 import adapters.outbound.notion.NotionFileSync
 import adapters.outbound.notion.NotionPostsRepository
 import adapters.outbound.notion.NotionSchedulerRepository
@@ -37,12 +41,19 @@ class CoreConfiguration {
     fun notionSync(configurationRepository: ConfigurationRepository): NotionSync = NotionFileSync(configurationRepository)
 
     @Bean
+    fun googleDriveSync(configurationRepository: ConfigurationRepository): GoogleDriveSync = GoogleDriveFileSync(configurationRepository)
+
+    @Bean
     fun postsRepository(
         configurationRepository: ConfigurationRepository,
         notionSync: NotionSync,
+        googleDriveSync: GoogleDriveSync,
     ): PostsRepository =
         NotionPostsRepository(
-            FileSystemPostRepository(configurationRepository = configurationRepository),
+            GoogleDrivePostsRepository(
+                FileSystemPostRepository(configurationRepository = configurationRepository),
+                googleDriveSync,
+            ),
             notionSync,
         )
 
@@ -50,11 +61,15 @@ class CoreConfiguration {
     fun schedulerRepository(
         configurationRepository: ConfigurationRepository,
         notionSync: NotionSync,
+        googleDriveSync: GoogleDriveSync,
     ): SchedulerRepository =
         NotionSchedulerRepository(
-            FileSystemSchedulerRepository(
-                postsRepository = FileSystemPostRepository(configurationRepository = configurationRepository),
-                configurationRepository = configurationRepository,
+            GoogleDriveSchedulerRepository(
+                FileSystemSchedulerRepository(
+                    postsRepository = FileSystemPostRepository(configurationRepository = configurationRepository),
+                    configurationRepository = configurationRepository,
+                ),
+                googleDriveSync,
             ),
             notionSync,
         )

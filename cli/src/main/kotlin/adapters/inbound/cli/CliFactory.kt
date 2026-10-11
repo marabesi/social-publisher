@@ -4,6 +4,10 @@ import Main
 import adapters.outbound.csv.FileSystemConfigurationRepository
 import adapters.outbound.csv.FileSystemPostRepository
 import adapters.outbound.csv.FileSystemSchedulerRepository
+import adapters.outbound.googledrive.GoogleDriveFileSync
+import adapters.outbound.googledrive.GoogleDrivePostsRepository
+import adapters.outbound.googledrive.GoogleDriveSchedulerRepository
+import adapters.outbound.googledrive.GoogleDriveSync
 import adapters.outbound.notion.NotionFileSync
 import adapters.outbound.notion.NotionPostsRepository
 import adapters.outbound.notion.NotionSchedulerRepository
@@ -52,15 +56,23 @@ class TweetCreatedModule(
         bind(ConfigurationRepository::class.java).toInstance(configuration)
 
         val notionSync: NotionSync = NotionFileSync(configuration)
+        val googleDriveSync: GoogleDriveSync = GoogleDriveFileSync(configuration)
         val filePostsRepository = FileSystemPostRepository(configurationRepository = configuration)
-        val postRepository = NotionPostsRepository(filePostsRepository, notionSync)
+        val postRepository =
+            NotionPostsRepository(
+                GoogleDrivePostsRepository(filePostsRepository, googleDriveSync),
+                notionSync,
+            )
         bind(PostsRepository::class.java).toInstance(postRepository)
 
         val scheduler =
             NotionSchedulerRepository(
-                FileSystemSchedulerRepository(
-                    postsRepository = filePostsRepository,
-                    configurationRepository = configuration,
+                GoogleDriveSchedulerRepository(
+                    FileSystemSchedulerRepository(
+                        postsRepository = filePostsRepository,
+                        configurationRepository = configuration,
+                    ),
+                    googleDriveSync,
                 ),
                 notionSync,
             )

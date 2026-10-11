@@ -46,10 +46,13 @@ directory you run the CLI from. The document accepts the following keys:
 | `linkedin.redirectUri` | to connect | — | Redirect URL registered in your LinkedIn app. |
 | `linkedin.accessToken` | yes | — | Access token for your LinkedIn account. |
 | `linkedin.authorUrn` | yes | — | Author of the post, e.g. `urn:li:person:123`. |
-| `storage` | no | `csv` | Storage adapter. `csv` stores locally; `notion` also uploads the data files to Notion on every change. |
+| `storage` | no | `csv` | Storage adapter. `csv` stores locally; `notion` or `google_drive` also upload the data files on every change. |
 | `notion` | for notional storage | — | Notion credentials used when `storage` is `notion`. |
 | `notion.apiKey` | yes | — | Notion integration token (`ntn_...`). |
 | `notion.pageId` | to persist | — | Page the uploaded files are attached to. Without it files expire after an hour. |
+| `googleDrive` | for Google Drive storage | — | Google Drive credentials used when `storage` is `google_drive`. |
+| `googleDrive.accessToken` | yes | — | OAuth 2.0 access token with the `drive.file` scope. |
+| `googleDrive.folderId` | no | — | Folder the data files are uploaded to. Without it they go to My Drive root. |
 | `timezone` | no | `UTC` | Timezone used to interpret local publish dates and reported when a post is scheduled. |
 | `fileName` | no | `production` | Suffix for the data files: `posts-<fileName>.csv` and `scheduler-<fileName>.csv`. |
 
@@ -154,6 +157,33 @@ not a replacement for the local store.
 
 See [Notion storage](/guide/notion-storage) for a full walkthrough of how the
 integration is handled.
+
+## Use Google Drive as storage
+
+Set `"storage": "google_drive"` and provide the Google Drive credentials block:
+
+```sh
+social configuration -c '{
+  "storage": "google_drive",
+  "googleDrive": {
+    "accessToken": "ya29.your-oauth-access-token",
+    "folderId": "your-folder-id"
+  }
+}'
+```
+
+With `google_drive` selected, every change (creating, updating or deleting a
+post or a schedule, and publishing one) uploads the `posts-<fileName>.csv` and
+`scheduler-<fileName>.csv` files to Google Drive. Each file is uploaded under its
+own name, and an existing file with that name in the configured folder is
+replaced with the new contents instead of a second copy being created.
+
+The files are still written to the local store directory first, so reads keep
+working exactly as with `csv`. Google Drive is an extra remote copy of the data
+files, not a replacement for the local store.
+
+See [Google Drive storage](/guide/google-drive-storage) for a full walkthrough,
+including how to obtain an access token.
 
 ## Create the configuration
 

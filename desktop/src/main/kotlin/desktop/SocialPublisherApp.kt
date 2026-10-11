@@ -3,6 +3,9 @@ package desktop
 import adapters.outbound.csv.FileSystemConfigurationRepository
 import adapters.outbound.csv.FileSystemPostRepository
 import adapters.outbound.csv.FileSystemSchedulerRepository
+import adapters.outbound.googledrive.GoogleDriveFileSync
+import adapters.outbound.googledrive.GoogleDrivePostsRepository
+import adapters.outbound.googledrive.GoogleDriveSchedulerRepository
 import adapters.outbound.notion.NotionFileSync
 import adapters.outbound.notion.NotionPostsRepository
 import adapters.outbound.notion.NotionSchedulerRepository
@@ -152,13 +155,21 @@ private fun rememberDesktopStore(): SocialPublisherStore =
     remember {
         val configurationRepository = FileSystemConfigurationRepository()
         val notionSync = NotionFileSync(configurationRepository)
+        val googleDriveSync = GoogleDriveFileSync(configurationRepository)
         val filePostsRepository = FileSystemPostRepository(configurationRepository = configurationRepository)
-        val postsRepository = NotionPostsRepository(filePostsRepository, notionSync)
+        val postsRepository =
+            NotionPostsRepository(
+                GoogleDrivePostsRepository(filePostsRepository, googleDriveSync),
+                notionSync,
+            )
         val schedulerRepository =
             NotionSchedulerRepository(
-                FileSystemSchedulerRepository(
-                    postsRepository = filePostsRepository,
-                    configurationRepository = configurationRepository,
+                GoogleDriveSchedulerRepository(
+                    FileSystemSchedulerRepository(
+                        postsRepository = filePostsRepository,
+                        configurationRepository = configurationRepository,
+                    ),
+                    googleDriveSync,
                 ),
                 notionSync,
             )

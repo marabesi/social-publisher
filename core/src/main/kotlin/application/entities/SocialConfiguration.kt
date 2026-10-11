@@ -7,6 +7,7 @@ data class SocialConfiguration(
     var twitter: TwitterCredentials? = null,
     var linkedin: LinkedInCredentials? = null,
     var notion: NotionCredentials? = null,
+    var googleDrive: GoogleDriveCredentials? = null,
     var timezone: String = "",
 )
 
@@ -31,4 +32,10 @@ data class LinkedInCredentials(
 data class NotionCredentials(
     val apiKey: String = "",
     val pageId: String = "",
+)
+
+@kotlinx.serialization.Serializable
+data class GoogleDriveCredentials(
+    val accessToken: String = "",
+    val folderId: String = "",
 )

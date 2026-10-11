@@ -1,18 +1,18 @@
 package desktop
 
+import adapters.outbound.SocialThirdPartyRouting
 import adapters.outbound.csv.FileSystemConfigurationRepository
 import adapters.outbound.csv.FileSystemPostRepository
 import adapters.outbound.csv.FileSystemSchedulerRepository
 import adapters.outbound.googledrive.GoogleDriveFileSync
 import adapters.outbound.googledrive.GoogleDrivePostsRepository
 import adapters.outbound.googledrive.GoogleDriveSchedulerRepository
-import adapters.outbound.notion.NotionFileSync
-import adapters.outbound.notion.NotionPostsRepository
-import adapters.outbound.notion.NotionSchedulerRepository
 import adapters.outbound.linkedin.LinkedInOAuthClient
 import adapters.outbound.linkedin.Linkedin
 import adapters.outbound.linkedin.LinkedinCredentialsValidator
-import adapters.outbound.SocialThirdPartyRouting
+import adapters.outbound.notion.NotionFileSync
+import adapters.outbound.notion.NotionPostsRepository
+import adapters.outbound.notion.NotionSchedulerRepository
 import adapters.outbound.twitter.Twitter
 import adapters.outbound.twitter.TwitterCredentialsValidator
 import androidx.compose.foundation.layout.Box

@@ -2,6 +2,7 @@ package adapters.inbound.cli
 
 import Main
 import adapters.outbound.SocialThirdPartyRouting
+import adapters.outbound.bluesky.BlueskyCredentialsValidator
 import adapters.outbound.csv.FileSystemConfigurationRepository
 import adapters.outbound.csv.FileSystemPostRepository
 import adapters.outbound.csv.FileSystemSchedulerRepository
@@ -83,6 +84,7 @@ class TweetCreatedModule(
         val socialNetworks = MapBinder.newMapBinder(binder(), SocialMedia::class.java, SocialThirdParty::class.java)
         socialNetworks.addBinding(SocialMedia.TWITTER).to(TwitterCredentialsValidator::class.java)
         socialNetworks.addBinding(SocialMedia.LINKEDIN).to(LinkedinCredentialsValidator::class.java)
+        socialNetworks.addBinding(SocialMedia.BLUESKY).to(BlueskyCredentialsValidator::class.java)
 
         bind(SocialThirdPartyProvider::class.java).to(SocialThirdPartyRouting::class.java)
         bind(ExchangeLinkedInAuthorization::class.java).to(LinkedInOAuthClient::class.java)

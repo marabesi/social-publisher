@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import application.entities.BlueskyCredentials
 import application.entities.GoogleDriveCredentials
 import application.entities.LinkedInCredentials
 import application.entities.NotionCredentials
@@ -44,6 +45,8 @@ fun configurationPage(store: SocialPublisherStore) {
     var linkedinRedirectUri by remember { mutableStateOf(existing?.linkedin?.redirectUri.orEmpty()) }
     var linkedinAccessToken by remember { mutableStateOf(existing?.linkedin?.accessToken.orEmpty()) }
     var linkedinAuthorUrn by remember { mutableStateOf(existing?.linkedin?.authorUrn.orEmpty()) }
+    var blueskyIdentifier by remember { mutableStateOf(existing?.bluesky?.identifier.orEmpty()) }
+    var blueskyPassword by remember { mutableStateOf(existing?.bluesky?.password.orEmpty()) }
     var notionApiKey by remember { mutableStateOf(existing?.notion?.apiKey.orEmpty()) }
     var notionPageId by remember { mutableStateOf(existing?.notion?.pageId.orEmpty()) }
     var googleDriveAccessToken by remember { mutableStateOf(existing?.googleDrive?.accessToken.orEmpty()) }
@@ -80,6 +83,11 @@ fun configurationPage(store: SocialPublisherStore) {
                                     redirectUri = linkedinRedirectUri,
                                     accessToken = linkedinAccessToken,
                                     authorUrn = linkedinAuthorUrn,
+                                ),
+                            bluesky =
+                                BlueskyCredentials(
+                                    identifier = blueskyIdentifier,
+                                    password = blueskyPassword,
                                 ),
                             notion =
                                 NotionCredentials(
@@ -187,6 +195,23 @@ fun configurationPage(store: SocialPublisherStore) {
                 value = linkedinAuthorUrn,
                 onValueChange = { linkedinAuthorUrn = it },
                 label = { Text("LinkedIn author urn") },
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            Text("Bluesky credentials", style = MaterialTheme.typography.titleMedium)
+
+            OutlinedTextField(
+                value = blueskyIdentifier,
+                onValueChange = { blueskyIdentifier = it },
+                label = { Text("Bluesky identifier") },
+                supportingText = { Text("The handle or email used to log in to Bluesky.") },
+                modifier = Modifier.fillMaxWidth(),
+            )
+            OutlinedTextField(
+                value = blueskyPassword,
+                onValueChange = { blueskyPassword = it },
+                label = { Text("Bluesky password") },
+                supportingText = { Text("Use an app password from Bluesky settings.") },
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -301,6 +326,7 @@ internal fun configurationFrom(
     timezone: String,
     twitter: TwitterCredentials?,
     linkedin: LinkedInCredentials? = null,
+    bluesky: BlueskyCredentials? = null,
     notion: NotionCredentials? = null,
     googleDrive: GoogleDriveCredentials? = null,
 ): SocialConfiguration {
@@ -321,6 +347,12 @@ internal fun configurationFrom(
                 it.authorUrn.isNotBlank()
         }
 
+    val blueskyCredentials =
+        bluesky?.takeIf {
+            it.identifier.isNotBlank() ||
+                it.password.isNotBlank()
+        }
+
     val notionCredentials =
         notion?.takeIf {
             it.apiKey.isNotBlank() ||
@@ -338,6 +370,7 @@ internal fun configurationFrom(
         storage = storage,
         twitter = credentials,
         linkedin = linkedinCredentials,
+        bluesky = blueskyCredentials,
         notion = notionCredentials,
         googleDrive = googleDriveCredentials,
         timezone = timezone,

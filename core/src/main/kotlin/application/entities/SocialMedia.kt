@@ -5,4 +5,5 @@ enum class SocialMedia(
 ) {
     TWITTER("Twitter"),
     LINKEDIN("LinkedIn"),
+    BLUESKY("Bluesky"),
 }

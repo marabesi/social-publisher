@@ -55,6 +55,12 @@ function test_schedule_a_post_for_twitter() {
     assert_contains "${expected}" "${output}"
 }
 
+function test_schedule_a_post_for_bluesky() {
+    output=$(sh ./social/bin/social scheduler create -p "1" -d "2090-10-02T09:00:00Z" -s "BLUESKY")
+    local expected="Post has been scheduled using UTC timezone"
+    assert_contains "${expected}" "${output}"
+}
+
 function test_list_scheduled_post() {
     output=$(sh ./social/bin/social scheduler list)
     local expected="1. Post with id 1 will be published on 2090-10-02T09:00:00Z"

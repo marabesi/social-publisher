@@ -1,6 +1,8 @@
 package desktop
 
 import adapters.outbound.SocialThirdPartyRouting
+import adapters.outbound.bluesky.Bluesky
+import adapters.outbound.bluesky.BlueskyCredentialsValidator
 import adapters.outbound.csv.FileSystemConfigurationRepository
 import adapters.outbound.csv.FileSystemPostRepository
 import adapters.outbound.csv.FileSystemSchedulerRepository
@@ -180,6 +182,8 @@ private fun rememberDesktopStore(): SocialPublisherStore =
                         TwitterCredentialsValidator(configurationRepository, Twitter(configurationRepository)),
                     SocialMedia.LINKEDIN to
                         LinkedinCredentialsValidator(configurationRepository, Linkedin(configurationRepository)),
+                    SocialMedia.BLUESKY to
+                        BlueskyCredentialsValidator(configurationRepository, Bluesky(configurationRepository)),
                 ),
             )
         SocialPublisherStore(

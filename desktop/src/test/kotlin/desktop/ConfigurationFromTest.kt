@@ -1,5 +1,6 @@
 package desktop
 
+import application.entities.BlueskyCredentials
 import application.entities.GoogleDriveCredentials
 import application.entities.LinkedInCredentials
 import application.entities.NotionCredentials
@@ -77,6 +78,35 @@ class ConfigurationFromTest {
             )
 
         assertNull(configuration.linkedin)
+    }
+
+    @Test
+    fun `keeps the bluesky credentials when at least one field is set`() {
+        val configuration =
+            configurationFrom(
+                fileName = "prod",
+                storage = "csv",
+                timezone = "UTC",
+                twitter = null,
+                bluesky = BlueskyCredentials(identifier = "test.bsky.social", password = "app-password"),
+            )
+
+        assertEquals("test.bsky.social", configuration.bluesky?.identifier)
+        assertEquals("app-password", configuration.bluesky?.password)
+    }
+
+    @Test
+    fun `drops empty bluesky credentials`() {
+        val configuration =
+            configurationFrom(
+                fileName = "prod",
+                storage = "csv",
+                timezone = "UTC",
+                twitter = null,
+                bluesky = BlueskyCredentials(),
+            )
+
+        assertNull(configuration.bluesky)
     }
 
     @Test

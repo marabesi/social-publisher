@@ -2,6 +2,8 @@ package adapters.inbound.rest.config
 
 import adapters.inbound.rest.RestOutput
 import adapters.outbound.SocialThirdPartyRouting
+import adapters.outbound.bluesky.Bluesky
+import adapters.outbound.bluesky.BlueskyCredentialsValidator
 import adapters.outbound.csv.FileSystemConfigurationRepository
 import adapters.outbound.csv.FileSystemPostRepository
 import adapters.outbound.csv.FileSystemSchedulerRepository
@@ -81,6 +83,9 @@ class CoreConfiguration {
     fun linkedin(configurationRepository: ConfigurationRepository): Linkedin = Linkedin(configurationRepository)
 
     @Bean
+    fun bluesky(configurationRepository: ConfigurationRepository): Bluesky = Bluesky(configurationRepository)
+
+    @Bean
     fun exchangeLinkedInAuthorization(configurationRepository: ConfigurationRepository): ExchangeLinkedInAuthorization =
         LinkedInOAuthClient(configurationRepository)
 
@@ -89,11 +94,13 @@ class CoreConfiguration {
         configurationRepository: ConfigurationRepository,
         publishPost: PublishPost,
         linkedin: Linkedin,
+        bluesky: Bluesky,
     ): SocialThirdPartyProvider =
         SocialThirdPartyRouting(
             mapOf(
                 SocialMedia.TWITTER to TwitterCredentialsValidator(configurationRepository, publishPost),
                 SocialMedia.LINKEDIN to LinkedinCredentialsValidator(configurationRepository, linkedin),
+                SocialMedia.BLUESKY to BlueskyCredentialsValidator(configurationRepository, bluesky),
             ),
         )
 }

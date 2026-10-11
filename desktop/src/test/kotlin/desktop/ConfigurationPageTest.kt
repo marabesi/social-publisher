@@ -10,6 +10,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.runComposeUiTest
+import application.entities.BlueskyCredentials
 import application.entities.GoogleDriveCredentials
 import application.entities.LinkedInCredentials
 import application.entities.NotionCredentials
@@ -38,6 +39,8 @@ class ConfigurationPageTest {
             onNodeWithText("LinkedIn redirect uri").assertExists()
             onNodeWithText("LinkedIn access token").assertExists()
             onNodeWithText("LinkedIn author urn").assertExists()
+            onNodeWithText("Bluesky identifier").assertExists()
+            onNodeWithText("Bluesky password").assertExists()
             onNodeWithText("Notion API key").assertExists()
             onNodeWithText("Notion page id").assertExists()
             onNodeWithText("Google Drive access token").assertExists()
@@ -77,6 +80,11 @@ class ConfigurationPageTest {
                                 accessToken = "linkedin-access-token",
                                 authorUrn = "urn:li:person:123",
                             ),
+                        bluesky =
+                            BlueskyCredentials(
+                                identifier = "test.bsky.social",
+                                password = "app-password",
+                            ),
                         notion =
                             NotionCredentials(
                                 apiKey = "notion-api-key",
@@ -99,6 +107,8 @@ class ConfigurationPageTest {
             onNodeWithText("access-token-secret").assertExists()
             onNodeWithText("linkedin-access-token").assertExists()
             onNodeWithText("urn:li:person:123").assertExists()
+            onNodeWithText("test.bsky.social").assertExists()
+            onNodeWithText("app-password").assertExists()
             onNodeWithText("notion-api-key").assertExists()
             onNodeWithText("notion-page-id").assertExists()
             onNodeWithText("drive-access-token").assertExists()

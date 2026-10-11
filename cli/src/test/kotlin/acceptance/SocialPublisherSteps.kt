@@ -1,5 +1,6 @@
 package acceptance
 
+import application.entities.BlueskyCredentials
 import application.entities.LinkedInCredentials
 import application.entities.SocialConfiguration
 import application.entities.TwitterCredentials
@@ -10,6 +11,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions.assertEquals
 import picocli.CommandLine
+import thirdpartyintegration.WireMockBluesky
 import thirdpartyintegration.WireMockLinkedIn
 import thirdpartyintegration.WireMockTwitter
 import java.io.ByteArrayOutputStream
@@ -37,12 +39,14 @@ class SocialPublisherSteps : En {
             HookNoArgsBody {
                 WireMockTwitter.start()
                 WireMockLinkedIn.start()
+                WireMockBluesky.start()
             },
         )
         After(
             HookNoArgsBody {
                 WireMockTwitter.stop()
                 WireMockLinkedIn.stop()
+                WireMockBluesky.stop()
             },
         )
 
@@ -201,6 +205,24 @@ class SocialPublisherSteps : En {
                         LinkedInCredentials(
                             accessToken = "test-access-token",
                             authorUrn = "urn:li:person:123",
+                        ),
+                )
+            val configuration = Json.encodeToString(socialConfiguration)
+
+            exitCode = cmd.execute("configuration", "-c", configuration)
+
+            assertContains(outputStreamCaptor.toString(), "Configuration has been stored")
+        }
+
+        Given("the bluesky credentials in place") {
+            val socialConfiguration =
+                SocialConfiguration(
+                    "bluesky",
+                    "csv",
+                    bluesky =
+                        BlueskyCredentials(
+                            identifier = "test.bsky.social",
+                            password = "test-app-password",
                         ),
                 )
             val configuration = Json.encodeToString(socialConfiguration)

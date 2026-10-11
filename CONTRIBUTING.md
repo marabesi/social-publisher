@@ -117,6 +117,19 @@ npm run docs:dev
 
 Other available scripts are `npm run docs:build` and `npm run docs:preview`.
 
+The desktop screenshots in the guide (`docs/public/screenshots/`) are rendered
+from the real Compose UI by a dedicated Gradle task — never captured by hand:
+
+```sh
+./gradlew :desktop:generateScreenshots
+```
+
+It runs the `ScreenshotGalleryTest` UI test against a fixed fixture and a fixed
+window size, writes the PNG files into `docs/public/screenshots/` and fails if a
+screen no longer shows what the docs describe. Regenerate and commit the images
+whenever the desktop UI changes. The task is excluded from the normal
+`:desktop:test` run.
+
 ## Docker
 
 Build the distribution and the image, then run it:

@@ -5,6 +5,9 @@ hero:
   name: Social Publisher
   text: Schedule once, publish later
   tagline: A desktop app, a command line and a REST API that store your posts in plain local files and publish them to X (Twitter) or LinkedIn when the time comes.
+  image:
+    src: /screenshots/home.png
+    alt: The Social Publisher desktop app
   actions:
     - theme: brand
       text: Download & get started

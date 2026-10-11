@@ -48,6 +48,31 @@ compose.desktop {
     }
 }
 
+// Where the docs read their images from: VitePress serves everything under
+// docs/public/ from the site root, so the files end up at /screenshots/*.png.
+val docsScreenshotsDir = rootProject.layout.projectDirectory.dir("docs/public/screenshots")
+
+// Renders the desktop app screens and writes them to docs/public/screenshots.
+// Reproducible: static fixture, fixed window size and a single command.
+val generateScreenshots =
+    tasks.register<Test>("generateScreenshots") {
+        val testSourceSet = sourceSets.test.get()
+        group = "documentation"
+        description = "Renders the desktop app screens to docs/public/screenshots."
+        testClassesDirs = testSourceSet.output.classesDirs
+        classpath = testSourceSet.runtimeClasspath
+        useJUnitPlatform()
+        filter {
+            includeTestsMatching("desktop.ScreenshotGalleryTest")
+        }
+        systemProperty("screenshots.dir", docsScreenshotsDir.asFile.absolutePath)
+        outputs.upToDateWhen { false }
+    }
+
 tasks.test {
     useJUnitPlatform()
+    // The gallery is documentation tooling: run it through :desktop:generateScreenshots.
+    filter {
+        excludeTestsMatching("desktop.ScreenshotGalleryTest")
+    }
 }

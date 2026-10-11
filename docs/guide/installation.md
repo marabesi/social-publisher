@@ -47,6 +47,8 @@ The desktop app is the friendliest way to use Social Publisher.
 A window opens where you can manage your configuration, posts and schedules.
 See the [Desktop app guide](/guide/desktop) for a tour.
 
+![The desktop app home page](/screenshots/home.png)
+
 ## Start from the terminal
 
 The same `social.jar` also gives you a command line:

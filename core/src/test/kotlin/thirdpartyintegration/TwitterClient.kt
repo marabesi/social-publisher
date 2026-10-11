@@ -1,8 +1,8 @@
 package thirdpartyintegration
 
-import adapters.outbound.social.DeleteTweet
-import adapters.outbound.social.Twitter
-import adapters.outbound.social.TwitterCredentialsValidator
+import adapters.outbound.twitter.DeleteTweet
+import adapters.outbound.twitter.Twitter
+import adapters.outbound.twitter.TwitterCredentialsValidator
 import application.entities.ScheduledItem
 import application.entities.SocialConfiguration
 import application.entities.SocialPosts

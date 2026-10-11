@@ -1,5 +1,6 @@
-package adapters.outbound.social
+package adapters.outbound.twitter
 
+import adapters.outbound.CouldNotPublishPostException
 import application.entities.SocialPosts
 import application.persistence.configuration.ConfigurationRepository
 import application.socialnetwork.PublishPost

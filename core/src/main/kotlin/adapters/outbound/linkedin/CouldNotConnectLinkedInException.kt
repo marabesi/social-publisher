@@ -1,4 +1,4 @@
-package adapters.outbound.social
+package adapters.outbound.linkedin
 
 class CouldNotConnectLinkedInException(
     message: String?,

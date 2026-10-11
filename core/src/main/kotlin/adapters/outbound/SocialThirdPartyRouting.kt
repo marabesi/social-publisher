@@ -1,4 +1,4 @@
-package adapters.outbound.social
+package adapters.outbound
 
 import application.entities.SocialMedia
 import application.socialnetwork.SocialThirdParty

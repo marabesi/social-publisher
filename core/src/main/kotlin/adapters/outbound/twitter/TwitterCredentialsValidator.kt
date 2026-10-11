@@ -1,4 +1,4 @@
-package adapters.outbound.social
+package adapters.outbound.twitter
 
 import application.entities.ScheduledItem
 import application.entities.SocialPosts

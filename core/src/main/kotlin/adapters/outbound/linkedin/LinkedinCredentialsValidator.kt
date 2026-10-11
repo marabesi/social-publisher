@@ -1,4 +1,4 @@
-package adapters.outbound.social
+package adapters.outbound.linkedin
 
 import application.entities.LinkedInCredentials
 import application.entities.ScheduledItem

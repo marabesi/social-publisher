@@ -1,8 +1,8 @@
 package adapters.inbound.rest
 
 import adapters.inbound.rest.dto.ErrorResponse
-import adapters.outbound.social.CouldNotConnectLinkedInException
-import adapters.outbound.social.CouldNotPublishPostException
+import adapters.outbound.linkedin.CouldNotConnectLinkedInException
+import adapters.outbound.CouldNotPublishPostException
 import application.persistence.configuration.MissingConfiguration
 import application.socialnetwork.MissingConfigurationSetup
 import org.springframework.http.HttpStatus

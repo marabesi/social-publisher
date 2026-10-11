@@ -1,4 +1,4 @@
-package adapters.outbound.social
+package adapters.outbound.linkedin
 
 import application.entities.LinkedInCredentials
 import application.persistence.configuration.ConfigurationRepository
@@ -7,7 +7,6 @@ import application.socialnetwork.LinkedInToken
 import jakarta.inject.Inject
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.apache.http.HttpStatus
 import org.apache.http.client.entity.UrlEncodedFormEntity

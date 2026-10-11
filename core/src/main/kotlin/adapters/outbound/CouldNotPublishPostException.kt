@@ -1,4 +1,4 @@
-package adapters.outbound.social
+package adapters.outbound
 
 class CouldNotPublishPostException(
     message: String?,

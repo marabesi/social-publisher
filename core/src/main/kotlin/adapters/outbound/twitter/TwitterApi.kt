@@ -1,4 +1,4 @@
-package adapters.outbound.social
+package adapters.outbound.twitter
 
 object TwitterApi {
     private const val DEFAULT_BASE_URL = "https://api.twitter.com"

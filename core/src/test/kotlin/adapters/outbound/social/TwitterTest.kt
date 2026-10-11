@@ -1,5 +1,6 @@
 package adapters.outbound.social
 
+import adapters.outbound.twitter.TwitterCredentialsValidator
 import application.entities.ScheduledItem
 import application.entities.SocialConfiguration
 import application.entities.SocialPosts

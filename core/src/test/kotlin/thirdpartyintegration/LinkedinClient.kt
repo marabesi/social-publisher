@@ -1,8 +1,8 @@
 package thirdpartyintegration
 
-import adapters.outbound.social.LinkedInOAuthClient
-import adapters.outbound.social.Linkedin
-import adapters.outbound.social.LinkedinCredentialsValidator
+import adapters.outbound.linkedin.LinkedInOAuthClient
+import adapters.outbound.linkedin.Linkedin
+import adapters.outbound.linkedin.LinkedinCredentialsValidator
 import application.entities.LinkedInCredentials
 import application.entities.ScheduledItem
 import application.entities.SocialConfiguration

@@ -1,4 +1,4 @@
-package adapters.outbound.social
+package adapters.outbound.twitter
 
 import application.persistence.configuration.ConfigurationRepository
 import application.socialnetwork.DeleteTweet

@@ -1,5 +1,7 @@
 package adapters.outbound.social
 
+import adapters.outbound.linkedin.Linkedin
+import adapters.outbound.linkedin.LinkedinCredentialsValidator
 import application.entities.LinkedInCredentials
 import application.entities.ScheduledItem
 import application.entities.SocialConfiguration

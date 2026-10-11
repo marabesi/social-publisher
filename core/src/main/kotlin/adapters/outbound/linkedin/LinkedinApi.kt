@@ -1,4 +1,4 @@
-package adapters.outbound.social
+package adapters.outbound.linkedin
 
 object LinkedinApi {
     private const val DEFAULT_BASE_URL = "https://api.linkedin.com"

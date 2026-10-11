@@ -28,6 +28,7 @@ import application.entities.ScheduledItem
 import application.entities.SocialMedia
 import application.order.Direction
 import application.scheduler.ScheduleSearch
+import application.scheduler.ScheduleStatus
 import application.scheduler.order.PublishDateOrder
 
 internal const val SCHEDULE_POST_ID_TAG = "schedulePostId"
@@ -40,6 +41,7 @@ internal const val SCHEDULE_RANDOM_TAG = "scheduleRandom"
 internal const val SCHEDULE_SEARCH_TEXT_TAG = "scheduleSearchText"
 internal const val SCHEDULE_SEARCH_IDS_TAG = "scheduleSearchIds"
 internal const val SCHEDULE_SEARCH_SOCIAL_MEDIA_TAG = "scheduleSearchSocialMedia"
+internal const val SCHEDULE_STATUS_TAG = "scheduleStatus"
 internal const val SCHEDULE_SORT_TAG = "scheduleSort"
 internal const val SCHEDULE_SORT_ASC_LABEL = "Date ascending"
 internal const val SCHEDULE_SORT_DESC_LABEL = "Date descending"
@@ -62,11 +64,12 @@ fun schedulesPage(store: SocialPublisherStore) {
     var searchText by remember { mutableStateOf("") }
     var searchIds by remember { mutableStateOf("") }
     var searchSocialMedia by remember { mutableStateOf<SocialMedia?>(null) }
+    var status by remember { mutableStateOf(ScheduleStatus.UPCOMING) }
     var sortDirection by remember { mutableStateOf(Direction.DESC) }
 
     val filteredSchedules =
         ScheduleSearch
-            .from(text = searchText, postIds = searchIds, socialMedia = searchSocialMedia)
+            .from(text = searchText, postIds = searchIds, socialMedia = searchSocialMedia, status = status)
             .filter(schedules)
     val visibleSchedules = PublishDateOrder(sortDirection).apply(ArrayList(filteredSchedules))
 
@@ -233,6 +236,12 @@ fun schedulesPage(store: SocialPublisherStore) {
                 testTag = SCHEDULE_SEARCH_SOCIAL_MEDIA_TAG,
                 includeAllOption = true,
                 modifier = Modifier.weight(1f),
+            )
+            scheduleStatusSelect(
+                selected = status,
+                onSelect = { status = it },
+                modifier = Modifier.weight(1f),
+                testTag = SCHEDULE_STATUS_TAG,
             )
         }
 

@@ -16,6 +16,7 @@ import org.apache.http.HttpStatus
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.StringEntity
 import org.apache.http.impl.client.DefaultHttpClient
+import java.util.logging.Logger
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
@@ -49,6 +50,8 @@ class Twitter
     constructor(
         val configurationRepository: ConfigurationRepository,
     ) : PublishPost {
+        private val logger = Logger.getLogger(Twitter::class.java.name)
+
         override fun publish(text: String): SocialPosts {
             val configuration = configurationRepository.find()
             val consumerKey = configuration.twitter!!.consumerKey
@@ -75,6 +78,8 @@ class Twitter
                 response.entity.content
                     .bufferedReader()
                     .use { it.readText() }
+
+            logger.info("Twitter API response: $responseBody")
 
             if (response.statusLine.statusCode != HttpStatus.SC_CREATED) {
                 throw CouldNotPublishPostException(responseBody + " " + response.allHeaders.contentDeepToString())

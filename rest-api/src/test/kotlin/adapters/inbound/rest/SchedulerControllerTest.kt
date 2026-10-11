@@ -152,6 +152,42 @@ class SchedulerControllerTest {
     }
 
     @Test
+    fun `should hide published schedules by default`() {
+        postsRepository.save(arrayListOf(SocialPosts(text = "release notes")))
+        controller.create(SchedulePostRequest("1", "2022-07-10T09:00:00Z"))
+        schedulerRepository.markAsSent(schedulerRepository.findAll()[0])
+
+        val result = controller.list(null, null, null, null, ScheduleSearchRequest())
+
+        assertTrue(result.isEmpty())
+    }
+
+    @Test
+    fun `should list published schedules when filtering by status`() {
+        postsRepository.save(arrayListOf(SocialPosts(text = "release notes")))
+        controller.create(SchedulePostRequest("1", "2022-07-10T09:00:00Z"))
+        schedulerRepository.markAsSent(schedulerRepository.findAll()[0])
+
+        val searchRequest = ScheduleSearchRequest().apply { status = "PUBLISHED" }
+        val result = controller.list(null, null, null, null, searchRequest)
+
+        assertEquals(1, result.size)
+        assertTrue(result[0].published)
+    }
+
+    @Test
+    fun `should list upcoming schedules when filtering by status`() {
+        postsRepository.save(arrayListOf(SocialPosts(text = "release notes")))
+        controller.create(SchedulePostRequest("1", "2022-07-10T09:00:00Z"))
+
+        val searchRequest = ScheduleSearchRequest().apply { status = "UPCOMING" }
+        val result = controller.list(null, null, null, null, searchRequest)
+
+        assertEquals(1, result.size)
+        assertEquals("1", result[0].postId)
+    }
+
+    @Test
     fun `should delete a schedule`() {
         postsRepository.save(arrayListOf(SocialPosts(text = "release notes")))
         controller.create(SchedulePostRequest("1", "2022-07-10T09:00:00Z"))

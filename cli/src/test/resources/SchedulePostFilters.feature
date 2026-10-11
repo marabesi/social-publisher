@@ -100,6 +100,29 @@ Feature: Schedule a post to be posted
     2. Post with id 1 will be published on 2022-10-02T09:00:00Z (Twitter)
     """
 
+  Scenario: Filter scheduled posts by status
+    Given A new cli
+    When I create a configuration of type csv and store files under the name "e2e-file"
+    When I create a post with the text "Post to filter by status"
+    Then I clean the output
+    And I schedule the post with id "1" to be published at "2023-10-02T09:00:00Z"
+    Then I clean the output
+    When I list the scheduled posts filtering by status "upcoming"
+    Then Show successfully message
+    """
+    1. Post with id 1 will be published on 2023-10-02T09:00:00Z (Twitter)
+    """
+
+  Scenario: Filter scheduled posts by published status shows nothing when nothing was sent
+    Given A new cli
+    When I create a configuration of type csv and store files under the name "e2e-file"
+    When I create a post with the text "Post to filter by published status"
+    Then I clean the output
+    And I schedule the post with id "1" to be published at "2023-10-02T09:00:00Z"
+    Then I clean the output
+    When I list the scheduled posts filtering by status "published"
+    Then Show successfully message "No posts scheduled"
+
   Scenario: Interpret date filters using the configured timezone
     Given A new cli
     When I create a configuration with '{"storage":"csv","timezone":"Europe/Madrid","fileName":"tz-filter"}'

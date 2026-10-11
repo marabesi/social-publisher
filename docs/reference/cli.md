@@ -93,7 +93,9 @@ week are skipped so the same content does not repeat. See
 
 ## `social scheduler list`
 
-List schedules, optionally filtered.
+List schedules, optionally filtered. Schedules that have already been sent are
+hidden unless `--status published` is used; see
+[Filter by status](/guide/scheduling#filter-by-status).
 
 | Option | Description |
 | --- | --- |
@@ -103,6 +105,7 @@ List schedules, optionally filtered.
 | `--search <text>` | Only schedules whose post matches the case-insensitive text search (matches word starts). |
 | `--ids <ids>` | Only schedules for posts whose id is in the comma separated list, e.g. `1,3`. |
 | `--social-media <network>` | Only schedules targeting the given network (`TWITTER` or `LINKEDIN`). |
+| `--status <status>` | Only schedules with the given status. Accepts `upcoming` (default) or `published`. |
 | `--group-by <criterion>` | Group the output. The only accepted value is `post`. |
 | `-o`, `--order-by <criterion>` | Order the output. Accepts `publish_date=asc` or `publish_date=desc`. |
 

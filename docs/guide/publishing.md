@@ -36,6 +36,14 @@ time:
   Post 1 sent to twitter
   ```
 
+  Every response received from the X API is also written to the application log
+  (`Twitter API response: ...`), so you can read the full payload the server
+  returned for each published tweet — for example the id of the created tweet:
+
+  ```log
+  INFO: Twitter API response: {"data":{"id":"1753..."}}
+  ```
+
   Each schedule is sent to the network chosen with
   [`scheduler create -s`](/guide/scheduling#create-a-schedule):
 

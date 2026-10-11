@@ -49,7 +49,7 @@ with `--server.port`, use that port in the URLs above.
 | `GET` | `/api/posts` | List posts. Each entry includes `characterCount` and `characterLimit`. Query: `search`, `ids`, `socialMedia`. |
 | `POST` | `/api/schedules` | Schedule a post. Body: `{"postId": "1", "publishDate": "2099-01-02T09:00:00Z", "socialMedia": "TWITTER"}`. `socialMedia` accepts `TWITTER` or `LINKEDIN`. |
 | `POST` | `/api/schedules/random` | Pick a random post and schedule it for a day. Body: `{"publishDate": "2099-01-02", "socialMedia": "TWITTER"}`. |
-| `GET` | `/api/schedules` | List schedules (each entry includes `socialMedia`). Query: `startDate`, `endDate`, `filter`, `orderBy`, `search`, `ids`, `socialMedia`. |
+| `GET` | `/api/schedules` | List schedules (each entry includes `socialMedia`). Query: `startDate`, `endDate`, `filter`, `orderBy`, `search`, `ids`, `socialMedia`, `status`. |
 | `DELETE` | `/api/schedules/{id}` | Delete a schedule. |
 | `POST` | `/api/poster/run` | Publish every due schedule. |
 | `GET` | `/api/configuration` | Read the stored configuration. |
@@ -95,7 +95,12 @@ curl --get localhost:8080/api/posts --data-urlencode 'socialMedia=LINKEDIN'
 curl --get localhost:8080/api/schedules --data-urlencode 'search=release notes'
 curl --get localhost:8080/api/schedules --data-urlencode 'ids=1,3'
 curl --get localhost:8080/api/schedules --data-urlencode 'socialMedia=LINKEDIN'
+curl --get localhost:8080/api/schedules --data-urlencode 'status=PUBLISHED'
 ```
+
+Like the CLI, `GET /api/schedules` only returns upcoming schedules by default;
+pass `status=published` (or `status=upcoming`) to pick what is listed (see
+[Filter by status](/guide/scheduling#filter-by-status)).
 
 ## Examples
 

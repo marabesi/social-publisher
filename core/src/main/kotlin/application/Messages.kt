@@ -8,5 +8,6 @@ class Messages private constructor() {
         const val INVALID_GROUP_BY_PARAMETER = "Value for group-by is not valid"
         const val INVALID_ORDER_BY_PARAMETER = "Value for order-by is not valid"
         const val INVALID_FILTER_PARAMETER = "Value for filter is not valid"
+        const val INVALID_STATUS = "Value for status is not valid"
     }
 }

@@ -20,6 +20,7 @@ import org.apache.http.entity.StringEntity
 import org.apache.http.entity.mime.MultipartEntityBuilder
 import org.apache.http.impl.client.HttpClients
 import java.io.File
+import java.util.logging.Logger
 
 class HttpNotionFileUploader(
     private val apiKey: String,
@@ -27,6 +28,7 @@ class HttpNotionFileUploader(
     private val baseUrl: String = NotionApi.baseUrl(),
 ) : NotionFileUploader {
     private val httpClient = HttpClients.createDefault()
+    private val logger = Logger.getLogger(HttpNotionFileUploader::class.java.name)
 
     override fun upload(file: File): String {
         val uploadId = createUpload(file)
@@ -209,6 +211,8 @@ class HttpNotionFileUploader(
                     ?.bufferedReader()
                     ?.use { it.readText() }
                     .orEmpty()
+
+            logger.info("Notion API response (${request.method} ${request.uri.path}): $body")
 
             val status = response.statusLine.statusCode
             if (status !in SUCCESS_RANGE) {

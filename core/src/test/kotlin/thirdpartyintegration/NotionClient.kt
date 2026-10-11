@@ -7,6 +7,11 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import java.nio.file.Path
+import java.util.logging.Handler
+import java.util.logging.Level
+import java.util.logging.LogRecord
+import java.util.logging.Logger
+import kotlin.test.assertContains
 
 class NotionClient {
     @TempDir
@@ -58,6 +63,38 @@ class NotionClient {
         assertEquals(1, WireMockNotion.updateBlockCalls())
         assertEquals(0, WireMockNotion.appendBlockCalls())
         assertEquals(1, WireMockNotion.deleteBlockCalls())
+    }
+
+    @Test
+    fun `logs the full response from the notion api`() {
+        WireMockNotion.start()
+        val file = file("posts-prod.csv")
+
+        val uploader = HttpNotionFileUploader(apiKey = "test-key", pageId = "page-id")
+        val logger = Logger.getLogger(HttpNotionFileUploader::class.java.name)
+        val records = mutableListOf<LogRecord>()
+        val handler =
+            object : Handler() {
+                override fun publish(record: LogRecord) {
+                    records.add(record)
+                }
+
+                override fun flush() = Unit
+
+                override fun close() = Unit
+            }
+        logger.addHandler(handler)
+
+        try {
+            uploader.upload(file)
+        } finally {
+            logger.removeHandler(handler)
+        }
+
+        val logged = records.filter { it.level == Level.INFO }.joinToString("\n") { it.message }
+        assertContains(logged, """{"object":"file_upload","id":"test-upload-id","status":"pending"}""")
+        assertContains(logged, """{"object":"file_upload","id":"test-upload-id","status":"uploaded"}""")
+        assertContains(logged, """{"object":"list"}""")
     }
 
     private fun file(name: String): File = File(tempDir.toFile(), name).apply { writeText("hello,1") }

@@ -14,6 +14,7 @@ import application.persistence.configuration.ConfigurationRepository
 import application.scheduler.Create
 import application.scheduler.PickRandom
 import application.scheduler.ScheduleSearch
+import application.scheduler.ScheduleStatus
 import application.scheduler.filters.Criterion
 import application.scheduler.filters.DateTimeValidation
 import application.scheduler.filters.FilterExpression
@@ -68,11 +69,13 @@ class SchedulerController(
         val filters = buildFilters(startDate, endDate, filter)
         val order = orderBy?.let { OrderExpression.parse(it, "publish_date") { d -> PublishDateOrder(d) } ?: invalid("order-by") }
         val items = schedulerRepository.findAll(filters)
+        val status = searchRequest.status?.let { ScheduleStatus.from(it) ?: invalid("status") }
         val criteria =
             ScheduleSearch.from(
                 text = searchRequest.search.orEmpty(),
                 postIds = searchRequest.ids.orEmpty(),
                 socialMedia = searchRequest.socialMedia,
+                status = status ?: ScheduleStatus.UPCOMING,
             )
         val searched = ArrayList(criteria.filter(items))
         val ordered = order?.apply(searched) ?: searched

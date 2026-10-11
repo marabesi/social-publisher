@@ -24,6 +24,44 @@ class ScheduleSearchTest {
     }
 
     @Test
+    fun `hides published schedules by default`() {
+        val upcoming = ScheduledItem(SocialPosts(id = "1", text = "upcoming"), Instant.EPOCH)
+        val published =
+            ScheduledItem(SocialPosts(id = "2", text = "already sent"), Instant.EPOCH, published = true)
+
+        val result = ScheduleSearch().filter(listOf(upcoming, published))
+
+        assertEquals(listOf("1"), result.map { it.post.id })
+    }
+
+    @Test
+    fun `shows published schedules when filtering by published status`() {
+        val upcoming = ScheduledItem(SocialPosts(id = "1", text = "upcoming"), Instant.EPOCH)
+        val published =
+            ScheduledItem(SocialPosts(id = "2", text = "already sent"), Instant.EPOCH, published = true)
+
+        val result = ScheduleSearch(status = ScheduleStatus.PUBLISHED).filter(listOf(upcoming, published))
+
+        assertEquals(listOf("2"), result.map { it.post.id })
+    }
+
+    @Test
+    fun `builds the status criteria from raw values`() {
+        val criteria = ScheduleSearch.from(text = "notes", postIds = "1, 3", status = ScheduleStatus.PUBLISHED)
+
+        assertEquals("notes", criteria.text)
+        assertEquals(listOf("1", "3"), criteria.postIds)
+        assertEquals(ScheduleStatus.PUBLISHED, criteria.status)
+    }
+
+    @Test
+    fun `parses a status value case insensitively`() {
+        assertEquals(ScheduleStatus.UPCOMING, ScheduleStatus.from("upcoming"))
+        assertEquals(ScheduleStatus.PUBLISHED, ScheduleStatus.from("PUBLISHED"))
+        assertEquals(null, ScheduleStatus.from("whatever"))
+    }
+
+    @Test
     fun `matches the post text by word prefix`() {
         val result = ScheduleSearch(text = "hello desk").filter(schedules)
 

@@ -23,6 +23,7 @@ import application.entities.SocialConfiguration
 import application.entities.SocialMedia
 import application.entities.SocialPosts
 import application.persistence.SchedulerRepository
+import application.scheduler.ScheduleStatus
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -168,6 +169,56 @@ class SchedulesPageTest {
             onNodeWithTag(SCHEDULE_SEARCH_TEXT_TAG).performTextInput("zzz")
 
             onNodeWithText("No schedules match your search").assertIsDisplayed()
+        }
+
+    @Test
+    fun `hides published schedules by default`() =
+        runComposeUiTest {
+            val schedulerRepository = InMemorySchedulerRepository()
+            val store = storeWith(posts = listOf("already sent"), schedulerRepository = schedulerRepository)
+            schedulerRepository.save(
+                ScheduledItem(
+                    post = store.posts()[0],
+                    publishDate = Instant.parse("2022-10-02T09:00:00Z"),
+                    published = true,
+                ),
+            )
+
+            setContent { schedulesPage(store) }
+
+            onNodeWithText("No schedules match your search").assertIsDisplayed()
+        }
+
+    @Test
+    fun `shows published schedules when filtering by status`() =
+        runComposeUiTest {
+            val schedulerRepository = InMemorySchedulerRepository()
+            val store =
+                storeWith(
+                    posts = listOf("already sent", "upcoming"),
+                    schedulerRepository = schedulerRepository,
+                )
+            schedulerRepository.save(
+                ScheduledItem(
+                    post = store.posts()[0],
+                    publishDate = Instant.parse("2022-10-02T09:00:00Z"),
+                    published = true,
+                ),
+            )
+            schedulerRepository.save(
+                ScheduledItem(
+                    post = store.posts()[1],
+                    publishDate = Instant.parse("2022-10-03T09:00:00Z"),
+                ),
+            )
+
+            setContent { schedulesPage(store) }
+
+            onNodeWithTag(SCHEDULE_STATUS_TAG).performClick()
+            onNodeWithTag("$SCHEDULE_STATUS_TAG-${ScheduleStatus.PUBLISHED.name}").performClick()
+
+            onNodeWithText("Post 1 on", substring = true).assertIsDisplayed()
+            onNodeWithText("Post 2 on", substring = true).assertDoesNotExist()
         }
 
     @Test

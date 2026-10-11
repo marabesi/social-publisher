@@ -89,6 +89,9 @@ social scheduler list
 The target social network (the `-s` value) is shown in parentheses. The desktop
 app and the REST API report the same value for each schedule.
 
+Schedules that have already been sent (the `published` flag is `true`) are
+hidden by default. Use the `--status` filter below to show them.
+
 ### Search schedules
 
 The same search used for [posts](/guide/posts#search-posts) also works on
@@ -136,6 +139,34 @@ unknown property or a malformed expression returns
 | `post.text` | Text of the scheduled post. |
 | `post.socialMediaId` | Social network id, set once published. |
 | `socialMedia` | Target social network, e.g. `TWITTER` or `LINKEDIN`. |
+
+To list schedules by their sent state, prefer `--status` over filtering directly
+on the `published` property, because the default list only shows upcoming
+schedules (so `--filter "published=true"` would report `No posts scheduled`).
+
+### Filter by status
+
+Use `--status` to choose between schedules that have **not** been sent yet
+(`upcoming`, the default) and schedules that have already been published
+(`published`):
+
+```sh
+social scheduler list
+social scheduler list --status upcoming
+social scheduler list --status published
+```
+
+The default list shows only upcoming schedules; published ones only appear when
+you pass `--status published`. Both values are also accepted case-insensitively
+(`UPCOMING` / `PUBLISHED`). An unknown value returns
+`Value for status is not valid`.
+
+The status filter can be combined with the other filters, for example to list
+the published schedules of a single post:
+
+```sh
+social scheduler list --status published --ids "1,2"
+```
 
 ### Filter by date range
 

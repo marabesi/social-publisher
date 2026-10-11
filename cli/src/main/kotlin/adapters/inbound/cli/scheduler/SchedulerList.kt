@@ -9,6 +9,7 @@ import application.persistence.SchedulerRepository
 import application.persistence.configuration.ConfigurationRepository
 import application.scheduler.List
 import application.scheduler.ScheduleSearch
+import application.scheduler.ScheduleStatus
 import application.scheduler.filters.Criterion
 import application.scheduler.filters.DateTimeValidation
 import application.scheduler.filters.FilterExpression
@@ -78,6 +79,14 @@ open class SchedulerList
         )
         var socialMedia: SocialMedia? = null
 
+        @CommandLine.Option(
+            names = ["--status"],
+            description = [
+                "Only schedules with the given status: UPCOMING (default) or PUBLISHED",
+            ],
+        )
+        var status: String = ""
+
         override fun call(): String {
             val filters: ArrayList<Criterion> = arrayListOf()
             val zoneId = Timezone.zoneId(configurationRepository)
@@ -118,7 +127,18 @@ open class SchedulerList
                 return cliOutput.write(Messages.INVALID_ORDER_BY_PARAMETER)
             }
 
-            val searchCriteria = ScheduleSearch.from(text = search, postIds = ids, socialMedia = socialMedia)
+            val scheduleStatus = if (status.isEmpty()) ScheduleStatus.UPCOMING else ScheduleStatus.from(status)
+            if (scheduleStatus == null) {
+                return cliOutput.write(Messages.INVALID_STATUS)
+            }
+
+            val searchCriteria =
+                ScheduleSearch.from(
+                    text = search,
+                    postIds = ids,
+                    socialMedia = socialMedia,
+                    status = scheduleStatus,
+                )
 
             return List(scheduleRepository, cliOutput, filters, groupBy, order, searchCriteria).invoke()
         }

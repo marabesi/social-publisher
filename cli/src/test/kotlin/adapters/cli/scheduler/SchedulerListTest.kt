@@ -54,7 +54,7 @@ class SchedulerListTest {
                 "                             [--group-by=<groupBy>] [--ids=<ids>]",
                 "                             [-o=<orderBy>] [--search=<search>]",
                 "                             [--social-media=<socialMedia>]",
-                "                             [--start-date=<startDate>]",
+                "                             [--start-date=<startDate>] [--status=<status>]",
                 "      --end-date=<endDate>   list posts until this date",
                 "  -f, --filter=<filter>      Filters the scheduled posts by any property, e.g.",
                 "                               post.text=draft",
@@ -71,6 +71,8 @@ class SchedulerListTest {
                 "      --start-date=<startDate>",
                 "                             list posts that has they publish date starting",
                 "                               with this value",
+                "      --status=<status>      Only schedules with the given status: UPCOMING",
+                "                               (default) or PUBLISHED",
                 "  -V, --version              Print version information and exit.",
                 "",
             ).joinToString("\n"),
@@ -742,5 +744,56 @@ class SchedulerListTest {
             """.trimIndent(),
             cmd.getExecutionResult(),
         )
+    }
+
+    @Test
+    fun `should hide published schedules by default`() {
+        val post = SocialPosts(text = "already sent")
+        postsRepository.save(arrayListOf(post))
+        scheduleRepository.save(ScheduledItem(post, Instant.parse("2022-10-02T09:00:00Z"), published = true))
+
+        cmd.execute()
+
+        assertEquals("No posts scheduled", cmd.getExecutionResult())
+    }
+
+    @Test
+    fun `should list published schedules when filtering by status`() {
+        val post = SocialPosts(text = "already sent")
+        postsRepository.save(arrayListOf(post))
+        scheduleRepository.save(ScheduledItem(post, Instant.parse("2022-10-02T09:00:00Z"), published = true))
+
+        cmd.execute("--status", "published")
+
+        assertEquals(
+            """
+            1. Post with id 1 will be published on 2022-10-02T09:00:00Z (Twitter)
+            """.trimIndent(),
+            cmd.getExecutionResult(),
+        )
+    }
+
+    @Test
+    fun `should list upcoming schedules when filtering by status`() {
+        val post = SocialPosts(text = "upcoming")
+        postsRepository.save(arrayListOf(post))
+        scheduleRepository.save(ScheduledItem(post, Instant.parse("2022-10-02T09:00:00Z")))
+        scheduleRepository.save(ScheduledItem(post, Instant.parse("2022-10-03T09:00:00Z"), published = true))
+
+        cmd.execute("--status", "upcoming")
+
+        assertEquals(
+            """
+            1. Post with id 1 will be published on 2022-10-02T09:00:00Z (Twitter)
+            """.trimIndent(),
+            cmd.getExecutionResult(),
+        )
+    }
+
+    @Test
+    fun `should validate if entry given for status is not supported`() {
+        cmd.execute("--status", "whatever")
+
+        assertEquals(Messages.INVALID_STATUS, cmd.getExecutionResult())
     }
 }

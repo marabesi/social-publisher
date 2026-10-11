@@ -14,6 +14,11 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Instant
+import java.util.logging.Handler
+import java.util.logging.Level
+import java.util.logging.LogRecord
+import java.util.logging.Logger
+import kotlin.test.assertContains
 import kotlin.test.assertNotNull
 
 class TwitterClient {
@@ -64,5 +69,39 @@ class TwitterClient {
 
         val deleteTweet = DeleteTweet(configurationRepository)
         deleteTweet.deleteTweetByTweetId(tweet.socialMediaId.toString())
+    }
+
+    @Test
+    fun `should log the full response from the twitter api`() {
+        val config =
+            SocialConfiguration(
+                twitter = credentials,
+            )
+
+        every { configurationRepository.find() } returns config
+
+        val twitter = Twitter(configurationRepository)
+        val logger = Logger.getLogger(Twitter::class.java.name)
+        val records = mutableListOf<LogRecord>()
+        val handler =
+            object : Handler() {
+                override fun publish(record: LogRecord) {
+                    records.add(record)
+                }
+
+                override fun flush() = Unit
+
+                override fun close() = Unit
+            }
+        logger.addHandler(handler)
+
+        try {
+            twitter.publish("Random tweet 123")
+        } finally {
+            logger.removeHandler(handler)
+        }
+
+        val logged = records.singleOrNull { it.level == Level.INFO }?.message ?: ""
+        assertContains(logged, """{"data":{"id":"1"}}""")
     }
 }

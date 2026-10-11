@@ -37,6 +37,15 @@ For each data file the tool runs the Notion
 3. The uploaded file is attached to the page configured in `notion.pageId` as a
    **file block**.
 
+Every response received from the Notion API during this flow is also written to
+the application log (`Notion API response (METHOD /path): ...`), so you can read
+the full payload the server returned for each call — for example the file upload
+object with its `id`:
+
+```log
+INFO: Notion API response (POST /v1/file_uploads): {"object":"file_upload","id":"...","status":"pending"}
+```
+
 ## Replace, don't duplicate
 
 Each data file is always attached under the same file name

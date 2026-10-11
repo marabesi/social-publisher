@@ -104,6 +104,10 @@ class SocialPublisherSteps : En {
             exitCode = cmd.execute("scheduler", "list", "--filter", filter)
         }
 
+        When("I list the scheduled posts filtering by status {string}") { status: String ->
+            exitCode = cmd.execute("scheduler", "list", "--status", status)
+        }
+
         When("I list the scheduled posts ordering by {string}") { orderBy: String ->
             exitCode = cmd.execute("scheduler", "list", "--order-by", orderBy)
         }

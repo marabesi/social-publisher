@@ -55,7 +55,9 @@ editor opens pre-filled when you edit an existing post.
 
 Pick a publish date and time with a calendar and clock picker when scheduling,
 choose the target social network from a dropdown, and delete schedules. The page
-also lists existing schedules and lets you **search** and **sort** them.
+also lists existing schedules and lets you **search**, **sort** and **filter by
+status** them. Only upcoming schedules are shown by default; pick **Published**
+in the status dropdown to list the schedules that have already been sent.
 
 ![Schedules page of the desktop app](/screenshots/schedules.png)
 

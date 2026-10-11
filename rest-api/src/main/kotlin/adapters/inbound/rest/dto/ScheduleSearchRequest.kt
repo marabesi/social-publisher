@@ -6,4 +6,5 @@ class ScheduleSearchRequest {
     var search: String? = null
     var ids: String? = null
     var socialMedia: SocialMedia? = null
+    var status: String? = null
 }

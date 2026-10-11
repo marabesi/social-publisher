@@ -11,9 +11,9 @@ import application.persistence.SchedulerRepository
 import application.persistence.configuration.ConfigurationRepository
 import application.persistence.configuration.MissingConfiguration
 import application.post.Create
-import application.socialnetwork.AuthorizationUrl
-import application.socialnetwork.ConnectLinkedIn
-import application.socialnetwork.ExchangeLinkedInAuthorization
+import application.socialnetwork.linkedin.AuthorizationUrl
+import application.socialnetwork.linkedin.ConnectLinkedIn
+import application.socialnetwork.linkedin.ExchangeLinkedInAuthorization
 import application.socialnetwork.SocialThirdPartyProvider
 import java.time.Instant
 import java.time.LocalDate

@@ -23,7 +23,7 @@ import application.entities.SocialMedia
 import application.persistence.PostsRepository
 import application.persistence.SchedulerRepository
 import application.persistence.configuration.ConfigurationRepository
-import application.socialnetwork.ExchangeLinkedInAuthorization
+import application.socialnetwork.linkedin.ExchangeLinkedInAuthorization
 import application.socialnetwork.PublishPost
 import application.socialnetwork.SocialThirdPartyProvider
 import org.springframework.context.annotation.Bean

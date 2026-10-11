@@ -1,4 +1,4 @@
-package application.socialnetwork
+package application.socialnetwork.twitter
 
 interface DeleteTweet {
     fun deleteTweetByTweetText(text: String): Boolean

@@ -1,7 +1,7 @@
 package adapters.outbound.twitter
 
 import application.persistence.configuration.ConfigurationRepository
-import application.socialnetwork.DeleteTweet
+import application.socialnetwork.twitter.DeleteTweet
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject

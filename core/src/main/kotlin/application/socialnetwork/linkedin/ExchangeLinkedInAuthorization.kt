@@ -1,4 +1,4 @@
-package application.socialnetwork
+package application.socialnetwork.linkedin
 
 data class LinkedInToken(
     val accessToken: String,

@@ -5,8 +5,8 @@ import adapters.inbound.rest.dto.LinkedInTokenRequest
 import adapters.outbound.inmemory.ConfigurationInMemoryRepository
 import application.entities.LinkedInCredentials
 import application.entities.SocialConfiguration
-import application.socialnetwork.ExchangeLinkedInAuthorization
-import application.socialnetwork.LinkedInToken
+import application.socialnetwork.linkedin.ExchangeLinkedInAuthorization
+import application.socialnetwork.linkedin.LinkedInToken
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals

@@ -4,9 +4,9 @@ import adapters.inbound.rest.dto.LinkedInTokenRequest
 import adapters.inbound.rest.dto.MessageResponse
 import application.Output
 import application.persistence.configuration.ConfigurationRepository
-import application.socialnetwork.AuthorizationUrl
-import application.socialnetwork.ConnectLinkedIn
-import application.socialnetwork.ExchangeLinkedInAuthorization
+import application.socialnetwork.linkedin.AuthorizationUrl
+import application.socialnetwork.linkedin.ConnectLinkedIn
+import application.socialnetwork.linkedin.ExchangeLinkedInAuthorization
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody

@@ -1,4 +1,4 @@
-package application.socialnetwork
+package application.socialnetwork.linkedin
 
 import application.Output
 import application.entities.LinkedInCredentials

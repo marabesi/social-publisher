@@ -6,8 +6,8 @@ import adapters.outbound.inmemory.InMemoryPostRepository
 import adapters.outbound.inmemory.InMemorySchedulerRepository
 import application.entities.LinkedInCredentials
 import application.entities.SocialConfiguration
-import application.socialnetwork.ExchangeLinkedInAuthorization
-import application.socialnetwork.LinkedInToken
+import application.socialnetwork.linkedin.ExchangeLinkedInAuthorization
+import application.socialnetwork.linkedin.LinkedInToken
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue

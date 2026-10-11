@@ -2,8 +2,8 @@ package adapters.outbound.linkedin
 
 import application.entities.LinkedInCredentials
 import application.persistence.configuration.ConfigurationRepository
-import application.socialnetwork.ExchangeLinkedInAuthorization
-import application.socialnetwork.LinkedInToken
+import application.socialnetwork.linkedin.ExchangeLinkedInAuthorization
+import application.socialnetwork.linkedin.LinkedInToken
 import jakarta.inject.Inject
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

@@ -2,7 +2,7 @@ package adapters.inbound.cli.linkedin
 
 import application.Output
 import application.persistence.configuration.ConfigurationRepository
-import application.socialnetwork.AuthorizationUrl
+import application.socialnetwork.linkedin.AuthorizationUrl
 import com.google.inject.Inject
 import picocli.CommandLine
 import java.util.concurrent.Callable

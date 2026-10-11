@@ -4,6 +4,7 @@ import MockedOutput
 import adapters.outbound.inmemory.ConfigurationInMemoryRepository
 import application.entities.LinkedInCredentials
 import application.entities.SocialConfiguration
+import application.socialnetwork.linkedin.AuthorizationUrl
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test

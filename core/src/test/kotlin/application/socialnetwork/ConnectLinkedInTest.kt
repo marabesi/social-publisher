@@ -5,6 +5,9 @@ import adapters.outbound.inmemory.ConfigurationInMemoryRepository
 import application.Messages
 import application.entities.LinkedInCredentials
 import application.entities.SocialConfiguration
+import application.socialnetwork.linkedin.ConnectLinkedIn
+import application.socialnetwork.linkedin.ExchangeLinkedInAuthorization
+import application.socialnetwork.linkedin.LinkedInToken
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
